@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('presensi', function (Blueprint $table) {
-            $table->id('id');
-            $table->unsignedBigInteger('jadwal_id')->require();
-            $table->string('nim')->require();
-            $table->time('waktu_presensi');
-            $table->enum('status', ['Hadir','Terlambat',"Izin","Tidak Hadir"]);
+        Schema::table('anggota_kelas', function (Blueprint $table) {
+            $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('presensi');
+        Schema::table('anggota_kelas', function (Blueprint $table) {
+            $table->dropForeign(['nim']);
+        });
     }
 };

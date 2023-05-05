@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('nip')->primary();
             $table->string('nama_dosen')->require();
             $table->string('tanggal_lahir')->require();
-            $table->enum('gender', ['laki-laki','perempuan']);
+            $table->unsignedBigInteger('user_id')->require();
+            $table->enum('gender', ['L','P']);
             $table->timestamps();
         });
     }

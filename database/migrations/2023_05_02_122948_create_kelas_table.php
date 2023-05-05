@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('presensi', function (Blueprint $table) {
-            $table->id('id');
-            $table->unsignedBigInteger('jadwal_id')->require();
-            $table->string('nim')->require();
-            $table->time('waktu_presensi');
-            $table->enum('status', ['Hadir','Terlambat',"Izin","Tidak Hadir"]);
+        Schema::create('kelas', function (Blueprint $table) {
+            $table->id();
+            $table->string("nama_kelas");
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('presensi');
+        Schema::dropIfExists('kelas');
     }
 };

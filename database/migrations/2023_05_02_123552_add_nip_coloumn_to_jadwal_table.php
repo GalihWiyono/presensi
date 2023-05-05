@@ -14,10 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('jadwal', function (Blueprint $table) {
-            $table->foreign('id_matkul')->references('id_matkul')->on('matakuliah')->onDelete('restrict');
-            $table->foreign('nip')->references('nip')->on('dosen')->onDelete('restrict');
-            $table->unsignedBigInteger('id_kelas')->after('id_matkul')->require();
-            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('restrict');
+            $table->foreign('matkul_id')->references('id')->on('matakuliah')->onDelete('cascade');
+            $table->foreign('nip')->references('nip')->on('dosen')->onDelete('cascade');
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
         });
     }
 
@@ -29,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropForeign(['id_matkul','nip','id_kelas']);
+            $table->dropForeign(['matkul_id','nip','kelas_id']);
         });
     }
 };

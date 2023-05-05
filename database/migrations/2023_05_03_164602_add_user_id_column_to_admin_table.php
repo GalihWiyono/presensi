@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('mahasiswa', function (Blueprint $table) {
-            $table->unsignedBigInteger('account_id')->after('gender')->require();
-            $table->foreign('account_id')->references('account_id')->on('accounts')->onDelete('restrict');
+        Schema::table('admins', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 
@@ -26,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('mahasiswa', function (Blueprint $table) {
-            $table->dropForeign(['account_id']);
-            $table->dropColumn('account_id');
+        Schema::table('admins', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
         });
     }
 };

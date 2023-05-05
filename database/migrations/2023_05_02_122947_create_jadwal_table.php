@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('jadwal', function (Blueprint $table) {
-            $table->id('id_jadwal');
-            $table->unsignedBigInteger('id_matkul')->require();
+            $table->id();
+            $table->unsignedBigInteger('matkul_id')->require();
+            $table->unsignedBigInteger('kelas_id')->require();
             $table->string('nip')->require();
-            $table->date('tanggal')->require();
-            $table->time('waktu_mulai');
+            $table->enum('hari', ['Senin','Selasa',"Rabu","Kamis","Jumat","Sabtu"]);
+            $table->time('waktu_mulai')->nullable();
             $table->timestamps();
         });
     }

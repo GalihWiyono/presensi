@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('anggota_kelas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_kelas')->require();
+            $table->unsignedBigInteger('kelas_id')->require();
             $table->string('nim')->require();
         });
     }

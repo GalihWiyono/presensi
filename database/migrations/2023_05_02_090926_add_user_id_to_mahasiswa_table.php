@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('presensi', function (Blueprint $table) {
-            $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwal')->onDelete('restrict');
+        Schema::table('mahasiswa', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -25,8 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('presensi', function (Blueprint $table) {
-            $table->dropForeign(['id_jadwal']);
+        Schema::table('mahasiswa', function (Blueprint $table) {
+            $table->dropForeign(['account_id']);
+            $table->dropColumn('account_id');
         });
     }
 };

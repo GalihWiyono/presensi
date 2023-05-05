@@ -15,41 +15,47 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 1,
             "username" => "admin1",
             "password" => bcrypt('admin'),
-            "role" => "admin"
+            "role_id" => 1
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 2,
             "username" => "admin2",
             "password" => bcrypt('admin'),
-            "role" => "admin"
+            "role_id" => 1
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 3,
             "username" => "mahasiswa1",
             "password" => bcrypt('mahasiswa'),
-            "role" => "mahasiswa"
+            "role_id" => 2
         ]);
 
 
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 4,
             "username" => "mahasiswa2",
             "password" => bcrypt('mahasiswa'),
-            "role" => "mahasiswa"
+            "role_id" => 2
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 5,
             "username" => "dosen1",
             "password" => bcrypt('dosen'),
-            "role" => "dosen"
+            "role_id" => 3
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('users')->insert([
+            'id' => 6,
             "username" => "dosen2",
             "password" => bcrypt('dosen'),
-            "role" => "dosen"
+            "role_id" => 3
         ]);
     }
 }

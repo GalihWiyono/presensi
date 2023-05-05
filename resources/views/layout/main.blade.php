@@ -14,14 +14,15 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ 'css/signin.css' }}" rel="stylesheet">
 </head>
 
 <body>
-    @include('dashboard.layout.header')
+    @include('layout/header')
 
     <div class="container-fluid">
         <div class="row">
-            @include('dashboard/layout/sidebar')
+            @include('layout/sidebar')
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 @yield('container')

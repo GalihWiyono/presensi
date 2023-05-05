@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_kelas')->after('id_matkul')->require();
-            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('restrict');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string("nama_role");
         });
     }
 
@@ -26,8 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropForeign(['id_kelas']);
-        });
+        Schema::dropIfExists('roles');
     }
 };

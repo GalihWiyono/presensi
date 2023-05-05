@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PresensiController extends Controller
 {
@@ -13,7 +15,8 @@ class PresensiController extends Controller
      */
     public function index()
     {
-        //
+        Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
+        return view('presensi/presensi');
     }
 
     /**
