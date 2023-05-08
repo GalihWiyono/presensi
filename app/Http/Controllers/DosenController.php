@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa;
-use App\Models\Presensi;
-use Carbon\Carbon;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
-class PresensiController extends Controller
+class DosenController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +13,7 @@ class PresensiController extends Controller
      */
     public function index()
     {
-        Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
-        return view('presensi/presensi', ['mahasiswa' => Mahasiswa::where('user_id', auth()->user()->id)->first()]);
+        //
     }
 
     /**
@@ -40,34 +34,7 @@ class PresensiController extends Controller
      */
     public function store(Request $request)
     {
-        $waktuPresensi = Carbon::now()->format('H:i:s');
-        $statusPresensi = "Hadir";
-        $nim = auth()->user()->mahasiswa->nim;
-
-        if($waktuPresensi > $request->akhir_absen){
-            $statusPresensi = "Terlambat";
-        }
-
-        $presensi = new Presensi([
-            'jadwal_id' => $request->id,
-            'nim' => $nim,
-            'waktu_presensi' => $waktuPresensi,
-            'status' => $statusPresensi
-        ]);
-
-        try {
-            if ($presensi->save()) {
-                return back()->with([
-                    "message" => "Presensi berhasil!",
-                    "status" => true,
-                ]);
-            }
-        } catch (\Throwable $th) {
-            return back()->with([
-                "message" => "Presensi Gagal, Error: $th",
-                "status" => false,
-            ]);
-        }
+        //
     }
 
     /**

@@ -32,9 +32,9 @@ class Mahasiswa extends Model
         return $this->hasMany(Presensi::class, 'nim', 'nim');
     }
 
-    public function anggotaKelas()
+    public function kelas()
     {
-        return $this->hasOne(AnggotaKelas::class,'nim', 'nim');
+        return $this->belongsTo(Kelas::class,);
     }
 
 }

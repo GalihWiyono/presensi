@@ -15,9 +15,9 @@ class Kelas extends Model
         'nama_kelas',
     ];
 
-    public function anggotaKelas()
+    public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
+        return $this->hasMany(Mahasiswa::class);
     }
 
     public function jadwal()

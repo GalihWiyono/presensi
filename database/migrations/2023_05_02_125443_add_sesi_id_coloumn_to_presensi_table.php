@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('anggota_kelas', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('kelas_id')->require();
-            $table->string('nim')->require();
+        Schema::table('presensi', function (Blueprint $table) {
+            $table->foreign('sesi_id')->references('id')->on('sesi')->onDelete('cascade');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('anggota_kelas');
+        Schema::table('presensi', function (Blueprint $table) {
+            $table->dropForeign(['sesi_id']);
+        });
     }
 };

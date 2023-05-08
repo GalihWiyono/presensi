@@ -10,8 +10,7 @@ class Presensi extends Model
     use HasFactory;
 
     protected $table = 'presensi';
-    public $timestamps = false;
-
+    
     protected $fillable = [
         'jadwal_id',
         'nim',
@@ -19,12 +18,14 @@ class Presensi extends Model
         'status'
     ];
 
-    protected $hidden = [];
-
-
-    public function jadwal()
+    public function sesi()
     {
-        return $this->belongsTo(Jadwal::class);
+        return $this->belongsTo(Sesi::class);
+    }
+
+    public function getPresensiOnSesi($sesi)
+    {
+        return $this->belongsTo(Sesi::class);
     }
 
     public function mahasiswa()

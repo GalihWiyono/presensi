@@ -11,12 +11,22 @@
                             Dashboard
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('dashboard/database') ? 'active' : '' }}"
-                            href="/dashboard/database">
+                    <li class="nav-item accordion">
+                        <a type="button" class="nav-link {{ Request::is('dashboard/database*') ? 'active' : '' }}"
+                            data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
                             <span data-feather="database"></span>
                             Database
                         </a>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-4">
+                                <li><a class="dropdown-item mb-1" href="/dashboard/database/mahasiswa"><span class="me-2" data-feather="chevrons-right"></span>Mahasiswa</a></li>
+                                <li><a class="dropdown-item mb-1" href="/dashboard/database/dosen"><span class="me-2" data-feather="chevrons-right"></span>Dosen</a></li>
+                                <li><a class="dropdown-item mb-1" href="/dashboard/database/jadwal"><span class="me-2" data-feather="chevrons-right"></span>Jadwal</a></li>
+                                <li><a class="dropdown-item mb-1" href="/dashboard/database/admin"><span class="me-2" data-feather="chevrons-right"></span>Admin</a></li>
+                            </ul>
+                        </div>
                     </li>
                 @endcan
 
@@ -29,8 +39,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('dashboard/kelas') ? 'active' : '' }}"
-                            href="/dashboard/kelas">
+                        <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/kelas">
                             <span data-feather="hard-drive"></span>
                             Kelas
                         </a>
@@ -46,14 +55,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('dashboard/presensi') ? 'active' : '' }}"
+                        <a class="nav-link {{ Request::is('dashboard/presensi*') ? 'active' : '' }}"
                             href="/dashboard/presensi">
                             <span data-feather="hard-drive"></span>
                             Presensi
                         </a>
                     </li>
                 @endcan
-                
+
             </ul>
         </div>
         <div>

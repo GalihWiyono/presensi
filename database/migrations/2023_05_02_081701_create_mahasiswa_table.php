@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('tanggal_lahir')->require();
             $table->unsignedBigInteger('user_id')->require();
             $table->enum('gender', ['L','P']);
+            $table->unsignedBigInteger('kelas_id')->require();
             $table->timestamps();
         });
     }

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('anggota_kelas', function (Blueprint $table) {
-            $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
+        Schema::table('sesi', function (Blueprint $table) {
+            $table->foreign('jadwal_id')->references('id')->on('jadwal')->onDelete('cascade');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('anggota_kelas', function (Blueprint $table) {
-            $table->dropForeign(['nim']);
+        Schema::table('sesi', function (Blueprint $table) {
+            $table->dropForeign(['jadwal_id']);
         });
     }
 };

@@ -16,7 +16,10 @@ class Jadwal extends Model
         'kelas_id',
         'nip',
         'hari',
-        'waktu_mulai'
+        'jam_mulai',
+        'jam_berakhir',
+        'mulai_absen',
+        'akhir_absen'
     ];
 
     public function dosen()
@@ -34,8 +37,8 @@ class Jadwal extends Model
         return $this->belongsTo(Kelas::class);
     }
 
-    public function presensi()
+    public function sesi()
     {
-        return $this->hasMany(Presensi::class);
-    }
+        return $this->hasMany(Sesi::class);
+    } 
 }

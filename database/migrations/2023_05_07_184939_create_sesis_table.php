@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('presensi', function (Blueprint $table) {
-            $table->foreign('jadwal_id')->references('id')->on('jadwal')->onDelete('cascade');
+        Schema::create('sesi', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('jadwal_id');
+            $table->bigInteger('sesi');
+            $table->date('tanggal');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('presensi', function (Blueprint $table) {
-            $table->dropForeign(['jadwal_id']);
-        });
+        Schema::dropIfExists('sesis');
     }
 };

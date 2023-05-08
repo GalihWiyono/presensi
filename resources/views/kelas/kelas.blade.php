@@ -14,6 +14,7 @@
                         <th>Nama Mata Kuliah</th>
                         <th>Nama Kelas</th>
                         <th>Hari</th>
+                        <th>Jam</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -23,7 +24,8 @@
                             <th>{{ $loop->index+1 }}</th>
                             <td>{{ $item->matkul->nama_matkul }}</td>
                             <td>{{ $item->kelas->nama_kelas }}</td>
-                            <td>{{ $item->hari . ' ' . $item->waktu_mulai }}</td>
+                            <td>{{ $item->hari }}</td>
+                            <td>{{ $item->jam_mulai . " - " . $item->jam_berakhir }}</td>
                             <td><a class="btn btn-secondary btn-sm" href="{{ url('dashboard/kelas/'.$item->id.'') }}">Check</a></td>
                         </tr>
                     @endforeach
