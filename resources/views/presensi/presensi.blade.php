@@ -4,10 +4,15 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Presensi</h1>
     </div>
-
+    
     @if (session()->has('message'))
         <div class="alert @if (session('status') == true) alert-success @else alert-danger @endif  alert-dismissible fade show mt-3 mx-3"
             id="notification" role="alert">
+            @if (session('status') == true)
+                <span class="me-1" data-feather="check-circle"></span>
+            @else
+                <span class="me-1" data-feather="alert-triangle"></span>
+            @endif
             {{ session('message') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

@@ -36,10 +36,22 @@ Route::post('/dashboard/presensi/store', [PresensiController::class, "store"]) -
 
 //database
 Route::get('/dashboard/database', [DatabaseController::class, "index"]) -> middleware("auth");
+
+//database->mahasiswa
 Route::get('/dashboard/database/mahasiswa', [MahasiswaController::class, "index"]) -> middleware("auth");
+Route::post('/dashboard/database/mahasiswa/store', [MahasiswaController::class, "store"]) -> middleware("auth");
+Route::delete('/dashboard/database/mahasiswa/', [MahasiswaController::class, "destroy"]) -> middleware("auth");
+Route::put('/dashboard/database/mahasiswa/', [MahasiswaController::class, "update"]) -> middleware("auth");
+
+//database->dosen
 Route::get('/dashboard/database/dosen', [DosenController::class, "index"]) -> middleware("auth");
+
+//database->jadwal
 Route::get('/dashboard/database/jadwal', [JadwalController::class, "index"]) -> middleware("auth");
+
+//database->admin
 Route::get('/dashboard/database/admin', [AdminController::class, "index"]) -> middleware("auth");
+
 
 //kelas
 Route::get('/dashboard/kelas', [KelasController::class, "index"]) -> middleware("auth");

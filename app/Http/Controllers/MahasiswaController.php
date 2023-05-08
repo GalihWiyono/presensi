@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Mahasiswa;
+use App\Models\User;
+use Exception;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -18,8 +21,10 @@ class MahasiswaController extends Controller
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
         $mahasiswa = Mahasiswa::all();
+        $kelas = Kelas::all();
         return view('database/mahasiswa', [
-            'mahasiswa' => $mahasiswa
+            'mahasiswa' => $mahasiswa,
+            'kelas' => $kelas
         ]);
     }
 
@@ -41,7 +46,27 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $mahasiswa = new Mahasiswa([
+            "nim" => $request->nim,
+            'nama_mahasiswa' => $request->nama_mahasiswa,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'gender' => $request->gender,
+            'kelas_id' => $request->kelas_id
+        ]);
+
+        User::create([
+            'username' => $request->nim,
+            'password' => bcrypt("mahasiswa"),
+            'role' => "Mahasiswa",
+        ]);
+
+        $mahasiswa->user_id = User::where('username', $request->nim)->first()->id;
+        $mahasiswa->save();
+
+        return back()->with([
+            "message" => "Berhasil membuat data mahasiswa dengan NIM $request->nim",
+            "status" => true,
+        ]);
     }
 
     /**
@@ -73,9 +98,26 @@ class MahasiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            Mahasiswa::where('nim', $request->nim)->update([
+                'nama_mahasiswa' => $request->nama_mahasiswa,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'user_id' => $request->user_id,
+                'gender' => $request->gender,
+                'kelas_id' => $request->kelas_id,
+            ]);
+            return back()->with([
+                "message" => "Berhasil mengedit data mahasiswa",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal mengedit data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -84,8 +126,23 @@ class MahasiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            Mahasiswa::where([
+                "user_id" => $request->user_id2,
+                "nim" => $request->nim2
+            ])->delete();
+            User::find($request->w)->delete();
+            return back()->with([
+                "message" => "Berhasil menghapus data mahasiswa",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal menghapus data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 }

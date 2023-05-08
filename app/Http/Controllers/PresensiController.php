@@ -64,7 +64,7 @@ class PresensiController extends Controller
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi Gagal, Error: $th",
+                "message" => "Presensi Gagal, Error: ".json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

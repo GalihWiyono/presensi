@@ -8,6 +8,11 @@
     @if (session()->has('message'))
         <div class="alert @if (session('status') == true) alert-success @else alert-danger @endif  alert-dismissible fade show mt-3 mx-3"
             id="notification" role="alert">
+            @if (session('status') == true)
+                <span class="me-1" data-feather="check-circle"></span>
+            @else
+                <span class="me-1" data-feather="alert-triangle"></span>
+            @endif
             {{ session('message') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

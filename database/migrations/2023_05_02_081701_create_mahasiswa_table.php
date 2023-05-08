@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->string('nim')->primary();
             $table->string('nama_mahasiswa')->require();
-            $table->string('tanggal_lahir')->require();
+            $table->date('tanggal_lahir')->require();
             $table->unsignedBigInteger('user_id')->require();
             $table->enum('gender', ['L','P']);
             $table->unsignedBigInteger('kelas_id')->require();

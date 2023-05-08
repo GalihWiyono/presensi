@@ -12,19 +12,32 @@
                         </a>
                     </li>
                     <li class="nav-item accordion">
-                        <a type="button" class="nav-link {{ Request::is('dashboard/database*') ? 'active' : '' }}"
+                        <a type="button" class="nav-link {{ Request::is('dashboard/database') ? 'active' : '' }}"
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <span data-feather="database"></span>
                             Database
                         </a>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample">
-                            <ul class="acoordion-body list-unstyled container ms-4">
-                                <li><a class="dropdown-item mb-1" href="/dashboard/database/mahasiswa"><span class="me-2" data-feather="chevrons-right"></span>Mahasiswa</a></li>
-                                <li><a class="dropdown-item mb-1" href="/dashboard/database/dosen"><span class="me-2" data-feather="chevrons-right"></span>Dosen</a></li>
-                                <li><a class="dropdown-item mb-1" href="/dashboard/database/jadwal"><span class="me-2" data-feather="chevrons-right"></span>Jadwal</a></li>
-                                <li><a class="dropdown-item mb-1" href="/dashboard/database/admin"><span class="me-2" data-feather="chevrons-right"></span>Admin</a></li>
+                        <div id="collapseOne"
+                            class="accordion-collapse collapse {{ Request::is('dashboard/database/*') ? 'show' : '' }}"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-2">
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/database/mahasiswa') ? 'active' : '' }}"
+                                        href="/dashboard/database/mahasiswa"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Mahasiswa</a></li>
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/database/dosen') ? 'active' : '' }}"
+                                        href="/dashboard/database/dosen"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Dosen</a></li>
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/database/jadwal') ? 'active' : '' }}"
+                                        href="/dashboard/database/jadwal"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Jadwal</a></li>
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/database/admin') ? 'active' : '' }}"
+                                        href="/dashboard/database/admin"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Admin</a></li>
                             </ul>
                         </div>
                     </li>

@@ -10,15 +10,15 @@ class DashboardController extends Controller
         $akun = auth()->user();
         $data = '';
 
-        if( $akun->role_id == 1) {
+        if( $akun->role == "Admin") {
             $data = $akun->admin;
         }
 
-        if( $akun->role_id == 2) {
+        if( $akun->role == "Mahasiswa") {
             $data = $akun->mahasiswa;
         }
 
-        if( $akun->role_id == 3) {
+        if( $akun->role == "Dosen") {
             $data = $akun->dosen;
         }
 

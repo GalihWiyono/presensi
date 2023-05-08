@@ -80,7 +80,7 @@ class KelasController extends Controller
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengupdate waktu mulai dan berakhir absen, Error : $th",
+                "message" => "Gagal mengupdate waktu mulai dan berakhir absen, Error: ".json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -112,7 +112,7 @@ class KelasController extends Controller
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi dengan nim {$request->nim} Gagal, Error: $th",
+                "message" => "Presensi dengan nim {$request->nim} Gagal, Error: ".json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

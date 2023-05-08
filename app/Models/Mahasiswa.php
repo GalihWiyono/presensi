@@ -16,17 +16,19 @@ class Mahasiswa extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'nim',
         'nama_mahasiswa',
         'tanggal_lahir',
         'gender',
-        'user_id'
+        'user_id',
+        'kelas_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function presensi()
     {
         return $this->hasMany(Presensi::class, 'nim', 'nim');
@@ -36,5 +38,4 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Kelas::class,);
     }
-
 }
