@@ -130,10 +130,10 @@ class MahasiswaController extends Controller
     {
         try {
             Mahasiswa::where([
-                "user_id" => $request->user_id2,
-                "nim" => $request->nim2
+                "user_id" => $request->user_id,
+                "nim" => $request->nim
             ])->delete();
-            User::find($request->w)->delete();
+            User::find($request->user_id)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data mahasiswa",
                 "status" => true,

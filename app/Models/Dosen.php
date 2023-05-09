@@ -16,6 +16,7 @@ class Dosen extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'nip',
         'nama_dosen',
         'tanggal_lahir',
         'gender',

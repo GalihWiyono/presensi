@@ -20,8 +20,13 @@
 
     <div class="container">
         <div class="d-flex justify-content-between mb-3">
-            <div class="form-outline">
-                <input type="search" id="form1" class="form-control" placeholder="Cari Mahasiswa" />
+            <div class="">
+                <div class="input-group">
+                    <input type="search" id="search" name="search" class="form-control" placeholder="Cari Mahasiswa" />
+                    <button type="button" type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
             <div class="">
                 <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Tambah
@@ -72,7 +77,7 @@
         aria-labelledby="tambahMahasiswaModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/database/mahasiswa/store" method="POST">
+                <form action="/dashboard/database/mahasiswa" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Tambah Mahasiswa</h5>

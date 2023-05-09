@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dosen;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DosenController extends Controller
 {
@@ -13,7 +17,11 @@ class DosenController extends Controller
      */
     public function index()
     {
-        //
+        Gate::allows('isAdmin') ? Response::allow() : abort(403);
+        $dosen = Dosen::all();
+        return view('database/dosen', [
+            "dosen" => $dosen
+        ]);
     }
 
     /**
@@ -34,7 +42,33 @@ class DosenController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $dosen = new Dosen([
+                "nip" => $request->nip,
+                'nama_dosen' => $request->nama_dosen,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'gender' => $request->gender,
+            ]);
+
+            User::create([
+                'username' => $request->nip,
+                'password' => bcrypt("dosen"),
+                'role' => "Dosen",
+            ]);
+
+            $dosen->user_id = User::where('username', $request->nip)->first()->id;
+            $dosen->save();
+
+            return back()->with([
+                "message" => "Berhasil membuat data dosen dengan NIP $request->nip",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal membuat data dosen, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -66,9 +100,25 @@ class DosenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            Dosen::where('nip', $request->nip)->update([
+                'nama_dosen' => $request->nama_dosen,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'user_id' => $request->user_id,
+                'gender' => $request->gender,
+            ]);
+            return back()->with([
+                "message" => "Berhasil mengedit data dosen",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal mengedit data dosen, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -77,8 +127,23 @@ class DosenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            Dosen::where([
+                "user_id" => $request->user_id,
+                "nip" => $request->nip
+            ])->delete();
+            User::find($request->user_id)->delete();
+            return back()->with([
+                "message" => "Berhasil menghapus data dosen",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal menghapus data dosen, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 }
