@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AdminController extends Controller
 {
@@ -13,7 +17,11 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        Gate::allows('isAdmin') ? Response::allow() : abort(403);
+        $admin = Admin::all();
+        return view('database/admin', [
+            "admin" => $admin
+        ]);
     }
 
     /**
@@ -34,7 +42,33 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $dosen = new Admin([
+                "nip" => $request->nip,
+                'nama_admin' => $request->nama_admin,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'gender' => $request->gender,
+            ]);
+
+            User::create([
+                'username' => $request->nip,
+                'password' => bcrypt("admin"),
+                'role' => "Admin",
+            ]);
+
+            $dosen->user_id = User::where('username', $request->nip)->first()->id;
+            $dosen->save();
+
+            return back()->with([
+                "message" => "Berhasil membuat data admin dengan NIP $request->nip",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal membuat data admin, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -66,9 +100,25 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            Admin::where('nip', $request->nip)->update([
+                'nama_admin' => $request->nama_admin,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'user_id' => $request->user_id,
+                'gender' => $request->gender,
+            ]);
+            return back()->with([
+                "message" => "Berhasil mengedit data admin",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal mengedit data admin, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -77,8 +127,23 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            Admin::where([
+                "user_id" => $request->user_id,
+                "nip" => $request->nip
+            ])->delete();
+            User::find($request->user_id)->delete();
+            return back()->with([
+                "message" => "Berhasil menghapus data admin",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal menghapus data admin, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 }

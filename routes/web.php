@@ -48,6 +48,12 @@ Route::post('/dashboard/database/dosen/', [DosenController::class, "store"])->mi
 Route::delete('/dashboard/database/dosen/', [DosenController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/database/dosen/', [DosenController::class, "update"])->middleware("auth");
 
+//database->admin
+Route::get('/dashboard/database/admin', [AdminController::class, "index"])->middleware("auth");
+Route::post('/dashboard/database/admin/', [AdminController::class, "store"])->middleware("auth");
+Route::delete('/dashboard/database/admin/', [AdminController::class, "destroy"])->middleware("auth");
+Route::put('/dashboard/database/admin/', [AdminController::class, "update"])->middleware("auth");
+
 //database->jadwal
 Route::get('/dashboard/database/jadwal', [JadwalController::class, "index"])->middleware("auth");
 
