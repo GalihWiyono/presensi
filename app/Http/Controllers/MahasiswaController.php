@@ -20,10 +20,14 @@ class MahasiswaController extends Controller
     public function index()
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        $mahasiswa = Mahasiswa::all();
+        $mahasiswa = Mahasiswa::latest();
+        
+        if(request('search')) {
+            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search'). '%');
+        } 
         $kelas = Kelas::all();
         return view('database/mahasiswa', [
-            'mahasiswa' => $mahasiswa,
+            'mahasiswa' => $mahasiswa->get(),
             'kelas' => $kelas
         ]);
     }

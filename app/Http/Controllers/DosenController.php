@@ -18,9 +18,13 @@ class DosenController extends Controller
     public function index()
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        $dosen = Dosen::all();
+        $dosen = Dosen::latest();
+        
+        if(request('search')) {
+            $dosen->where('nama_dosen', 'like', '%' . request('search'). '%');
+        } 
         return view('database/dosen', [
-            "dosen" => $dosen
+            "dosen" => $dosen->get()
         ]);
     }
 

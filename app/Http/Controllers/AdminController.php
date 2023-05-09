@@ -18,9 +18,14 @@ class AdminController extends Controller
     public function index()
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        $admin = Admin::all();
+        $admin =  Admin::latest();
+        
+        if(request('search')) {
+            $admin->where('nama_admin', 'like', '%' . request('search'). '%');
+        } 
+
         return view('database/admin', [
-            "admin" => $admin
+            "admin" => $admin->get()
         ]);
     }
 

@@ -21,12 +21,14 @@
     <div class="container">
         <div class="d-flex justify-content-between mb-3">
             <div class="">
-                <div class="input-group">
-                    <input type="search" id="search" name="search" class="form-control" placeholder="Cari Mahasiswa" />
-                    <button type="button" type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+                <form action="/dashboard/database/mahasiswa">
+                    <div class="input-group">
+                        <input type="search" id="search" name="search" class="form-control" placeholder="Cari Mahasiswa" value="{{ request('search') }}"/>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
             <div class="">
                 <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Tambah
