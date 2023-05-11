@@ -70,6 +70,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="d-flex justify-content-center">
+            {{ $dosen->links() }}
+        </div>
     </div>
 
     {{-- Modal Tambah dosen --}}

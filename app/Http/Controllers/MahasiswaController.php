@@ -23,11 +23,12 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::latest();
         
         if(request('search')) {
-            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search'). '%');
+            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search'). '%')
+            ->orWhere('nim', 'like', '%' . request('search'). '%');
         } 
         $kelas = Kelas::all();
         return view('database/mahasiswa', [
-            'mahasiswa' => $mahasiswa->get(),
+            'mahasiswa' => $mahasiswa->paginate(7)->withQueryString(),
             'kelas' => $kelas
         ]);
     }

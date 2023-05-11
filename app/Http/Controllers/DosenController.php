@@ -21,10 +21,11 @@ class DosenController extends Controller
         $dosen = Dosen::latest();
         
         if(request('search')) {
-            $dosen->where('nama_dosen', 'like', '%' . request('search'). '%');
+            $dosen->where('nama_dosen', 'like', '%' . request('search'). '%')
+            ->orWhere('nip', 'like', '%' . request('search'). '%');
         } 
         return view('database/dosen', [
-            "dosen" => $dosen->get()
+            "dosen" => $dosen->paginate(7)->withQueryString()
         ]);
     }
 

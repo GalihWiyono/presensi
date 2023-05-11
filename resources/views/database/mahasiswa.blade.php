@@ -51,7 +51,7 @@
                 <tbody>
                     @foreach ($mahasiswa as $item)
                         <tr>
-                            <th>{{ $loop->index + 1 }}</th>
+                            <th>{{ ($mahasiswa ->currentpage()-1) * $mahasiswa ->perpage() + $loop->index + 1 }}</th>
                             <td>{{ $item->nim }}</td>
                             <td>{{ $item->nama_mahasiswa }}</td>
                             <td>{{ $item->tanggal_lahir }}</td>
@@ -71,6 +71,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            {{ $mahasiswa->links() }}
         </div>
     </div>
 

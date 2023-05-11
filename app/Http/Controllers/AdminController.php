@@ -21,11 +21,12 @@ class AdminController extends Controller
         $admin =  Admin::latest();
         
         if(request('search')) {
-            $admin->where('nama_admin', 'like', '%' . request('search'). '%');
+            $admin->where('nama_admin', 'like', '%' . request('search'). '%')
+            ->orWhere('nip', 'like', '%' . request('search'). '%');;
         } 
 
         return view('database/admin', [
-            "admin" => $admin->get()
+            "admin" => $admin->paginate(7)->withQueryString()
         ]);
     }
 
