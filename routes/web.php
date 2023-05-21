@@ -54,11 +54,17 @@ Route::post('/dashboard/database/admin/', [AdminController::class, "store"])->mi
 Route::delete('/dashboard/database/admin/', [AdminController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/database/admin/', [AdminController::class, "update"])->middleware("auth");
 
-//database->jadwal
-Route::get('/dashboard/database/jadwal', [JadwalController::class, "index"])->middleware("auth");
+//academic->jadwal
+Route::get('/dashboard/academic/schedule', [JadwalController::class, "index"])->middleware("auth");
+Route::post('/dashboard/academic/schedule', [JadwalController::class, "store"])->middleware("auth");
+Route::delete('/dashboard/academic/schedule', [JadwalController::class, "destroy"])->middleware("auth");
+Route::put('/dashboard/academic/schedule', [JadwalController::class, "update"])->middleware("auth");
 
-//database->admin
-Route::get('/dashboard/database/admin', [AdminController::class, "index"])->middleware("auth");
+//academic->kelas
+Route::get('/dashboard/academic/jadwal', [JadwalController::class, "index"])->middleware("auth");
+
+//academic->matkul
+Route::get('/dashboard/academic/jadwal', [JadwalController::class, "index"])->middleware("auth");
 
 
 //kelas

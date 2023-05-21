@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Presensi</h1>
     </div>
-    
+
     @if (session()->has('message'))
         <div class="alert @if (session('status') == true) alert-success @else alert-danger @endif  alert-dismissible fade show mt-3 mx-3"
             id="notification" role="alert">
@@ -20,6 +20,7 @@
 
     <div class="container">
         <div class="row">
+            <div id='map'></div>
             <div class="col-lg-6 col-sm-12 mx-auto" id="reader">
             </div>
         </div>
@@ -80,5 +81,45 @@
         </div>
     </div>
 
+    {{-- Modal Lokasi Denied --}}
+    <div class="modal fade" id="lokasiModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="lokasiModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Location Not Found</h5>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-justify">Lokasi anda tidak ditemukan, silakan aktifkan izin untuk mendapatkan lokasi
+                        agar dapat menggunakan
+                        fitur yang ada pada website ini!</h6>
+
+                    <h6>Silakan aktifkan kembali lokasi dengan mengikuti tutorial ini</h6>
+                    <a href="#" id="lokasiLink" class="btn btn-info">Click</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Lokasi Outside --}}
+    <div class="modal fade" id="lokasiOutsideModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="lokasiOutsideModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Location Outside The Campus Area</h5>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-justify">Lokasi anda berada diluar lokasi kampus yang sudah ditentukan,
+                        silakan pergi ke lokasi agar dapat menggunakan fitur yang ada pada website ini!</h6>
+                </div>
+            </div>
+        </div>
+    </div>
     @include('../script/qrcode-script')
+@endsection
+
+@section('footer-scripts')
+    @include('../script/leaflet-script')
 @endsection

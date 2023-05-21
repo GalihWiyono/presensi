@@ -49,7 +49,15 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         try {
-            $dosen = new Admin([
+            $cekAdmin = Admin::where('nim', $request->nim)->first();
+            if ($cekAdmin) {
+                return back()->with([
+                    "message" => "Gagal membuat data admin, NIP $request->nip sudah ada!",
+                    "status" => false,
+                ]);
+            }
+
+            $admin = new Admin([
                 "nip" => $request->nip,
                 'nama_admin' => $request->nama_admin,
                 'tanggal_lahir' => $request->tanggal_lahir,
@@ -62,8 +70,8 @@ class AdminController extends Controller
                 'role' => "Admin",
             ]);
 
-            $dosen->user_id = User::where('username', $request->nip)->first()->id;
-            $dosen->save();
+            $admin->user_id = User::where('username', $request->nip)->first()->id;
+            $admin->save();
 
             return back()->with([
                 "message" => "Berhasil membuat data admin dengan NIP $request->nip",

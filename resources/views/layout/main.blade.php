@@ -15,6 +15,19 @@
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
     {{-- <link href="{{ 'css/signin.css' }}" rel="stylesheet"> --}}
     <script src="https://kit.fontawesome.com/9eee2454f1.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        #map {
+            width: 0px;
+            height: 0px;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,6 +56,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.5/platform.min.js"></script>
 
     <script src="{{ asset('js/dashboard.js') }}"></script>
     @yield('footer-scripts')

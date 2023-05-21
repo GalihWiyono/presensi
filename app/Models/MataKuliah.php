@@ -14,4 +14,9 @@ class MataKuliah extends Model
     protected $fillable = [
         'nama_matkul',
     ];
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class);
+    }
 }

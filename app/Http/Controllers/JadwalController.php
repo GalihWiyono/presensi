@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dosen;
+use App\Models\Jadwal;
+use App\Models\Kelas;
+use App\Models\MataKuliah;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class JadwalController extends Controller
 {
@@ -13,9 +19,52 @@ class JadwalController extends Controller
      */
     public function index()
     {
-        //
-    }
+        Gate::allows('isAdmin') ? Response::allow() : abort(403);
+        
+        $jadwal = Jadwal::with(['matkul', 'dosen', 'kelas'])->latest();
+        $matkul = new MataKuliah;
+        $kelas = new Kelas;
+        $dosen = new Dosen;
+        $filter = "";
 
+        //get ID for filter
+        if(request('filter') == "Course") {
+            $filter = $matkul->where('nama_matkul', 'like', '%' . request('search') . '%')->first()->id;
+        }
+
+        if(request('filter') == "Class") {
+            $filter = $kelas->where('nama_kelas', 'like', '%' . request('search') . '%')->first()->id;
+        }
+
+        if(request('filter') == "Lecture") {
+            $filter = $dosen->where('nama_dosen', 'like', '%' . request('search') . '%')->first()->nip;
+        }
+
+        if (request('search')) {
+            $jadwal->when(request('filter') == 'Course', function ($q) use($filter) {
+                return $q->where('matkul_id',$filter);
+            });
+            $jadwal->when(request('filter') == 'Class', function ($q) use($filter) {
+                return $q->where('kelas_id',$filter);
+            });
+            $jadwal->when(request('filter') == 'Lecture', function ($q) use($filter) {
+                return $q->where('nip',$filter);
+            });
+            $jadwal->when(request('filter') == 'Course', function ($q) use($filter) {
+                return $q->where('matkul_id',$filter);
+            });
+            $jadwal->when(request('filter') == 'Day', function ($q) {
+                return $q->where('hari', request('search'));
+            });
+        }
+
+        return view('academic/schedule', [
+            'jadwal' => $jadwal->paginate(7),
+            'matkul' => $matkul->get(),
+            'kelas' => $kelas->get(),
+            'dosen' => $dosen->get(),
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -34,7 +83,28 @@ class JadwalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $jadwal = new Jadwal([
+                "matkul_id" => $request->matkul_id,
+                'kelas_id' => $request->kelas_id,
+                'nip' => $request->dosen_id,
+                'hari' => $request->hari,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_berakhir' => $request->jam_berakhir
+            ]);
+
+            if($jadwal->save()) {
+                return back()->with([
+                    "message" => "Berhasil membuat data jadwal",
+                    "status" => true,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal membuat jadwal, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -66,9 +136,27 @@ class JadwalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            Jadwal::where('id', $request->id)->update([
+                "matkul_id" => $request->matkul_id,
+                'kelas_id' => $request->kelas_id,
+                'nip' => $request->dosen_id,
+                'hari' => $request->hari,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_berakhir' => $request->jam_berakhir
+            ]);
+            return back()->with([
+                "message" => "Berhasil mengedit data jadwal",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal mengedit data jadwal, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**
@@ -77,8 +165,20 @@ class JadwalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            if(Jadwal::find($request->id)->delete()) {
+                return back()->with([
+                    "message" => "Berhasil menghapus data jadwal",
+                    "status" => true,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal menghapus data jadwal, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 }

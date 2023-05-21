@@ -20,15 +20,15 @@ class MahasiswaController extends Controller
     public function index()
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        $mahasiswa = Mahasiswa::latest();
-        
-        if(request('search')) {
-            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search'). '%')
-            ->orWhere('nim', 'like', '%' . request('search'). '%');
-        } 
+        $mahasiswa = Mahasiswa::with('kelas')->latest();
+
+        if (request('search')) {
+            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search') . '%')
+                ->orWhere('nim', 'like', '%' . request('search') . '%');
+        }
         $kelas = Kelas::all();
         return view('database/mahasiswa', [
-            'mahasiswa' => $mahasiswa->paginate(7)->withQueryString(),
+            'mahasiswa' => $mahasiswa->paginate(7),
             'kelas' => $kelas
         ]);
     }
@@ -51,27 +51,42 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $mahasiswa = new Mahasiswa([
-            "nim" => $request->nim,
-            'nama_mahasiswa' => $request->nama_mahasiswa,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'gender' => $request->gender,
-            'kelas_id' => $request->kelas_id
-        ]);
+        try {
+            $cekMahasiswa = Mahasiswa::where('nim', $request->nim)->first();
+            if ($cekMahasiswa) {
+                return back()->with([
+                    "message" => "Gagal membuat data mahasiswa, NIM $request->nim sudah ada!",
+                    "status" => false,
+                ]);
+            }
 
-        User::create([
-            'username' => $request->nim,
-            'password' => bcrypt("mahasiswa"),
-            'role' => "Mahasiswa",
-        ]);
+            $mahasiswa = new Mahasiswa([
+                "nim" => $request->nim,
+                'nama_mahasiswa' => $request->nama_mahasiswa,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'gender' => $request->gender,
+                'kelas_id' => $request->kelas_id
+            ]);
 
-        $mahasiswa->user_id = User::where('username', $request->nim)->first()->id;
-        $mahasiswa->save();
+            User::create([
+                'username' => $request->nim,
+                'password' => bcrypt("mahasiswa"),
+                'role' => "Mahasiswa",
+            ]);
 
-        return back()->with([
-            "message" => "Berhasil membuat data mahasiswa dengan NIM $request->nim",
-            "status" => true,
-        ]);
+            $mahasiswa->user_id = User::where('username', $request->nim)->first()->id;
+            $mahasiswa->save();
+
+            return back()->with([
+                "message" => "Berhasil membuat data mahasiswa dengan NIM $request->nim",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal membuat data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
     }
 
     /**

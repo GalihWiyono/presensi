@@ -25,19 +25,41 @@
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/mahasiswa') ? 'active' : '' }}"
                                         href="/dashboard/database/mahasiswa"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Mahasiswa</a></li>
+                                            data-feather="chevrons-right"></span>Student</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/dosen') ? 'active' : '' }}"
                                         href="/dashboard/database/dosen"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Dosen</a></li>
-                                <li class="nav-item"><a
-                                        class="nav-link dropdown-item {{ Request::is('dashboard/database/jadwal') ? 'active' : '' }}"
-                                        href="/dashboard/database/jadwal"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Jadwal</a></li>
+                                            data-feather="chevrons-right"></span>Lecture</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/admin') ? 'active' : '' }}"
                                         href="/dashboard/database/admin"><span class="me-2"
                                             data-feather="chevrons-right"></span>Admin</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item accordion">
+                        <a type="button" class="nav-link {{ Request::is('dashboard/academic') ? 'active' : '' }}"
+                            data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                            aria-controls="collapseTwo">
+                            <span data-feather="calendar"></span>
+                            Academic
+                        </a>
+                        <div id="collapseTwo"
+                            class="accordion-collapse collapse {{ Request::is('dashboard/academic/*') ? 'show' : '' }}"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-2">
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/academic/class') ? 'active' : '' }}"
+                                        href="/dashboard/academic/class"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Class</a></li>
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/academic/course') ? 'active' : '' }}"
+                                        href="/dashboard/academic/course"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Course</a></li>
+                                <li class="nav-item"><a
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/academic/schedule') ? 'active' : '' }}"
+                                        href="/dashboard/academic/schedule"><span class="me-2"
+                                            data-feather="chevrons-right"></span>Schedule</a></li>
                             </ul>
                         </div>
                     </li>
