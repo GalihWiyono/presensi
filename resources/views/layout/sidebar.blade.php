@@ -92,7 +92,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/presensi*') ? 'active' : '' }}"
                             href="/dashboard/presensi">
-                            <span data-feather="hard-drive"></span>
+                            <span data-feather="camera"></span>
                             Presensi
                         </a>
                     </li>

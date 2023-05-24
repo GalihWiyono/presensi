@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DosenController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,11 +63,17 @@ Route::delete('/dashboard/academic/schedule', [JadwalController::class, "destroy
 Route::put('/dashboard/academic/schedule', [JadwalController::class, "update"])->middleware("auth");
 
 //academic->kelas
-Route::get('/dashboard/academic/jadwal', [JadwalController::class, "index"])->middleware("auth");
+Route::get('/dashboard/academic/class', [ClassController::class, "index"])->middleware("auth");
+Route::get('/dashboard/academic/class/{id}', [ClassController::class, "show"])->middleware("auth");
+Route::post('/dashboard/academic/class', [ClassController::class, "store"])->middleware("auth");
+Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
+Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");
 
 //academic->matkul
-Route::get('/dashboard/academic/jadwal', [JadwalController::class, "index"])->middleware("auth");
-
+Route::get('/dashboard/academic/course', [MatkulController::class, "index"])->middleware("auth");
+Route::post('/dashboard/academic/course', [MatkulController::class, "store"])->middleware("auth");
+Route::delete('/dashboard/academic/course', [MatkulController::class, "destroy"])->middleware("auth");
+Route::post('/dashboard/academic/course/{id}', [MatkulController::class, "update"])->middleware("auth");
 
 //kelas
 Route::get('/dashboard/kelas', [KelasController::class, "index"])->middleware("auth");

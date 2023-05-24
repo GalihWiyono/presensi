@@ -19,7 +19,6 @@
 
     @can('isAdmin')
         <h1>Ini Main Dashboard Admin</h1>
-        <div id='map'></div>
     @endcan
 
     @can('isMahasiswa')

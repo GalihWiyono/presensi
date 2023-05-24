@@ -25,6 +25,7 @@
     function onScanSuccess(decodedText, decodedResult) {
         const dataKelas = JSON.parse(decodedText);
         insertData(dataKelas);
+        checkQR(dataKelas);
         $('#presensiModal').modal('show');
         $('#html5-qrcode-button-camera-stop').click();
     }
@@ -43,5 +44,8 @@
         $('#hari').val(data.hari);
         $('#jam').val(data.jam_mulai + " - " + data.jam_berakhir);
         $('#jam_presensi').val(data.mulai_absen + " - " + data.akhir_absen);
+    }
+
+    function checkQR(data) {
     }
 </script>
