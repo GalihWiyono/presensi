@@ -1,4 +1,8 @@
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+
 <script type='text/javascript'>
     console.log('script running')
 
@@ -14,7 +18,7 @@
 
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
-            fps: 30,
+            fps: 60,
             qrbox: qrboxFunction
         },
         /* verbose= */
@@ -24,9 +28,7 @@
 
     function onScanSuccess(decodedText, decodedResult) {
         const dataKelas = JSON.parse(decodedText);
-        insertData(dataKelas);
-        checkQR(dataKelas);
-        $('#presensiModal').modal('show');
+        verifyQR(dataKelas);
         $('#html5-qrcode-button-camera-stop').click();
     }
 
@@ -38,14 +40,55 @@
 
     function insertData(data) {
         $('#id').val(data.id);
-        $('#mataKuliah').val(data.mataKuliah);
+        $('#mataKuliah').val(data.matkul);
         $('#dosen').val(data.dosen);
         $('#kelas').val(data.kelas);
-        $('#hari').val(data.hari);
+        $('#pekan').val("Pekan " + data.pekan + " - " + data.tanggal);
         $('#jam').val(data.jam_mulai + " - " + data.jam_berakhir);
         $('#jam_presensi').val(data.mulai_absen + " - " + data.akhir_absen);
+
+        $("#presensiBtn").prop("disabled", checkWaktu(data));
     }
 
-    function checkQR(data) {
+    function checkWaktu(data) {
+        var format = 'hh:mm:ss'
+        var currentTime = moment(),
+            beforeTime = moment(data.mulai_absen, format),
+            afterTime = moment(data.akhir_absen, format)
+
+        if (moment(data.tanggal).isSame(moment(), 'day') && currentTime.isBetween(beforeTime, afterTime)) {
+            return false;
+        }
+        return true;
+    }
+
+    function verifyQR(data) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "/dashboard/presensi/check",
+            data: {
+                uniq: data.uniq,
+                id: data.id
+            },
+            method: 'POST',
+            success: function(response) {
+                console.log(response);
+                if (response.status == "Valid") {
+                    insertData(response.data);
+                    $('#presensiModal').modal('show');
+                } else {
+                    $('#qrInvalid').modal('show');
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
     }
 </script>

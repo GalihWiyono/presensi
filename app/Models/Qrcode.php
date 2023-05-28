@@ -5,16 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sesi extends Model
+class Qrcode extends Model
 {
     use HasFactory;
 
-    protected $table = 'sesi';
+    protected $table = 'qrcode';
 
     protected $fillable = [
+        'unique',
         'jadwal_id',
-        'sesi',
-        'tanggal'
+        'sesi_id',
+        'tanggal',
+        'mulai_absen',
+        'akhir_absen',
+        'status'
     ];
 
     public function jadwal()
@@ -22,13 +26,9 @@ class Sesi extends Model
         return $this->belongsTo(Jadwal::class);
     }
 
-    public function presensi()
+    public function sesi()
     {
-        return $this->hasMany(Presensi::class);
+        return $this->belongsTo(Sesi::class);
     }
 
-    public function qrcode()
-    {
-        return $this->hasOne(Qrcode::class);
-    }
 }

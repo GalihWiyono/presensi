@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.84.0">
-    <title>Signin Template · Bootstrap v5.0</title>
+    <title>Login - Presensi QRCode</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 
@@ -32,7 +32,7 @@
         <main class="form-signin">
             <form action="/login" method="post">
                 @csrf
-                <img class="mb-4" src="{{ 'brand/bootstrap-logo.svg' }}" alt="" width="72" height="57">
+                <img class="mb-4" src="{{ 'brand/qrscanner.png' }}" alt="" width="200" height="100">
                 <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
                 <div class="form-floating">
                     <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"

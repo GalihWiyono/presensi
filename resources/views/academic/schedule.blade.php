@@ -50,7 +50,7 @@
                         <th>Course</th>
                         <th>Class</th>
                         <th>Lecture</th>
-                        <th>Day</th>
+                        <th>Start Course Date</th>
                         <th>Class Start Time</th>
                         <th>Class End Time</th>
                         <th>Attendance Start Time</th>
@@ -65,7 +65,7 @@
                             <td>{{ $item->matkul->nama_matkul }}</td>
                             <td>{{ $item->kelas->nama_kelas }}</td>
                             <td>{{ $item->dosen->nama_dosen }}</td>
-                            <td>{{ $item->hari }}</td>
+                            <td>{{ $item->tanggal_mulai->toDateString() }}</td>
                             <td>{{ $item->jam_mulai }}</td>
                             <td>{{ $item->jam_berakhir }}</td>
                             <td>{{ $item->mulai_absen ?: '-' }}</td>
@@ -74,7 +74,7 @@
                                 <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                     data-bs-target="#editJadwalModal" data-id="{{ $item->id }}"
                                     data-matkul="{{ $item->matkul_id }}" data-kelas="{{ $item->kelas_id }}"
-                                    data-dosen="{{ $item->nip }}" data-hari="{{ $item->hari }}"
+                                    data-dosen="{{ $item->nip }}" data-tanggal-mulai="{{ $item->tanggal_mulai }}"
                                     data-jam-mulai="{{ $item->jam_mulai }}"
                                     data-jam-berakhir="{{ $item->jam_berakhir }}"><span data-feather="edit"></span></a>
                                 <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-id="{{ $item->id }}"
@@ -134,16 +134,8 @@
                                 <label for="dosen_id">Lecture</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <select class="form-select" name="hari" id="hari" required>
-                                    <option selected>Choose Day</option>
-                                    <option val="Senin">Senin</option>
-                                    <option val="Selasa">Selasa</option>
-                                    <option val="Rabu">Rabu</option>
-                                    <option val="Kamis">Kamis</option>
-                                    <option val="Jumat">Jumat</option>
-                                    <option val="Sabtu">Sabtu</option>
-                                </select>
-                                <label for="hari">Day</label>
+                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" type="date"/>
+                                <label for="tanggal_mulai">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="jam_mulai" id="jam_mulai" type="time"
@@ -215,16 +207,8 @@
                                 <label for="dosen_edit">Lecture</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <select class="form-select" name="hari" id="hari_edit" required>
-                                    <option selected>Choose Day</option>
-                                    <option val="Senin">Senin</option>
-                                    <option val="Selasa">Selasa</option>
-                                    <option val="Rabu">Rabu</option>
-                                    <option val="Kamis">Kamis</option>
-                                    <option val="Jumat">Jumat</option>
-                                    <option val="Sabtu">Sabtu</option>
-                                </select>
-                                <label for="hari">Day</label>
+                                <input class="form-control" name="tanggal_mulai"  id="tanggal_mulai_edit" type="date"/>
+                                <label for="hari">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="jam_mulai" id="jam_mulai_edit" type="time"

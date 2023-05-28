@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
-                        data-sb-validations="" value="{{ $detail->hari }}" readonly />
+                        data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}" readonly />
                     <label for="hari">Hari</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -90,7 +90,7 @@
                             @method('post')
                             <select class="form-select" id="sesiSelect">
                                 @foreach ($sesi as $item)
-                                    <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Sesi {{ $item->sesi }} -
+                                    <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan {{ $item->sesi }} -
                                         {{ $item->tanggal }}
                                     </option>
                                 @endforeach

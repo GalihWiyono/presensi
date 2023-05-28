@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jadwal;
 use App\Models\Mahasiswa;
 use App\Models\Presensi;
+use App\Models\Qrcode;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class PresensiController extends Controller
         $statusPresensi = "Hadir";
         $nim = auth()->user()->mahasiswa->nim;
 
-        if($waktuPresensi > $request->akhir_absen){
+        if ($waktuPresensi > $request->akhir_absen) {
             $statusPresensi = "Terlambat";
         }
 
@@ -64,10 +66,42 @@ class PresensiController extends Controller
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi Gagal, Error: ".json_encode($th->getMessage(), true),
+                "message" => "Presensi Gagal, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
+    }
+
+    public function checkPresensi(Request $request)
+    {
+        if ($request->ajax()) {
+            $status = "Invalid";
+
+            $mahasiswa = Mahasiswa::where('user_id', auth()->user()->id)->first();
+            $dataQR = Qrcode::find($request->id);
+            $dataJadwal = $dataQR->jadwal;
+
+            if($mahasiswa->kelas_id === $dataJadwal->kelas_id && $dataQR->status == "Active") {
+                $status = "Valid";
+            }
+
+            $dataResponse = [
+                'id' => $dataJadwal->id,
+                'matkul' => $dataJadwal->matkul->nama_matkul,
+                'kelas' => $dataJadwal->kelas->nama_kelas,
+                'dosen' => $dataJadwal->dosen->nama_dosen,
+                'jam_mulai' => $dataJadwal->jam_mulai,
+                'jam_berakhir' => $dataJadwal->jam_berakhir,
+                'pekan' => $dataQR->sesi->sesi,
+                'tanggal' => $dataQR->tanggal,
+                'mulai_absen' => $dataQR->mulai_absen,
+                'akhir_absen' => $dataQR->akhir_absen,
+            ];
+
+            $objectResponse = (object)$dataResponse;
+
+            return response()->json(['status'=>$status, 'data' => $objectResponse]);
+        } 
     }
 
     /**

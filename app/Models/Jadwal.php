@@ -15,12 +15,14 @@ class Jadwal extends Model
         'matkul_id',
         'kelas_id',
         'nip',
-        'hari',
+        'tanggal_mulai',
         'jam_mulai',
         'jam_berakhir',
         'mulai_absen',
         'akhir_absen'
     ];
+
+    protected $dates = ['created_at', 'updated_at', 'tanggal_mulai'];
 
     public function dosen()
     {
@@ -41,4 +43,9 @@ class Jadwal extends Model
     {
         return $this->hasMany(Sesi::class);
     } 
+
+    public function qrcode()
+    {
+        return $this->hasMany(Qrcode::class);
+    }
 }

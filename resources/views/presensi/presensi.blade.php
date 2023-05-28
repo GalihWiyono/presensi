@@ -57,9 +57,9 @@
                             <label for="kelas">Kelas</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input class="form-control" name="hari" id="hari" type="text" value=""
+                            <input class="form-control" name="pekan" id="pekan" type="text" value=""
                                 readonly />
-                            <label for="hari">Hari</label>
+                            <label for="Pekan">Pekan</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="jam" id="jam" type="text" value=""
@@ -74,7 +74,7 @@
                     </div>
                     <div class="modal-footer">
                         <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
-                        <button type="submit" class="btn btn-primary">Presensi</button>
+                        <button type="submit" id="presensiBtn" class="btn btn-primary">Presensi</button>
                     </div>
                 </form>
             </div>
@@ -113,6 +113,20 @@
                 <div class="modal-body">
                     <h6 class="text-justify">Lokasi anda berada diluar lokasi kampus yang sudah ditentukan,
                         silakan pergi ke lokasi agar dapat menggunakan fitur yang ada pada website ini!</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="qrInvalid" tabindex="-1" aria-labelledby="qrInvalid" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">QRCode Invalid</h5>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-justify">Anda tidak terdaftar pada kelas ini atau QRCode invalid, periksa
+                        kembali QRCode yang akan anda scan!</h6>
                 </div>
             </div>
         </div>

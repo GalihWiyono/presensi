@@ -15,14 +15,14 @@
         let matkul = $(this).attr('data-matkul');
         let kelas = $(this).attr('data-kelas');
         let dosen = $(this).attr('data-dosen');
-        let hari = $(this).attr('data-hari');
+        let tanggal_mulai = $(this).attr('data-tanggal-mulai');
         let jam_mulai = $(this).attr('data-jam-mulai');
         let jam_berakhir = $(this).attr('data-jam-berakhir');
         $('#id_edit').val(id);
         $('#matkul_edit').val(matkul);
         $('#kelas_edit').val(kelas);
         $('#dosen_edit').val(dosen);
-        $('#hari_edit').val(hari);
+        $('#tanggal_mulai_edit').val(tanggal_mulai);
         $('#jam_mulai_edit').val(jam_mulai);
         $('#jam_berakhir_edit').val(jam_berakhir);
 

@@ -33,6 +33,7 @@ Route::get('/dashboard', [DashboardController::class, "index"])->name('dashboard
 //presensi
 Route::get('/dashboard/presensi', [PresensiController::class, "index"])->middleware('auth');
 Route::post('/dashboard/presensi/store', [PresensiController::class, "store"])->middleware('auth');
+Route::post('/dashboard/presensi/check', [PresensiController::class, "checkPresensi"])->middleware('auth');
 
 
 //database

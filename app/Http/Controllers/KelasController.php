@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jadwal;
 use App\Models\Sesi;
 use App\Models\Presensi;
+use App\Models\Qrcode as ModelsQrcode;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -23,42 +24,49 @@ class KelasController extends Controller
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $jadwal_kelas = Jadwal::find($id);
-        $sesi = Sesi::where(['jadwal_id' => $id])->get();
+        $allSesi = Sesi::where(['jadwal_id' => $id])->get();
 
+        //mendapatkan sesi dengan status belum ketika awal membuka (sesiRequest 0 hanya untuk trigger)
         if ($sesiRequest == 0) {
-            $sesiRequest = $sesi->where('status', "belum")->first()->sesi;
+            $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
         }
 
-        $presensi = $sesi->where('sesi', $sesiRequest)->first()->presensi->sortBy('nim');
-        $qrcode = $this->generate($jadwal_kelas);
+        $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
+        $presensi = $activeSesiData->presensi->sortBy('nim');
+        
+        $qrcode = "";
+        //generate QRCode
+        if($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen) {
+            $qrcode = $this->generate($jadwal_kelas,$activeSesiData);
+        }
 
         return view('kelas/detail_kelas', [
             'detail' => $jadwal_kelas,
-            'sesi' => $sesi,
+            'sesi' => $allSesi,
             'absen' => $presensi,
             'qrcode' => $qrcode,
             "sesiNow" => $sesiRequest
         ]);
     }
 
-    public function generate($jadwal_kelas)
+    public function generate($jadwal_kelas, $sesi)
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $random = md5(uniqid(rand(), true));
-        $dataKelas = [
-            'uniq' => $random,
-            'id' => $jadwal_kelas->id,
-            'mataKuliah' => $jadwal_kelas->matkul->nama_matkul,
-            'kelas' => $jadwal_kelas->kelas->nama_kelas,
-            'dosen' => $jadwal_kelas->dosen->nama_dosen,
-            'hari' => $jadwal_kelas->hari,
-            'jam_mulai' => $jadwal_kelas->jam_mulai,
-            'jam_berakhir' => $jadwal_kelas->jam_berakhir,
+        $dataQR = ModelsQrcode::firstOrCreate([
+            'jadwal_id' => $jadwal_kelas->id,
+            'sesi_id' => $sesi->id,
+        ],[
+            'unique' => $random,
+            'jadwal_id' => $jadwal_kelas->id,
+            'sesi_id' => $sesi->id,
+            'tanggal' => $sesi->tanggal,
             'mulai_absen' => $jadwal_kelas->mulai_absen,
-            'akhir_absen' => $jadwal_kelas->akhir_absen
-        ];
+            'akhir_absen' => $jadwal_kelas->akhir_absen,
+            'status' => 'Active'
+        ]);
 
-        $jsonData = json_encode($dataKelas);
+        $jsonData = json_encode($dataQR);
         $qrcode = QrCode::size('300')->generate($jsonData);
 
         return $qrcode;

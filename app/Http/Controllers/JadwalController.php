@@ -6,6 +6,7 @@ use App\Models\Dosen;
 use App\Models\Jadwal;
 use App\Models\Kelas;
 use App\Models\MataKuliah;
+use App\Models\Sesi;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -20,7 +21,7 @@ class JadwalController extends Controller
     public function index()
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        
+
         $jadwal = Jadwal::with(['matkul', 'dosen', 'kelas'])->latest();
         $matkul = new MataKuliah;
         $kelas = new Kelas;
@@ -28,30 +29,30 @@ class JadwalController extends Controller
         $filter = "";
 
         //get ID for filter
-        if(request('filter') == "Course") {
+        if (request('filter') == "Course") {
             $filter = $matkul->where('nama_matkul', 'like', '%' . request('search') . '%')->first()->id;
         }
 
-        if(request('filter') == "Class") {
+        if (request('filter') == "Class") {
             $filter = $kelas->where('nama_kelas', 'like', '%' . request('search') . '%')->first()->id;
         }
 
-        if(request('filter') == "Lecture") {
+        if (request('filter') == "Lecture") {
             $filter = $dosen->where('nama_dosen', 'like', '%' . request('search') . '%')->first()->nip;
         }
 
         if (request('search')) {
-            $jadwal->when(request('filter') == 'Course', function ($q) use($filter) {
-                return $q->where('matkul_id',$filter);
+            $jadwal->when(request('filter') == 'Course', function ($q) use ($filter) {
+                return $q->where('matkul_id', $filter);
             });
-            $jadwal->when(request('filter') == 'Class', function ($q) use($filter) {
-                return $q->where('kelas_id',$filter);
+            $jadwal->when(request('filter') == 'Class', function ($q) use ($filter) {
+                return $q->where('kelas_id', $filter);
             });
-            $jadwal->when(request('filter') == 'Lecture', function ($q) use($filter) {
-                return $q->where('nip',$filter);
+            $jadwal->when(request('filter') == 'Lecture', function ($q) use ($filter) {
+                return $q->where('nip', $filter);
             });
-            $jadwal->when(request('filter') == 'Course', function ($q) use($filter) {
-                return $q->where('matkul_id',$filter);
+            $jadwal->when(request('filter') == 'Course', function ($q) use ($filter) {
+                return $q->where('matkul_id', $filter);
             });
             $jadwal->when(request('filter') == 'Day', function ($q) {
                 return $q->where('hari', request('search'));
@@ -88,12 +89,18 @@ class JadwalController extends Controller
                 "matkul_id" => $request->matkul_id,
                 'kelas_id' => $request->kelas_id,
                 'nip' => $request->dosen_id,
-                'hari' => $request->hari,
+                'tanggal_mulai' => $request->tanggal_mulai,
                 'jam_mulai' => $request->jam_mulai,
                 'jam_berakhir' => $request->jam_berakhir
             ]);
 
-            if($jadwal->save()) {
+            if ($jadwal->save()) {
+                $jadwal = $jadwal->fresh();
+
+                for ($i=1; $i<19 ; $i++) { 
+                    $this->generateSesi($jadwal, $i);
+                }
+
                 return back()->with([
                     "message" => "Berhasil membuat data jadwal",
                     "status" => true,
@@ -105,6 +112,16 @@ class JadwalController extends Controller
                 "status" => false,
             ]);
         }
+    }
+
+    public function generateSesi($jadwal, $sesi)
+    {
+        $sesi = Sesi::create([
+            'jadwal_id' => $jadwal->id,
+            'sesi' => $sesi,
+            'tanggal' => $jadwal->tanggal_mulai->addDays(($sesi-1)*7),
+            'status' => 'Belum'
+        ]);
     }
 
     /**
@@ -168,7 +185,7 @@ class JadwalController extends Controller
     public function destroy(Request $request)
     {
         try {
-            if(Jadwal::find($request->id)->delete()) {
+            if (Jadwal::find($request->id)->delete()) {
                 return back()->with([
                     "message" => "Berhasil menghapus data jadwal",
                     "status" => true,
