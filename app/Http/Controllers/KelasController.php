@@ -8,6 +8,7 @@ use App\Models\Presensi;
 use App\Models\Qrcode as ModelsQrcode;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -57,7 +58,7 @@ class KelasController extends Controller
             'jadwal_id' => $jadwal_kelas->id,
             'sesi_id' => $sesi->id,
         ],[
-            'unique' => $random,
+            'unique' => Crypt::encryptString($random),
             'jadwal_id' => $jadwal_kelas->id,
             'sesi_id' => $sesi->id,
             'tanggal' => $sesi->tanggal,

@@ -73,8 +73,8 @@
         $.ajax({
             url: "/dashboard/presensi/check",
             data: {
-                uniq: data.uniq,
-                id: data.id
+                id: data.id,
+                unique: data.unique,
             },
             method: 'POST',
             success: function(response) {

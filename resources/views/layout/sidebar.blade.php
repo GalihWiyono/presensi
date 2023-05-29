@@ -90,6 +90,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/jadwal">
+                            <span data-feather="hard-drive"></span>
+                            Kelas
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/presensi*') ? 'active' : '' }}"
                             href="/dashboard/presensi">
                             <span data-feather="camera"></span>

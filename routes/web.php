@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\JadwalMahasiswaController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MahasiswaController;
@@ -35,6 +36,8 @@ Route::get('/dashboard/presensi', [PresensiController::class, "index"])->middlew
 Route::post('/dashboard/presensi/store', [PresensiController::class, "store"])->middleware('auth');
 Route::post('/dashboard/presensi/check', [PresensiController::class, "checkPresensi"])->middleware('auth');
 
+//jadwal mahasiswa
+Route::get('/dashboard/jadwal', [JadwalMahasiswaController::class, "index"])->middleware('auth');
 
 //database
 Route::get('/dashboard/database', [DatabaseController::class, "index"])->middleware("auth");

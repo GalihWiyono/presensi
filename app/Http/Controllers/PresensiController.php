@@ -8,7 +8,9 @@ use App\Models\Presensi;
 use App\Models\Qrcode;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 
 class PresensiController extends Controller
@@ -76,12 +78,22 @@ class PresensiController extends Controller
     {
         if ($request->ajax()) {
             $status = "Invalid";
+            $errorMessage = "";
 
             $mahasiswa = Mahasiswa::where('user_id', auth()->user()->id)->first();
-            $dataQR = Qrcode::find($request->id);
-            $dataJadwal = $dataQR->jadwal;
+            $getData = Qrcode::find($request->id);
+            $dataJadwal = $getData->jadwal;
+            $QRCodeUnique = $request->unique;
+            $dataUnique = $getData->unique;
 
-            if($mahasiswa->kelas_id === $dataJadwal->kelas_id && $dataQR->status == "Active") {
+            try {
+                $QRCodeUnique = Crypt::decryptString($QRCodeUnique);
+                $dataUnique = Crypt::decryptString($dataUnique);
+            } catch (DecryptException $e) {
+                $errorMessage = "Decrypt Failed, Error : " + $e;
+            }
+
+            if($mahasiswa->kelas_id === $dataJadwal->kelas_id && $QRCodeUnique == $dataUnique && $getData->status == "Active") {
                 $status = "Valid";
             }
 
@@ -92,15 +104,15 @@ class PresensiController extends Controller
                 'dosen' => $dataJadwal->dosen->nama_dosen,
                 'jam_mulai' => $dataJadwal->jam_mulai,
                 'jam_berakhir' => $dataJadwal->jam_berakhir,
-                'pekan' => $dataQR->sesi->sesi,
-                'tanggal' => $dataQR->tanggal,
-                'mulai_absen' => $dataQR->mulai_absen,
-                'akhir_absen' => $dataQR->akhir_absen,
+                'pekan' => $getData->sesi->sesi,
+                'tanggal' => $getData->tanggal,
+                'mulai_absen' => $getData->mulai_absen,
+                'akhir_absen' => $getData->akhir_absen,
             ];
 
             $objectResponse = (object)$dataResponse;
 
-            return response()->json(['status'=>$status, 'data' => $objectResponse]);
+            return response()->json(['status'=>$status, 'data' => $objectResponse, 'errorMessage' => $errorMessage]);
         } 
     }
 
