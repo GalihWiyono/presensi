@@ -44,28 +44,38 @@ class PresensiController extends Controller
      */
     public function store(Request $request)
     {
-        $waktuPresensi = Carbon::now()->format('H:i:s');
-        $statusPresensi = "Hadir";
-        $nim = auth()->user()->mahasiswa->nim;
-
-        if ($waktuPresensi > $request->akhir_absen) {
-            $statusPresensi = "Terlambat";
-        }
-
-        $presensi = new Presensi([
-            'jadwal_id' => $request->id,
-            'nim' => $nim,
-            'waktu_presensi' => $waktuPresensi,
-            'status' => $statusPresensi
-        ]);
-
+        Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
         try {
-            if ($presensi->save()) {
+            $waktuPresensi = Carbon::now()->format('H:i:s');
+            $statusPresensi = "Hadir";
+            $nim = auth()->user()->mahasiswa->nim;
+
+            if ($waktuPresensi > $request->akhir_absen) {
+                $statusPresensi = "Terlambat";
+            }
+
+            $presensi = Presensi::firstOrCreate([
+                'nim' => $nim,
+                'sesi_id' => $request->sesi_id
+            ], [
+                'sesi_id' => $request->sesi_id,
+                'nim' => $nim,
+                'waktu_presensi' => $waktuPresensi,
+                'status' => $statusPresensi
+            ]);
+
+            if ($presensi->wasRecentlyCreated) {
                 return back()->with([
                     "message" => "Presensi berhasil!",
                     "status" => true,
                 ]);
+            } else {
+                return back()->with([
+                    "message" => "Anda sudah melakukan presensi untuk jadwal di pekan ini!",
+                    "status" => false,
+                ]);
             }
+
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Presensi Gagal, Error: " . json_encode($th->getMessage(), true),
@@ -76,6 +86,7 @@ class PresensiController extends Controller
 
     public function checkPresensi(Request $request)
     {
+        Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
         if ($request->ajax()) {
             $status = "Invalid";
             $errorMessage = "";
@@ -93,12 +104,13 @@ class PresensiController extends Controller
                 $errorMessage = "Decrypt Failed, Error : " + $e;
             }
 
-            if($mahasiswa->kelas_id === $dataJadwal->kelas_id && $QRCodeUnique == $dataUnique && $getData->status == "Active") {
+            if ($mahasiswa->kelas_id === $dataJadwal->kelas_id && $QRCodeUnique == $dataUnique && $getData->status == "Active") {
                 $status = "Valid";
             }
 
             $dataResponse = [
                 'id' => $dataJadwal->id,
+                'sesi_id' => $getData->sesi_id,
                 'matkul' => $dataJadwal->matkul->nama_matkul,
                 'kelas' => $dataJadwal->kelas->nama_kelas,
                 'dosen' => $dataJadwal->dosen->nama_dosen,
@@ -112,8 +124,8 @@ class PresensiController extends Controller
 
             $objectResponse = (object)$dataResponse;
 
-            return response()->json(['status'=>$status, 'data' => $objectResponse, 'errorMessage' => $errorMessage]);
-        } 
+            return response()->json(['status' => $status, 'data' => $objectResponse, 'errorMessage' => $errorMessage]);
+        }
     }
 
     /**

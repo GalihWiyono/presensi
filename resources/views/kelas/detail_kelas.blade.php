@@ -40,7 +40,8 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
-                        data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}" readonly />
+                        data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
+                        readonly />
                     <label for="hari">Hari</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -73,9 +74,25 @@
                 </form>
                 <div class="mb-3">
                     <button href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
-                        data-bs-target="#qrModal" {!! $detail->mulai_absen == null || $detail->akhir_absen == null ? 'disabled' : '' !!}>Generate QRCode</button>
+                        data-bs-target="#qrModal" {!! $detail->mulai_absen == null || $detail->akhir_absen == null || $activeSesi->status != 'Belum'
+                            ? 'disabled'
+                            : '' !!}>Generate QRCode</button>
                 </div>
                 {{-- </form> --}}
+                <div class="mb-3">
+                    <form action="/dashboard/kelas/tutup" method="POST">
+                        @csrf
+                        <div class="form-floating mb-3 col-lg-5">
+                            <input class="form-control" name="jadwal_id" id="jadwal_id" type="hidden" placeholder="Jadwal"
+                                value="{{ $detail->id }}" readonly />
+                        </div>
+                        <div class="form-floating mb-3 col-lg-5">
+                            <input class="form-control" name="sesi_id" id="sesi_id" type="hidden" placeholder="Sesi"
+                                value="{{ $activeSesi->id }}" readonly />
+                        </div>
+                        <button class="btn btn-warning py-3 w-100" {!! $activeSesi->status == 'Belum' ? '' : 'disabled' !!}>Tutup Pekan</button>
+                    </form>
+                </div>
             </div>
 
             {{-- Daftar Hadir --}}
@@ -90,7 +107,8 @@
                             @method('post')
                             <select class="form-select" id="sesiSelect">
                                 @foreach ($sesi as $item)
-                                    <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan {{ $item->sesi }} -
+                                    <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan {{ $item->sesi }}
+                                        -
                                         {{ $item->tanggal }}
                                     </option>
                                 @endforeach
@@ -117,7 +135,13 @@
                                     <th>{{ $loop->index + 1 }}</th>
                                     <td>{{ $item->nim }}</td>
                                     <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
-                                    <td>{{ $item->waktu_presensi }}</td>
+                                    <td>
+                                        @if ($item->status == "Hadir")
+                                            {{ $item->waktu_presensi }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>{{ $item->status }}</td>
                                     <td><a class="btn btn-secondary btn-sm"
                                             href="{{ url('dashboard/kelas/' . $item->id . '') }}">Check</a></td>

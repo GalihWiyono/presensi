@@ -12,11 +12,13 @@ class Presensi extends Model
     protected $table = 'presensi';
     
     protected $fillable = [
-        'jadwal_id',
+        'sesi_id',
         'nim',
         'waktu_presensi',
         'status'
     ];
+
+    public $timestamps = false;
 
     public function sesi()
     {

@@ -42,6 +42,10 @@
                                 readonly />
                         </div>
                         <div class="form-floating mb-3">
+                            <input class="form-control" name="sesi_id" id="sesi_id" type="hidden" value=""
+                                readonly />
+                        </div>
+                        <div class="form-floating mb-3">
                             <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
                                 value=""readonly />
                             <label for="mataKuliah">Mata Kuliah</label>

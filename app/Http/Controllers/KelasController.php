@@ -46,7 +46,8 @@ class KelasController extends Controller
             'sesi' => $allSesi,
             'absen' => $presensi,
             'qrcode' => $qrcode,
-            "sesiNow" => $sesiRequest
+            "sesiNow" => $sesiRequest,
+            "activeSesi" => $activeSesiData
         ]);
     }
 
@@ -122,6 +123,39 @@ class KelasController extends Controller
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Presensi dengan nim {$request->nim} Gagal, Error: ".json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function closePekan(Request $request)
+    {
+        Gate::allows('isDosen') ? Response::allow() : abort(403);
+        //tutup sesi
+        try {
+            $sesi = Sesi::where('id', $request->sesi_id);
+            $affectedRow = $sesi->update(['status' => 'Selesai']);
+    
+            $jadwal = Jadwal::find($request->jadwal_id);
+            $anggotaKelas = $jadwal->kelas->anggota_kelas;
+            foreach ($anggotaKelas as $mahasiswa) {
+                $absen = Presensi::firstOrCreate([
+                    'nim' => $mahasiswa->nim,
+                    'sesi_id' => $request->sesi_id
+                ],[
+                    'sesi_id' => $request->sesi_id,
+                    'nim' => $mahasiswa->nim,
+                    'status' => "Tidak Hadir"
+                ]);
+            };
+    
+            return back()->with([
+                "message" => "Tutup pekan berhasil!",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Tutup pekan gagal, Error: ".json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

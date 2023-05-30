@@ -90,9 +90,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/jadwal">
-                            <span data-feather="hard-drive"></span>
-                            Kelas
+                        <a class="nav-link {{ Request::is('dashboard/jadwal*') ? 'active' : '' }}" href="/dashboard/jadwal">
+                            <span data-feather="file-text"></span>
+                            Jadwal
                         </a>
                     </li>
                     <li class="nav-item">

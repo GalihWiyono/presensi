@@ -38,6 +38,8 @@ Route::post('/dashboard/presensi/check', [PresensiController::class, "checkPrese
 
 //jadwal mahasiswa
 Route::get('/dashboard/jadwal', [JadwalMahasiswaController::class, "index"])->middleware('auth');
+Route::get('/dashboard/jadwal/{id}', [JadwalMahasiswaController::class, "show"])->middleware("auth");
+
 
 //database
 Route::get('/dashboard/database', [DatabaseController::class, "index"])->middleware("auth");
@@ -85,6 +87,7 @@ Route::get('/dashboard/kelas/{id}', [KelasController::class, "show"])->middlewar
 Route::post('/dashboard/kelas/{id}/generate', [KelasController::class, 'generateQRCode'])->middleware("auth");
 Route::put('/dashboard/kelas/{id}/update_jam', [KelasController::class, 'updateWaktuAbsen'])->middleware("auth");
 Route::post('/dashboard/kelas/{id}/sesi', [KelasController::class, 'gantiSesi'])->middleware("auth");
+Route::post('/dashboard/kelas/tutup', [KelasController::class, 'closePekan'])->middleware("auth");
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

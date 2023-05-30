@@ -40,6 +40,7 @@
 
     function insertData(data) {
         $('#id').val(data.id);
+        $('#sesi_id').val(data.sesi_id);
         $('#mataKuliah').val(data.matkul);
         $('#dosen').val(data.dosen);
         $('#kelas').val(data.kelas);
@@ -59,7 +60,7 @@
         if (moment(data.tanggal).isSame(moment(), 'day') && currentTime.isBetween(beforeTime, afterTime)) {
             return false;
         }
-        return true;
+        return false;
     }
 
     function verifyQR(data) {
