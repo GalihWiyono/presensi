@@ -95,6 +95,9 @@
                                         @foreach ($presensi as $item2)
                                             @if ($item->id == $item2->sesi_id)
                                                 {{ $item2->waktu_presensi }}
+                                                @if ($item2->status == 'Tidak Hadir' || $item2->status == "Izin")
+                                                    -
+                                                @endif
                                             @endif
                                         @endforeach
                                     </td>

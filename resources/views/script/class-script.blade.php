@@ -1,24 +1,5 @@
 <script type='text/javascript'>
-    console.log("script class running");
-
-    $(document).on('click', '#deleteBtn', function() {
-        let id = $(this).attr('data-id');
-        let kelas = $(this).attr('data-kelas');
-        $('#nama_kelas_delete').val(kelas);
-        $('#id_kelas_delete').val(id);
-    });
-
-    $(document).on('click', '#editBtn', function() {
-        let id = $(this).attr('data-id');
-        let kelas = $(this).attr('data-kelas');
-        $('#id_kelas').val(id)
-        $('#nama_kelas').val(kelas);
-        $('#class').attr('action', '/dashboard/academic/class/' + id);
-
-        $("#title-class").text("Edit Class");
-        $("#send-class").text("Edit Class");
-        $("#send-class").attr('class', 'btn btn-warning');
-    });
+    console.log("script detail class running");
 
     $(document).on('click', '#reset-class', function() {
         $('#class').attr('action', '/dashboard/academic/class/');
@@ -26,4 +7,10 @@
         $("#send-class").text("Add Class");
         $("#send-class").attr('class', 'btn btn-primary');
     });
+
+    $(document).on('click', '#presensiBtn', function() {
+        let nim = $(this).attr('data-nim');
+        $('#presensiModal').modal('show');
+    });
+
 </script>

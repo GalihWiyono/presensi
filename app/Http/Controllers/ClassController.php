@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnggotaKelas;
+use App\Models\Jadwal;
 use App\Models\Kelas;
+use App\Models\Mahasiswa;
+use App\Models\Presensi;
+use App\Models\Sesi;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -139,5 +143,25 @@ class ClassController extends Controller
                 "status" => false,
             ]);
         }
+    }
+
+    public function detail($id, $nim)
+    {
+        Gate::allows('isAdmin') ? Response::allow() : abort(403);
+        $sesi = new Sesi;
+        $jadwal = Jadwal::with('matkul')->where('kelas_id', $id)->get();
+        $getData = $sesi->where('jadwal_id', $jadwal->first()->id);
+        
+        if(request('kelas')) {
+           $getData = $sesi->where('jadwal_id', request('kelas'));
+        }
+
+        $presensi = Presensi::where('nim', $nim)->get();
+        return view('academic/detail_mahasiswa', [
+            'jadwal' => $jadwal,
+            'sesi' => $getData->paginate(7)->withQueryString(),
+            'presensi' => $presensi,
+            'mahasiswa' => $presensi->first()->mahasiswa
+        ]);
     }
 }

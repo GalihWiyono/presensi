@@ -49,9 +49,7 @@
                         data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}" readonly />
                     <label for="jam">Jam</label>
                 </div>
-                <form action="/dashboard/kelas/{{ $detail->id }}/update_jam" method="POST">
-                    @csrf
-                    @method('put')
+                <form action="" method="POST">
                     <div class="row gx-1">
                         <div class="form-floating mb-3 col-lg-5">
                             <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
@@ -101,11 +99,13 @@
                     <div class="col-6">
                         <h3>Daftar Hadir</h3>
                     </div>
-                    <div class="col-6">
-                        <form action="/dashboard/kelas/{{ $detail->id }}/sesi" method="POST">
-                            @csrf
-                            @method('post')
-                            <select class="form-select" id="sesiSelect">
+                    <div class="col-1">
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPresensiModal"><span
+                                class="feather-24" data-feather="plus-circle"></a>
+                    </div>
+                    <div class="col-5">
+                        <form action="/dashboard/kelas/{{ $detail->id }}" method="GET">
+                            <select class="form-select" id="searchPekan" name="searchPekan">
                                 @foreach ($sesi as $item)
                                     <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan {{ $item->sesi }}
                                         -
@@ -132,39 +132,33 @@
                         <tbody>
                             @foreach ($absen as $item)
                                 <tr>
-                                    <th>{{ $loop->index + 1 }}</th>
+                                    <th>{{ ($absen->currentpage() - 1) * $absen->perpage() + $loop->index + 1 }}</th>
                                     <td>{{ $item->nim }}</td>
                                     <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
                                     <td>
-                                        @if ($item->status == "Hadir")
+                                        @if ($item->status == 'Hadir' || $item->status == 'Terlambat')
                                             {{ $item->waktu_presensi }}
                                         @else
                                             -
                                         @endif
                                     </td>
                                     <td>{{ $item->status }}</td>
-                                    <td><a class="btn btn-secondary btn-sm"
-                                            href="{{ url('dashboard/kelas/' . $item->id . '') }}">Check</a></td>
+                                    <td><button type="button" class="btn btn-warning btn-sm" id="editPresensi"
+                                            data-bs-toggle="modal" data-bs-target="#editPresensiModal"
+                                            data-nim="{{ $item->nim }}"
+                                            data-nama="{{ $item->mahasiswa->nama_mahasiswa }}"
+                                            data-sesi="{{ $item->sesi_id }}" data-status="{{ $item->status }}"
+                                            data-waktu={{ $item->waktu_presensi }}><span data-feather="edit">
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                {{-- <div class="row gx-1">
-                    <form action="/dashboard/kelas/{{ $detail->id }}/presence" method="POST">
-                        @csrf
-                        <input class="form-control" id="jadwal_id" type="hidden" name='jadwal_id'
-                            value="{{ $detail->id }}" />
-                        <div class="form-floating mb-3 col-lg-10">
-                            <input class="form-control" id="nim" type="input" placeholder="Jam Absen" name='nim'
-                                value="" />
-                            <label for="nim">NIM</label>
-                        </div>
-                        <div class="mb-3 col-lg-2 ">
-                            <button class="btn btn-primary w-100 py-3 fs-6" type="submit">Submit</button>
-                        </div>
-                    </form>
-                </div> --}}
+                <div class="d-flex justify-content-center">
+                    {{ $absen->links() }}
+                </div>
             </div>
         </div>
     </div>
@@ -222,6 +216,142 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Edit Presensi --}}
+    <div class="modal fade" id="editPresensiModal" tabindex="-1" aria-labelledby="editPresensiModal"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/dashboard/kelas/{{ $detail->id }}/edit_presensi" method="POST">
+                    @csrf
+                    @method('put')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrModal">Edit Presensi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="sesi_id" id="sesi_edit" type="hidden"
+                                placeholder="Sesi" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nim" id="nim_edit" type="text" placeholder="NIM"
+                                readonly />
+                            <label for="nim">NIM</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa_edit" type="text"
+                                placeholder="Nama Mahasiswa" readonly />
+                            <label for="nama_mahasiswa">Nama Mahasiswa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="status" id="status_edit">
+                                <option value="Hadir">Hadir</option>
+                                <option value="Terlambat">Terlambat</option>
+                                <option value="Izin">Izin</option>
+                                <option value="Tidak Hadir">Tidak Hadir</option>
+                            </select>
+                            <label for="nim">Status</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="waktu_presensi_hidden" type="hidden"
+                                placeholder="Waktu Presensi" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="waktu_presensi" id="waktu_presensi_edit" type="time"
+                                placeholder="Waktu Presensi" required />
+                            <label for="waktu_presensi">Waktu Presensi</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Tambah Presensi --}}
+    <div class="modal fade" id="addPresensiModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        aria-labelledby="addPresensiModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrModal">Tambah Presensi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" id="kelas_id_search" value="{{ $detail->kelas_id }}" type="hidden" />
+                    <input class="form-control" id="sesi_id_search" value="{{ $activeSesi->id }}" type="hidden" />
+                    <form action="">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="nim_search" type="text" placeholder="NIM"
+                                autocomplete="off" />
+                            <label for="nim">NIM</label>
+                            <div class="invalid-feedback">
+                                <p id="messageError">Error Message</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" id="searchNim">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="showDataMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="showDataMahasiswaModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/dashboard/kelas/{{ $detail->id }}/presensi" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrModal">Tambah Presensi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nim" id="nim_show" type="text" placeholder="NIM"
+                                readonly />
+                            <label for="nim">NIM</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nama_mahasiswa" id="nama_show" type="text"
+                                placeholder="Nama Mahasiswa" readonly />
+                            <label for="nim">Nama Mahasiswa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="kelas" id="kelas_show" type="text" placeholder="NIM"
+                                readonly />
+                            <label for="nim">Kelas</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="status" id="status_show">
+                                <option value="Hadir">Hadir</option>
+                                <option value="Terlambat">Terlambat</option>
+                                <option value="Izin">Izin</option>
+                                <option value="Tidak Hadir">Tidak Hadir</option>
+                            </select>
+                            <label for="nim">Status</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="waktu_presensi" id="waktu_presensi_show" type="time"
+                                placeholder="Waktu Presensi" required />
+                            <label for="waktu_presensi">Waktu Presensi</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
                 </form>
             </div>

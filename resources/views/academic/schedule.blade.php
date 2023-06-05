@@ -24,11 +24,9 @@
                 <form action="/dashboard/academic/schedule">
                     <div class="input-group">
                         <select class="form-select" name="filter" id="filter" value="{{ request('filter') }}">
-                            <option>Filter</option>
                             <option value="Course" {!! (request('filter') == 'Course') ? 'selected' : "" !!}>Course</option>
                             <option value="Class" {!! (request('filter') == 'Class') ? 'selected' : "" !!}>Class</option>
                             <option value="Lecture" {!! (request('filter') == 'Lecture') ? 'selected' : "" !!}>Lecture</option>
-                            <option value="Day" {!! (request('filter') == 'Day') ? 'selected' : "" !!}>Day</option>
                         </select>
                         <input type="search" id="search" name="search" class="form-control" placeholder="Search"
                             value="{{ request('search') }}" />

@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Detail Class: {{ $kelas->nama_kelas }}</h1>
+        <h1 class="h2">Detail Mahasiswa: {{ $mahasiswa->nama_mahasiswa }}</h1>
     </div>
 
     @if (session()->has('message'))
@@ -21,66 +21,61 @@
     <div class="container">
         <div class="d-flex col-8 justify-content-between mb-3">
             <div class="">
-                <form action="/dashboard/academic/class">
-                    <div class="input-group">
-                        <input type="search" id="search" name="search" class="form-control"
-                            placeholder="Search Student" value="{{ request('search') }}" />
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                <form action="/dashboard/academic/class/{{ $mahasiswa->kelas_id }}/{{ $mahasiswa->nim }}" method="GET">
+                    <select class="form-select" id="kelas" name="kelas">
+                        @foreach ($jadwal as $item)
+                            <option value="{{ $item->id }}" {!! ($item->id == request('kelas')) ? 'selected' : "" !!}>{{ $item->matkul->nama_matkul }}</option>
+                        @endforeach
+                    </select>
                 </form>
             </div>
         </div>
         <div class="row">
-            <div class="div col-lg-8 col-sm-12 table-responsive">
+            <div class="div col-lg-12 col-sm-12 table-responsive">
                 <table class="table table-striped text-center align-middle">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>NIM</th>
-                            <th>Nama Mahasiswa</th>
-                            <th>Tanggal Lahir</th>
+                            <th>Pekan</th>
+                            <th>Tanggal</th>
+                            <th>Waktu Presensi</th>
+                            <th>Status Presensi</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($anggota as $item)
+                        @foreach ($sesi as $item)
                             <tr>
-                                <th>{{ ($anggota->currentpage() - 1) * $anggota->perpage() + $loop->index + 1 }}</th>
-                                <td>{{ $item->nim }}</td>
-                                <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
-                                <td>{{ $item->mahasiswa->tanggal_lahir }}</td>
+                                <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
+                                <td>Pekan {{ $item->sesi }}</td>
+                                <td>{{ $item->tanggal }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm px-3" href="/dashboard/academic/class/{{ $item->kelas_id }}/{{ $item->nim }}"><span data-feather="eye"></span></a>
+                                    @foreach ($presensi as $item2)
+                                        @if ($item->id == $item2->sesi_id)
+                                            {{ $item2->waktu_presensi }}
+                                            @if ($item2->status == 'Tidak Hadir' || $item2->status == 'Izin')
+                                                -
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach ($presensi as $item2)
+                                        @if ($item->id == $item2->sesi_id)
+                                            {{ $item2->status }}
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm px-3"><span data-feather="edit"></span></a>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-center">
-                    {{ $anggota->links() }}
+                    {{ $sesi->links() }}
                 </div>
-            </div>
-            <div class="div col-lg-4 col-sm-12 table-responsive" style="padding-left:20px; border-left: 1px solid #ccc;">
-                <form id="class" action="/dashboard/academic/class" method="POST">
-                    @csrf
-                    <div class="mb-4">
-                        <h5 class="text-center" id="title-class">Report Presensi</h5>
-                    </div>
-                    <div class="">
-                        <input class="form-control" name="id" id="id_kelas" type="hidden" placeholder="" required />
-                        <div class="form-floating mb-4">
-                            <select class="form-select" name="kelas_id" id="kelas_id_edit" required>
-                                <option value="PDF" selected>PDF</option>
-                            </select>
-                            <label for="nama_kelas">File Type</label>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <button class="btn btn-success" type="submit" id="send-class" disabled>Download</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -110,5 +105,5 @@
 @endsection
 
 @section('footer-scripts')
-    @include('../script/class-script')
+    @include('../script/detail-mahasiswa-class-script')
 @endsection

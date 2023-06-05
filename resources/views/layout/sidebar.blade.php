@@ -49,7 +49,7 @@
                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <ul class="acoordion-body list-unstyled container ms-2">
                                 <li class="nav-item"><a
-                                        class="nav-link dropdown-item {{ Request::is('dashboard/academic/class') ? 'active' : '' }}"
+                                        class="nav-link dropdown-item {{ Request::is('dashboard/academic/class*') ? 'active' : '' }}"
                                         href="/dashboard/academic/class"><span class="me-2"
                                             data-feather="chevrons-right"></span>Class</a></li>
                                 <li class="nav-item"><a

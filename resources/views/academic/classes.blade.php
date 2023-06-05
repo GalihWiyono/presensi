@@ -121,5 +121,5 @@
 @endsection
 
 @section('footer-scripts')
-    @include('../script/class-script')
+    @include('../script/classes-script')
 @endsection

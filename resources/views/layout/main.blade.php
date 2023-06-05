@@ -28,6 +28,16 @@
             width: 0px;
             height: 0px;
         }
+
+        .feather-24 {
+            width: 24px;
+            height: 24px;
+        }
+
+        .feather-32 {
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 

@@ -74,6 +74,7 @@ Route::get('/dashboard/academic/class/{id}', [ClassController::class, "show"])->
 Route::post('/dashboard/academic/class', [ClassController::class, "store"])->middleware("auth");
 Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
 Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");
+Route::get('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "detail"])->middleware("auth");
 
 //academic->matkul
 Route::get('/dashboard/academic/course', [MatkulController::class, "index"])->middleware("auth");
@@ -88,6 +89,8 @@ Route::post('/dashboard/kelas/{id}/generate', [KelasController::class, 'generate
 Route::put('/dashboard/kelas/{id}/update_jam', [KelasController::class, 'updateWaktuAbsen'])->middleware("auth");
 Route::post('/dashboard/kelas/{id}/sesi', [KelasController::class, 'gantiSesi'])->middleware("auth");
 Route::post('/dashboard/kelas/tutup', [KelasController::class, 'closePekan'])->middleware("auth");
+Route::put('/dashboard/kelas/{id}/edit_presensi', [KelasController::class, 'editPresensi'])->middleware("auth");
+Route::post('/dashboard/kelas/check', [KelasController::class, "checkNim"])->middleware('auth');
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

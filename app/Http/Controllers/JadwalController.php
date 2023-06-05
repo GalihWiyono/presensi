@@ -54,9 +54,6 @@ class JadwalController extends Controller
             $jadwal->when(request('filter') == 'Course', function ($q) use ($filter) {
                 return $q->where('matkul_id', $filter);
             });
-            $jadwal->when(request('filter') == 'Day', function ($q) {
-                return $q->where('hari', request('search'));
-            });
         }
 
         return view('academic/schedule', [
