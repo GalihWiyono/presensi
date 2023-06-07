@@ -114,3 +114,86 @@ body {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
+
+.text-center {
+  text-align: center;
+}
+
+#map {
+  width: 0px;
+  height: 0px;
+}
+
+.feather-24 {
+  width: 24px;
+  height: 24px;
+}
+
+.feather-32 {
+  width: 32px;
+  height: 32px;
+}
+
+.card-animate {
+  transition: all .4s;
+}
+
+.text-link-color {
+  color: #405189
+}
+
+.bg-soft-primary {
+  background-color: #4051892e !important;
+}
+
+.avatar-sm {
+  height: 3rem;
+  width: 3rem;
+}
+
+.avatar-md {
+  width: 4rem;
+}
+
+
+.avatar-title {
+  align-items: center;
+  background-color: #405189;
+  color: #fff;
+  display: flex;
+  font-weight: 500;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+body, .avatar-body-gray {
+  background-color: #f3f3f9;
+}
+
+.body-white {
+  background-color: #ffffff;
+}
+
+.card {
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 2px #38414a26;
+}
+
+.card-animate:hover {
+  transform: translateY(calc(-1.5rem / 5));
+  box-shadow: 0 5px 10px #1e20251f;
+}
+
+.card-title {
+  font-size: 18px;
+  margin: 0 0 7px;
+}
+
+.fs-13 {
+  font-size: 15px !important;
+}
+
+.fs-14 {
+  font-size: 16px !important;
+}

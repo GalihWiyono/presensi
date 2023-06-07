@@ -39,10 +39,10 @@
         var select = $("#status_show").val();
 
         if (select == "Tidak Hadir" || select == "Izin") {
-            $('#waktu_presensi_edit').prop('readonly', true);
-            $('#waktu_presensi_edit').val("")
+            $('#waktu_presensi_show').prop('readonly', true);
+            $('#waktu_presensi_show').val("")
         } else {
-            $('#waktu_presensi_edit').prop('readonly', false);
+            $('#waktu_presensi_show').prop('readonly', false);
         }
     });
 

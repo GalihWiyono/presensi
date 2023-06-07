@@ -32,4 +32,9 @@ class Dosen extends Model
     {
         return $this->hasMany(Jadwal::class);
     }
+
+    public function log()
+    {
+        return $this->hasMany(LogDosen::class);
+    }
 }

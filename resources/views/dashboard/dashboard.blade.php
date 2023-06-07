@@ -1,34 +1,95 @@
-<div id='map' width='1px' ></div>@extends('layout/main')
+<div id='map' width='1px'></div>@extends('layout/main')
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
         @can('isAdmin')
-            <h1 class="h2">Welcome Back Admin, {{ $data->nama_admin }}</h1>
+            <div class="col-12">
+                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-16 mb-1">Welcome Back, {{ $data->nama_admin }}!</h4>
+                        <p class="text-muted mb-0">Here's what's happening today.</p>
+                    </div>
+                    <div class="mt-3 mt-lg-0">
+                        <div class="row g-3 mb-0 align-items-center">
+                            <div class="col-sm-auto">
+                                <div class="input-group">
+                                    <input type="text" class="form-control dash-filter-picker border-dark "
+                                        value="{{ \Carbon\Carbon::now()->format('l') . ', ' . \Carbon\Carbon::now()->format('d F Y') }}"
+                                        readonly>
+                                    <div class="input-group-text bg-dark border-dark text-white">
+                                        <span data-feather="calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endcan
 
         @can('isMahasiswa')
-            <h1 class="h2">Welcome Back Mahasiswa, {{ $data->nama_mahasiswa }}</h1>
+        <div class="col-12">
+            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                <div class="flex-grow-1">
+                    <h4 class="fs-16 mb-1">Welcome Back, {{ $data->nama_mahasiswa }}!</h4>
+                    <p class="text-muted mb-0">Here's what's happening today.</p>
+                </div>
+                <div class="mt-3 mt-lg-0">
+                    <div class="row g-3 mb-0 align-items-center">
+                        <div class="col-sm-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control dash-filter-picker border-dark "
+                                    value="{{ \Carbon\Carbon::now()->format('l') . ', ' . \Carbon\Carbon::now()->format('d F Y') }}"
+                                    readonly>
+                                <div class="input-group-text bg-dark border-dark text-white">
+                                    <span data-feather="calendar"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @endcan
 
         @can('isDosen')
-            <h1 class="h2">Welcome Back Dosen, {{ $data->nama_dosen }}</h1>
+        <div class="col-12">
+            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                <div class="flex-grow-1">
+                    <h4 class="fs-16 mb-1">Welcome Back, {{ $data->nama_dosen }}!</h4>
+                    <p class="text-muted mb-0">Here's what's happening today.</p>
+                </div>
+                <div class="mt-3 mt-lg-0">
+                    <div class="row g-3 mb-0 align-items-center">
+                        <div class="col-sm-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control dash-filter-picker border-dark "
+                                    value="{{ \Carbon\Carbon::now()->format('l') . ', ' . \Carbon\Carbon::now()->format('d F Y') }}"
+                                    readonly>
+                                <div class="input-group-text bg-dark border-dark text-white">
+                                    <span data-feather="calendar"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @endcan
 
     </div>
 
     @can('isAdmin')
-        <h1>Ini Main Dashboard Admin</h1>
+        @include('dashboard/dashboard-admin')
     @endcan
 
     @can('isMahasiswa')
-        <h1>Ini Main Dashboard Mahasiswa</h1>
-        <div id='map'></div>
+        @include('dashboard/dashboard-mahasiswa')
     @endcan
 
     @can('isDosen')
-        <h1>Ini Main Dashboard Dosen</h1>
-        <div id='map'></div>
+        @include('dashboard/dashboard-dosen')
     @endcan
 
     {{-- Modal Lokasi Denied --}}
@@ -40,7 +101,8 @@
                     <h5 class="modal-title">Location Not Found</h5>
                 </div>
                 <div class="modal-body">
-                    <h6 class="text-justify">Lokasi anda tidak ditemukan, silakan aktifkan izin untuk mendapatkan lokasi
+                    <h6 class="text-justify">Lokasi anda tidak ditemukan, silakan aktifkan izin untuk mendapatkan
+                        lokasi
                         agar dapat menggunakan
                         fitur yang ada pada website ini!</h6>
 
@@ -61,7 +123,7 @@
                     <h5 class="modal-title">Location Outside The Campus Area</h5>
                 </div>
                 <div class="modal-body">
-                    <h6 class="text-justify">Lokasi anda berada diluar lokasi kampus yang sudah ditentukan, 
+                    <h6 class="text-justify">Lokasi anda berada diluar lokasi kampus yang sudah ditentukan,
                         silakan pergi ke lokasi agar dapat menggunakan fitur yang ada pada website ini!</h6>
                 </div>
             </div>

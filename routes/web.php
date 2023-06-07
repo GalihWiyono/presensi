@@ -91,6 +91,7 @@ Route::post('/dashboard/kelas/{id}/sesi', [KelasController::class, 'gantiSesi'])
 Route::post('/dashboard/kelas/tutup', [KelasController::class, 'closePekan'])->middleware("auth");
 Route::put('/dashboard/kelas/{id}/edit_presensi', [KelasController::class, 'editPresensi'])->middleware("auth");
 Route::post('/dashboard/kelas/check', [KelasController::class, "checkNim"])->middleware('auth');
+Route::post('/dashboard/kelas/{id}/presensi', [KelasController::class, "presence"])->middleware('auth');
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

@@ -72,7 +72,7 @@
                                 <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                     data-bs-target="#editJadwalModal" data-id="{{ $item->id }}"
                                     data-matkul="{{ $item->matkul_id }}" data-kelas="{{ $item->kelas_id }}"
-                                    data-dosen="{{ $item->nip }}" data-tanggal-mulai="{{ $item->tanggal_mulai }}"
+                                    data-dosen="{{ $item->nip }}" data-tanggal-mulai="{{ $item->tanggal_mulai->toDateString() }}"
                                     data-jam-mulai="{{ $item->jam_mulai }}"
                                     data-jam-berakhir="{{ $item->jam_berakhir }}"><span data-feather="edit"></span></a>
                                 <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-id="{{ $item->id }}"

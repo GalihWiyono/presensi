@@ -19,26 +19,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
         integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <style>
-        .text-center {
-            text-align: center;
-        }
-
-        #map {
-            width: 0px;
-            height: 0px;
-        }
-
-        .feather-24 {
-            width: 24px;
-            height: 24px;
-        }
-
-        .feather-32 {
-            width: 32px;
-            height: 32px;
-        }
-    </style>
 </head>
 
 <body>

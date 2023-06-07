@@ -113,21 +113,30 @@ class KelasController extends Controller
     public function presence(Request $request)
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
-        $waktuPresensi = date("H:i:s");
-        $presensi = new Presensi([
-            'jadwal_id' => $request->jadwal_id,
-            'nim' => $request->nim,
-            'waktu_presensi' => $waktuPresensi,
-            'status' => 'Hadir'
-        ]);
 
         try {
-            if ($presensi->save()) {
+            $presensi = Presensi::firstOrCreate([
+                'nim' => $request->nim,
+                'sesi_id' => $request->sesi_id
+            ], [
+                'sesi_id' => $request->sesi_id,
+                'nim' => $request->nim,
+                'waktu_presensi' => $request->waktu_presensi,
+                'status' => $request->status
+            ]);
+
+            if ($presensi->wasRecentlyCreated) {
                 return back()->with([
-                    "message" => "Presensi dengan nim {$request->nim} berhasil!",
+                    "message" => "Presensi berhasil!",
                     "status" => true,
                 ]);
+            } else {
+                return back()->with([
+                    "message" => "Presensi dengan nim {$request->nim} Gagal, Error: Sudah melakukan presensi!",
+                    "status" => false,
+                ]);
             }
+            
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Presensi dengan nim {$request->nim} Gagal, Error: " . json_encode($th->getMessage(), true),
@@ -159,7 +168,7 @@ class KelasController extends Controller
 
             $affectedRow = $sesi->update(['status' => 'Selesai']);
 
-            return view('kelas/detail_kelas')->with([
+            return back()->with([
                 "message" => "Tutup pekan berhasil!",
                 "status" => true,
             ]);

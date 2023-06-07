@@ -157,7 +157,7 @@ class JadwalController extends Controller
                 "matkul_id" => $request->matkul_id,
                 'kelas_id' => $request->kelas_id,
                 'nip' => $request->dosen_id,
-                'hari' => $request->hari,
+                'tanggal_mulai' => $request->tanggal_mulai,
                 'jam_mulai' => $request->jam_mulai,
                 'jam_berakhir' => $request->jam_berakhir
             ]);

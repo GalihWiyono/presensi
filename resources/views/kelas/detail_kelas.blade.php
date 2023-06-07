@@ -19,145 +19,153 @@
     @endif
 
     {{-- Detail Kelas --}}
+
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-sm-12">
-                {{-- <form action="/dashboard/kelas/{{ $detail->id }}/generate" method="POST"> --}}
-                @csrf
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="id" id="id" type="hidden" placeholder="ID"
-                        data-sb-validations="" value="{{ $detail->id }}" readonly />
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="mataKuliah" id="mataKuliah" type="text" placeholder="Mata Kuliah"
-                        data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}" readonly />
-                    <label for="mataKuliah">Mata Kuliah</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
-                        data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
-                    <label for="kelas">Kelas</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
-                        data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
-                        readonly />
-                    <label for="hari">Hari</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
-                        data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}" readonly />
-                    <label for="jam">Jam</label>
-                </div>
-                <form action="" method="POST">
-                    <div class="row gx-1">
-                        <div class="form-floating mb-3 col-lg-5">
-                            <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                                placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
-                                readonly />
-                            <label for="jam">Jam Mulai Presensi</label>
-                        </div>
-                        <div class="form-floating mb-3 col-lg-5">
-                            <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                                placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
-                                readonly />
-                            <label for="jam">Jam Akhir Presensi</label>
-                        </div>
-                        <div class="mb-3 col-lg-2 ">
-                            <a class="btn btn-secondary py-3 w-100" data-bs-toggle="modal" data-bs-target="#editWaktuModal">
-                                <span data-feather="edit"></span>
-                            </a>
-                        </div>
+                <div class="body-white border rounded shadow py-4 px-3">
+                    {{-- <form action="/dashboard/kelas/{{ $detail->id }}/generate" method="POST"> --}}
+                    @csrf
+                    <div class="form-floating">
+                        <input class="form-control" name="id" id="id" type="hidden" placeholder="ID"
+                            data-sb-validations="" value="{{ $detail->id }}" readonly />
                     </div>
-                </form>
-                <div class="mb-3">
-                    <button href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
-                        data-bs-target="#qrModal" {!! $detail->mulai_absen == null || $detail->akhir_absen == null || $activeSesi->status != 'Belum'
-                            ? 'disabled'
-                            : '' !!}>Generate QRCode</button>
-                </div>
-                {{-- </form> --}}
-                <div class="mb-3">
-                    <form action="/dashboard/kelas/tutup" method="POST">
-                        @csrf
-                        <div class="form-floating mb-3 col-lg-5">
-                            <input class="form-control" name="jadwal_id" id="jadwal_id" type="hidden" placeholder="Jadwal"
-                                value="{{ $detail->id }}" readonly />
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
+                            placeholder="Mata Kuliah" data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}"
+                            readonly />
+                        <label for="mataKuliah">Mata Kuliah</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
+                            data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
+                        <label for="kelas">Kelas</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
+                            data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
+                            readonly />
+                        <label for="hari">Hari</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
+                            data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}"
+                            readonly />
+                        <label for="jam">Jam</label>
+                    </div>
+                    <form action="" method="POST">
+                        <div class="row gx-1">
+                            <div class="form-floating mb-3 col-lg-5">
+                                <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
+                                    placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
+                                    readonly />
+                                <label for="jam">Jam Mulai Presensi</label>
+                            </div>
+                            <div class="form-floating mb-3 col-lg-5">
+                                <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
+                                    placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
+                                    readonly />
+                                <label for="jam">Jam Akhir Presensi</label>
+                            </div>
+                            <div class="mb-3 col-lg-2 ">
+                                <a class="btn btn-secondary py-3 w-100" data-bs-toggle="modal"
+                                    data-bs-target="#editWaktuModal">
+                                    <span data-feather="edit"></span>
+                                </a>
+                            </div>
                         </div>
-                        <div class="form-floating mb-3 col-lg-5">
-                            <input class="form-control" name="sesi_id" id="sesi_id" type="hidden" placeholder="Sesi"
-                                value="{{ $activeSesi->id }}" readonly />
-                        </div>
-                        <button class="btn btn-warning py-3 w-100" {!! $activeSesi->status == 'Belum' ? '' : 'disabled' !!}>Tutup Pekan</button>
                     </form>
-                </div>
-            </div>
-
-            {{-- Daftar Hadir --}}
-            <div class="col-lg-8 col-sm-12">
-                <div class="row">
-                    <div class="col-6">
-                        <h3>Daftar Hadir</h3>
+                    <div class="mb-3">
+                        <button href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
+                            data-bs-target="#qrModal" {!! $detail->mulai_absen == null || $detail->akhir_absen == null || $activeSesi->status != 'Belum'
+                                ? 'disabled'
+                                : '' !!}>Generate QRCode</button>
                     </div>
-                    <div class="col-1">
-                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPresensiModal"><span
-                                class="feather-24" data-feather="plus-circle"></a>
-                    </div>
-                    <div class="col-5">
-                        <form action="/dashboard/kelas/{{ $detail->id }}" method="GET">
-                            <select class="form-select" id="searchPekan" name="searchPekan">
-                                @foreach ($sesi as $item)
-                                    <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan {{ $item->sesi }}
-                                        -
-                                        {{ $item->tanggal }}
-                                    </option>
-                                @endforeach
-                            </select>
+                    {{-- </form> --}}
+                    <div class="">
+                        <form action="/dashboard/kelas/tutup" method="POST">
+                            @csrf
+                            <div class="form-floating mb-3 col-lg-5">
+                                <input class="form-control" name="jadwal_id" id="jadwal_id" type="hidden"
+                                    placeholder="Jadwal" value="{{ $detail->id }}" readonly />
+                            </div>
+                            <div class="form-floating mb-3 col-lg-5">
+                                <input class="form-control" name="sesi_id" id="sesi_id" type="hidden"
+                                    placeholder="Sesi" value="{{ $activeSesi->id }}" readonly />
+                            </div>
+                            <button class="btn btn-warning py-3 w-100" {!! $activeSesi->status == 'Belum' ? '' : 'disabled' !!}>Tutup Pekan</button>
                         </form>
                     </div>
                 </div>
-
-                <div class="div table-responsive">
-                    <table class="table table-striped text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nim</th>
-                                <th>Nama Mahasiswa</th>
-                                <th>Waktu Presensi</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($absen as $item)
-                                <tr>
-                                    <th>{{ ($absen->currentpage() - 1) * $absen->perpage() + $loop->index + 1 }}</th>
-                                    <td>{{ $item->nim }}</td>
-                                    <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
-                                    <td>
-                                        @if ($item->status == 'Hadir' || $item->status == 'Terlambat')
-                                            {{ $item->waktu_presensi }}
-                                        @else
+            </div>
+            {{-- Daftar Hadir --}}
+            <div class="col-lg-8 col-sm-12">
+                <div class="body-white border rounded shadow py-4 px-3">
+                    <div class="row">
+                        <div class="col-lg-6 col-9">
+                            <h3>Daftar Hadir</h3>
+                        </div>
+                        <div class="col-lg-1 col-3 mb-3">
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPresensiModal"><span
+                                    class="feather-24" data-feather="plus-circle"></a>
+                        </div>
+                        <div class="col-lg-5 col-12">
+                            <form action="/dashboard/kelas/{{ $detail->id }}" method="GET">
+                                <select class="form-select" id="searchPekan" name="searchPekan">
+                                    @foreach ($sesi as $item)
+                                        <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Pekan
+                                            {{ $item->sesi }}
                                             -
-                                        @endif
-                                    </td>
-                                    <td>{{ $item->status }}</td>
-                                    <td><button type="button" class="btn btn-warning btn-sm" id="editPresensi"
-                                            data-bs-toggle="modal" data-bs-target="#editPresensiModal"
-                                            data-nim="{{ $item->nim }}"
-                                            data-nama="{{ $item->mahasiswa->nama_mahasiswa }}"
-                                            data-sesi="{{ $item->sesi_id }}" data-status="{{ $item->status }}"
-                                            data-waktu={{ $item->waktu_presensi }}><span data-feather="edit">
-                                        </button>
-                                    </td>
+                                            {{ $item->tanggal }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="div table-responsive">
+                        <table class="table table-striped text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nim</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Waktu Presensi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="d-flex justify-content-center">
-                    {{ $absen->links() }}
+                            </thead>
+                            <tbody>
+                                @foreach ($absen as $item)
+                                    <tr>
+                                        <th>{{ ($absen->currentpage() - 1) * $absen->perpage() + $loop->index + 1 }}</th>
+                                        <td>{{ $item->nim }}</td>
+                                        <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
+                                        <td>
+                                            @if ($item->status == 'Hadir' || $item->status == 'Terlambat')
+                                                {{ $item->waktu_presensi }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>{{ $item->status }}</td>
+                                        <td><button type="button" class="btn btn-warning btn-sm" id="editPresensi"
+                                                data-bs-toggle="modal" data-bs-target="#editPresensiModal"
+                                                data-nim="{{ $item->nim }}"
+                                                data-nama="{{ $item->mahasiswa->nama_mahasiswa }}"
+                                                data-sesi="{{ $item->sesi_id }}" data-status="{{ $item->status }}"
+                                                data-waktu={{ $item->waktu_presensi }}><span data-feather="edit">
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        {{ $absen->links() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -319,6 +327,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input class="form-control" name="sesi_id" id="sesi_id" value="{{ $activeSesi->id }}"
+                            type="hidden" />
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nim" id="nim_show" type="text" placeholder="NIM"
                                 readonly />
