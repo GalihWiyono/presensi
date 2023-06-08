@@ -5,23 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogDosen extends Model
+class LogMahasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'log_dosen';
+    protected $table = 'log_mahasiswa';
 
     protected $fillable = [
-        'nip',
         'nim',
         'kelas_id',
-        'affected',
         'activity'
     ];
 
-    public function dosen()
+    public function mahasiswa()
     {
-        return $this->belongsTo(Dosen::class,'nip', 'nip');
+        return $this->belongsTo(Mahasiswa::class,'nim', 'nim');
     }
-
 }
