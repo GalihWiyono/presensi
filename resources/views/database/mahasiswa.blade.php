@@ -18,65 +18,68 @@
         </div>
     @endif
 
-    <div class="container">
-        <div class="d-flex justify-content-between mb-3">
-            <div class="">
-                <form action="/dashboard/database/mahasiswa">
-                    <div class="input-group">
-                        <input type="search" id="search" name="search" class="form-control" placeholder="Cari Mahasiswa" value="{{ request('search') }}"/>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+    <div class="body-white border rounded shadow">
+        <div class="container mt-3">
+            <div class="d-flex justify-content-between mb-3">
+                <div class="">
+                    <form action="/dashboard/database/mahasiswa">
+                        <div class="input-group">
+                            <input type="search" id="search" name="search" class="form-control"
+                                placeholder="Cari Mahasiswa" value="{{ request('search') }}" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="">
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Tambah
+                        Mahasiswa</a>
+                </div>
             </div>
-            <div class="">
-                <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Tambah
-                    Mahasiswa</a>
-            </div>
-        </div>
-        <div class="div table-responsive">
-            <table class="table table-striped text-center align-middle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NIM</th>
-                        <th>Nama Mahasiswa</th>
-                        <th>Tanggal Lahir</th>
-                        <th>Gender</th>
-                        <th>Kelas</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($mahasiswa as $item)
+            <div class="div table-responsive">
+                <table class="table table-striped text-center align-middle">
+                    <thead>
                         <tr>
-                            <th>{{ ($mahasiswa ->currentpage()-1) * $mahasiswa ->perpage() + $loop->index + 1 }}</th>
-                            <td>{{ $item->nim }}</td>
-                            <td>{{ $item->nama_mahasiswa }}</td>
-                            <td>{{ $item->tanggal_lahir }}</td>
-                            <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                            <td>{{ $item->kelas->nama_kelas }}</td>
-                            <td>
-                                <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
-                                    data-bs-target="#editMahasiswaModal" data-user-id="{{ $item->user_id }}"
-                                    data-nim="{{ $item->nim }}" data-nama="{{ $item->nama_mahasiswa }}"
-                                    data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"
-                                    data-kelas="{{ $item->kelas_id }}"><span data-feather="edit"></span></a>
-                                <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-user-id="{{ $item->user_id }}"
-                                    data-id="{{ $item->nim }}" data-bs-toggle="modal"
-                                    data-bs-target="#deleteMahasiswaModal"><span data-feather="x-circle"></span></a>
-                            </td>
+                            <th>#</th>
+                            <th>NIM</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Gender</th>
+                            <th>Kelas</th>
+                            <th>Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            {{ $mahasiswa->links() }}
+                    </thead>
+                    <tbody>
+                        @foreach ($mahasiswa as $item)
+                            <tr>
+                                <th>{{ ($mahasiswa->currentpage() - 1) * $mahasiswa->perpage() + $loop->index + 1 }}</th>
+                                <td>{{ $item->nim }}</td>
+                                <td>{{ $item->nama_mahasiswa }}</td>
+                                <td>{{ $item->tanggal_lahir }}</td>
+                                <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                                <td>{{ $item->kelas->nama_kelas }}</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                        data-bs-target="#editMahasiswaModal" data-user-id="{{ $item->user_id }}"
+                                        data-nim="{{ $item->nim }}" data-nama="{{ $item->nama_mahasiswa }}"
+                                        data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"
+                                        data-kelas="{{ $item->kelas_id }}"><span data-feather="edit"></span></a>
+                                    <a class="btn btn-danger btn-sm px-3" id='deleteBtn'
+                                        data-user-id="{{ $item->user_id }}" data-id="{{ $item->nim }}"
+                                        data-bs-toggle="modal" data-bs-target="#deleteMahasiswaModal"><span
+                                            data-feather="x-circle"></span></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ $mahasiswa->links() }}
+            </div>
         </div>
     </div>
-
     {{-- Modal Tambah Mahasiswa --}}
     <div class="modal fade" id="tambahMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="tambahMahasiswaModal" aria-hidden="true">

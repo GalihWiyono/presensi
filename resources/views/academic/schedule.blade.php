@@ -18,75 +18,79 @@
         </div>
     @endif
 
-    <div class="container">
-        <div class="d-flex justify-content-between mb-3">
-            <div class="">
-                <form action="/dashboard/academic/schedule">
-                    <div class="input-group">
-                        <select class="form-select" name="filter" id="filter" value="{{ request('filter') }}">
-                            <option value="Course" {!! (request('filter') == 'Course') ? 'selected' : "" !!}>Course</option>
-                            <option value="Class" {!! (request('filter') == 'Class') ? 'selected' : "" !!}>Class</option>
-                            <option value="Lecture" {!! (request('filter') == 'Lecture') ? 'selected' : "" !!}>Lecture</option>
-                        </select>
-                        <input type="search" id="search" name="search" class="form-control" placeholder="Search"
-                            value="{{ request('search') }}" />
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+    <div class="body-white border rounded shadow">
+        <div class="container mt-3">
+            <div class="d-flex justify-content-between mb-3">
+                <div class="">
+                    <form action="/dashboard/academic/schedule">
+                        <div class="input-group">
+                            <select class="form-select" name="filter" id="filter" value="{{ request('filter') }}">
+                                <option value="Course" {!! request('filter') == 'Course' ? 'selected' : '' !!}>Course</option>
+                                <option value="Class" {!! request('filter') == 'Class' ? 'selected' : '' !!}>Class</option>
+                                <option value="Lecture" {!! request('filter') == 'Lecture' ? 'selected' : '' !!}>Lecture</option>
+                            </select>
+                            <input type="search" id="search" name="search" class="form-control" placeholder="Search"
+                                value="{{ request('search') }}" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="">
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahJadwalModal">Add
+                        Schedule</a>
+                </div>
             </div>
-            <div class="">
-                <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahJadwalModal">Add Schedule</a>
-            </div>
-        </div>
-        <div class="div table-responsive">
-            <table class="table table-striped text-center align-middle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Course</th>
-                        <th>Class</th>
-                        <th>Lecture</th>
-                        <th>Start Course Date</th>
-                        <th>Class Start Time</th>
-                        <th>Class End Time</th>
-                        <th>Attendance Start Time</th>
-                        <th>Attendance End Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($jadwal as $item)
+            <div class="div table-responsive">
+                <table class="table table-striped text-center align-middle">
+                    <thead>
                         <tr>
-                            <th>{{ ($jadwal ->currentpage()-1) * $jadwal ->perpage() + $loop->index + 1 }}</th>
-                            <td>{{ $item->matkul->nama_matkul }}</td>
-                            <td>{{ $item->kelas->nama_kelas }}</td>
-                            <td>{{ $item->dosen->nama_dosen }}</td>
-                            <td>{{ $item->tanggal_mulai->toDateString() }}</td>
-                            <td>{{ $item->jam_mulai }}</td>
-                            <td>{{ $item->jam_berakhir }}</td>
-                            <td>{{ $item->mulai_absen ?: '-' }}</td>
-                            <td>{{ $item->akhir_absen ?: '-' }}</td>
-                            <td>
-                                <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
-                                    data-bs-target="#editJadwalModal" data-id="{{ $item->id }}"
-                                    data-matkul="{{ $item->matkul_id }}" data-kelas="{{ $item->kelas_id }}"
-                                    data-dosen="{{ $item->nip }}" data-tanggal-mulai="{{ $item->tanggal_mulai->toDateString() }}"
-                                    data-jam-mulai="{{ $item->jam_mulai }}"
-                                    data-jam-berakhir="{{ $item->jam_berakhir }}"><span data-feather="edit"></span></a>
-                                <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-id="{{ $item->id }}"
-                                    data-matkul="{{ $item->matkul->nama_matkul }}"
-                                    data-kelas="{{ $item->kelas->nama_kelas }}" data-bs-toggle="modal"
-                                    data-bs-target="#deleteJadwalModal"><span data-feather="x-circle"></span></a>
-                            </td>
+                            <th>#</th>
+                            <th>Course</th>
+                            <th>Class</th>
+                            <th>Lecture</th>
+                            <th>Start Course Date</th>
+                            <th>Class Start Time</th>
+                            <th>Class End Time</th>
+                            <th>Attendance Start Time</th>
+                            <th>Attendance End Time</th>
+                            <th>Action</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            {{ $jadwal->links() }}
+                    </thead>
+                    <tbody>
+                        @foreach ($jadwal as $item)
+                            <tr>
+                                <th>{{ ($jadwal->currentpage() - 1) * $jadwal->perpage() + $loop->index + 1 }}</th>
+                                <td>{{ $item->matkul->nama_matkul }}</td>
+                                <td>{{ $item->kelas->nama_kelas }}</td>
+                                <td>{{ $item->dosen->nama_dosen }}</td>
+                                <td>{{ $item->tanggal_mulai->toDateString() }}</td>
+                                <td>{{ $item->jam_mulai }}</td>
+                                <td>{{ $item->jam_berakhir }}</td>
+                                <td>{{ $item->mulai_absen ?: '-' }}</td>
+                                <td>{{ $item->akhir_absen ?: '-' }}</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                        data-bs-target="#editJadwalModal" data-id="{{ $item->id }}"
+                                        data-matkul="{{ $item->matkul_id }}" data-kelas="{{ $item->kelas_id }}"
+                                        data-dosen="{{ $item->nip }}"
+                                        data-tanggal-mulai="{{ $item->tanggal_mulai->toDateString() }}"
+                                        data-jam-mulai="{{ $item->jam_mulai }}"
+                                        data-jam-berakhir="{{ $item->jam_berakhir }}"><span data-feather="edit"></span></a>
+                                    <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-id="{{ $item->id }}"
+                                        data-matkul="{{ $item->matkul->nama_matkul }}"
+                                        data-kelas="{{ $item->kelas->nama_kelas }}" data-bs-toggle="modal"
+                                        data-bs-target="#deleteJadwalModal"><span data-feather="x-circle"></span></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ $jadwal->links() }}
+            </div>
         </div>
     </div>
 
@@ -132,7 +136,7 @@
                                 <label for="dosen_id">Lecture</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" type="date"/>
+                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" type="date" />
                                 <label for="tanggal_mulai">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -205,7 +209,8 @@
                                 <label for="dosen_edit">Lecture</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" name="tanggal_mulai"  id="tanggal_mulai_edit" type="date"/>
+                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai_edit"
+                                    type="date" />
                                 <label for="hari">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">

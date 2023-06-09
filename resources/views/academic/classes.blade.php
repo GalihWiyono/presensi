@@ -18,7 +18,8 @@
         </div>
     @endif
 
-    <div class="container">
+    <div class="body-white border rounded shadow">
+    <div class="container mt-3">
         <div class="d-flex justify-content-between mb-3">
             <div class="">
                 <form action="/dashboard/academic/class">
@@ -63,7 +64,7 @@
                     {{ $kelas->links() }}
                 </div>
             </div>
-            <div class="div col-lg-4 col-sm-12 table-responsive" style="padding-left:20px; border-left: 1px solid #ccc;">
+            <div class="div col-lg-4 col-sm-12 mb-3" style="padding-left:20px; border-left: 1px solid #ccc;">
                 <form id="class" action="/dashboard/academic/class" method="POST">
                     @csrf
                     <div class="mb-4">
@@ -86,7 +87,7 @@
             </div>
         </div>
     </div>
-
+    </div>
 
     {{-- Modal Delete Class --}}
     <div class="modal fade" id="deleteCourseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

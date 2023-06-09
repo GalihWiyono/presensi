@@ -17,61 +17,64 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
-    <div class="container">
-        <div class="d-flex justify-content-between mb-3">
-            <div class="">
-                <form action="/dashboard/database/admin">
-                    <div class="input-group">
-                        <input type="search" id="search" name="search" class="form-control" placeholder="Cari Admin" value="{{ request('search') }}"/>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+    <div class="body-white border rounded shadow">
+        <div class="container mt-3">
+            <div class="d-flex justify-content-between mb-3">
+                <div class="">
+                    <form action="/dashboard/database/admin">
+                        <div class="input-group">
+                            <input type="search" id="search" name="search" class="form-control"
+                                placeholder="Cari Admin" value="{{ request('search') }}" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="">
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Tambah
+                        Admin</a>
+                </div>
             </div>
-            <div class="">
-                <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Tambah
-                    Admin</a>
-            </div>
-        </div>
-        <div class="div table-responsive">
-            <table class="table table-striped text-center align-middle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NIP</th>
-                        <th>Nama Admin</th>
-                        <th>Tanggal Lahir</th>
-                        <th>Gender</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($admin as $item)
+            <div class="div table-responsive">
+                <table class="table table-striped text-center align-middle">
+                    <thead>
                         <tr>
-                            <th>{{ $loop->index + 1 }}</th>
-                            <td>{{ $item->nip }}</td>
-                            <td>{{ $item->nama_admin }}</td>
-                            <td>{{ $item->tanggal_lahir }}</td>
-                            <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                            <td>
-                                <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
-                                    data-bs-target="#editAdminModal" data-user-id="{{ $item->user_id }}"
-                                    data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_admin }}"
-                                    data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
-                                        data-feather="edit"></span></a>
-                                <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-user-id="{{ $item->user_id }}"
-                                    data-id="{{ $item->nip }}" data-bs-toggle="modal"
-                                    data-bs-target="#deleteAdminModal"><span data-feather="x-circle"></span></a>
-                            </td>
+                            <th>#</th>
+                            <th>NIP</th>
+                            <th>Nama Admin</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Gender</th>
+                            <th>Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            {{ $admin->links() }}
+                    </thead>
+                    <tbody>
+                        @foreach ($admin as $item)
+                            <tr>
+                                <th>{{ $loop->index + 1 }}</th>
+                                <td>{{ $item->nip }}</td>
+                                <td>{{ $item->nama_admin }}</td>
+                                <td>{{ $item->tanggal_lahir }}</td>
+                                <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                        data-bs-target="#editAdminModal" data-user-id="{{ $item->user_id }}"
+                                        data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_admin }}"
+                                        data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
+                                            data-feather="edit"></span></a>
+                                    <a class="btn btn-danger btn-sm px-3" id='deleteBtn'
+                                        data-user-id="{{ $item->user_id }}" data-id="{{ $item->nip }}"
+                                        data-bs-toggle="modal" data-bs-target="#deleteAdminModal"><span
+                                            data-feather="x-circle"></span></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ $admin->links() }}
+            </div>
         </div>
     </div>
 

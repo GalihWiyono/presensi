@@ -6,8 +6,10 @@ use App\Models\Admin;
 use App\Models\Dosen;
 use App\Models\Jadwal;
 use App\Models\Kelas;
+use App\Models\LogAdmin;
 use App\Models\LogDosen;
 use App\Models\LogMahasiswa;
+use App\Models\LogSystem;
 use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\Presensi;
@@ -62,9 +64,16 @@ class DashboardController extends Controller
             "jadwal" => $jadwal,
         ];
 
+        //log admin
+        $logAdmin = LogAdmin::latest();
+
+        //log system
+        $logSystem = LogSystem::latest();
+
         return (object)[
             'count' => $dataTotal,
-
+            'logAdmin' => $logAdmin->paginate(3, ['*'], 'logAdmin')->withQueryString(),
+            'logSystem' => $logSystem->paginate(3, ['*'], 'logSystem')->withQueryString()
         ];
     }
 

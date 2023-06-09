@@ -18,63 +18,67 @@
         </div>
     @endif
 
-    <div class="container">
-        <div class="d-flex col-8 justify-content-between mb-3">
-            <div class="">
-                <form action="/dashboard/academic/class/{{ $mahasiswa->kelas_id }}/{{ $mahasiswa->nim }}" method="GET">
-                    <select class="form-select" id="kelas" name="kelas">
-                        @foreach ($jadwal as $item)
-                            <option value="{{ $item->id }}" {!! ($item->id == request('kelas')) ? 'selected' : "" !!}>{{ $item->matkul->nama_matkul }}</option>
-                        @endforeach
-                    </select>
-                </form>
+    <div class="body-white border rounded shadow">
+        <div class="container mt-3">
+            <div class="d-flex col-8 justify-content-between mb-3">
+                <div class="">
+                    <form action="/dashboard/academic/class/{{ $mahasiswa->kelas_id }}/{{ $mahasiswa->nim }}"
+                        method="GET">
+                        <select class="form-select" id="kelas" name="kelas">
+                            @foreach ($jadwal as $item)
+                                <option value="{{ $item->id }}" {!! $item->id == request('kelas') ? 'selected' : '' !!}>{{ $item->matkul->nama_matkul }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="div col-lg-12 col-sm-12 table-responsive">
-                <table class="table table-striped text-center align-middle">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Pekan</th>
-                            <th>Tanggal</th>
-                            <th>Waktu Presensi</th>
-                            <th>Status Presensi</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($sesi as $item)
+            <div class="row">
+                <div class="div col-lg-12 col-sm-12 table-responsive">
+                    <table class="table table-striped text-center align-middle">
+                        <thead>
                             <tr>
-                                <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
-                                <td>Pekan {{ $item->sesi }}</td>
-                                <td>{{ $item->tanggal }}</td>
-                                <td>
-                                    @foreach ($presensi as $item2)
-                                        @if ($item->id == $item2->sesi_id)
-                                            {{ $item2->waktu_presensi }}
-                                            @if ($item2->status == 'Tidak Hadir' || $item2->status == 'Izin')
-                                                -
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    @foreach ($presensi as $item2)
-                                        @if ($item->id == $item2->sesi_id)
-                                            {{ $item2->status }}
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm px-3"><span data-feather="edit"></span></a>
-                                </td>
+                                <th>#</th>
+                                <th>Pekan</th>
+                                <th>Tanggal</th>
+                                <th>Waktu Presensi</th>
+                                <th>Status Presensi</th>
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-center">
-                    {{ $sesi->links() }}
+                        </thead>
+                        <tbody>
+                            @foreach ($sesi as $item)
+                                <tr>
+                                    <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
+                                    <td>Pekan {{ $item->sesi }}</td>
+                                    <td>{{ $item->tanggal }}</td>
+                                    <td>
+                                        @foreach ($presensi as $item2)
+                                            @if ($item->id == $item2->sesi_id)
+                                                {{ $item2->waktu_presensi }}
+                                                @if ($item2->status == 'Tidak Hadir' || $item2->status == 'Izin')
+                                                    -
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @foreach ($presensi as $item2)
+                                            @if ($item->id == $item2->sesi_id)
+                                                {{ $item2->status }}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm px-3"><span data-feather="edit"></span></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $sesi->links() }}
+                    </div>
                 </div>
             </div>
         </div>

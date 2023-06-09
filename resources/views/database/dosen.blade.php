@@ -18,63 +18,66 @@
         </div>
     @endif
 
-    <div class="container">
-        <div class="d-flex justify-content-between mb-3">
-            <div class="">
-                <form action="/dashboard/database/dosen">
-                    <div class="input-group">
-                        <input type="search" id="search" name="search" class="form-control" placeholder="Cari Dosen" value="{{ request('search') }}"/>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+    <div class="body-white border rounded shadow">
+        <div class="container mt-3">
+            <div class="d-flex justify-content-between mb-3">
+                <div class="">
+                    <form action="/dashboard/database/dosen">
+                        <div class="input-group">
+                            <input type="search" id="search" name="search" class="form-control"
+                                placeholder="Cari Dosen" value="{{ request('search') }}" />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="">
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahdosenModal">Tambah
+                        Dosen</a>
+                </div>
             </div>
-            <div class="">
-                <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahdosenModal">Tambah
-                    Dosen</a>
-            </div>
-        </div>
-        <div class="div table-responsive">
-            <table class="table table-striped text-center align-middle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NIP</th>
-                        <th>Nama Dosen</th>
-                        <th>Tanggal Lahir</th>
-                        <th>Gender</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($dosen as $item)
+            <div class="div table-responsive">
+                <table class="table table-striped text-center align-middle">
+                    <thead>
                         <tr>
-                            <th>{{ $loop->index + 1 }}</th>
-                            <td>{{ $item->nip }}</td>
-                            <td>{{ $item->nama_dosen }}</td>
-                            <td>{{ $item->tanggal_lahir }}</td>
-                            <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                            <td>
-                                <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
-                                    data-bs-target="#editDosenModal" data-user-id="{{ $item->user_id }}"
-                                    data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_dosen }}"
-                                    data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
-                                        data-feather="edit"></span></a>
-                                <a class="btn btn-danger btn-sm px-3" id='deleteBtn' data-user-id="{{ $item->user_id }}"
-                                    data-id="{{ $item->nip }}" data-bs-toggle="modal"
-                                    data-bs-target="#deleteDosenModal"><span data-feather="x-circle"></span></a>
-                            </td>
+                            <th>#</th>
+                            <th>NIP</th>
+                            <th>Nama Dosen</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Gender</th>
+                            <th>Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            {{ $dosen->links() }}
+                    </thead>
+                    <tbody>
+                        @foreach ($dosen as $item)
+                            <tr>
+                                <th>{{ $loop->index + 1 }}</th>
+                                <td>{{ $item->nip }}</td>
+                                <td>{{ $item->nama_dosen }}</td>
+                                <td>{{ $item->tanggal_lahir }}</td>
+                                <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                        data-bs-target="#editDosenModal" data-user-id="{{ $item->user_id }}"
+                                        data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_dosen }}"
+                                        data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
+                                            data-feather="edit"></span></a>
+                                    <a class="btn btn-danger btn-sm px-3" id='deleteBtn'
+                                        data-user-id="{{ $item->user_id }}" data-id="{{ $item->nip }}"
+                                        data-bs-toggle="modal" data-bs-target="#deleteDosenModal"><span
+                                            data-feather="x-circle"></span></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ $dosen->links() }}
+            </div>
         </div>
     </div>
-
     {{-- Modal Tambah dosen --}}
     <div class="modal fade" id="tambahdosenModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="tambahdosenModal" aria-hidden="true">
