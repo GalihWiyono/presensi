@@ -5,7 +5,7 @@
         <h1 class="h2">Detail Class: {{ $kelas->nama_kelas }}</h1>
     </div>
 
-    @if (session()->has('message'))
+    {{-- @if (session()->has('message'))
         <div class="alert @if (session('status') == true) alert-success @else alert-danger @endif  alert-dismissible fade show mt-3 mx-3"
             id="notification" role="alert">
             @if (session('status') == true)
@@ -15,6 +15,22 @@
             @endif
             {{ session('message') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif --}}
+
+    @if (session()->has('message'))
+        <div class="position-fixed mt-5 top-0 end-0 p-3" style="z-index: 11">
+            <div id="toastNotification" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="toast-header"
+                    class="toast-header @if (session('status') == true) text-success @else text-danger @endif">
+                    <i class="fa-solid fa-square fa-xl"></i>
+                    <strong class="ms-2 me-auto">{{ session('status') == true ? 'Success' : 'Failed' }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    {{ session('message') }}
+                </div>
+            </div>
         </div>
     @endif
 
@@ -65,8 +81,7 @@
                         {{ $anggota->links() }}
                     </div>
                 </div>
-                <div class="div col-lg-4 col-sm-12 mb-3"
-                    style="padding-left:20px; border-left: 1px solid #ccc;">
+                <div class="div col-lg-4 col-sm-12 mb-3" style="padding-left:20px; border-left: 1px solid #ccc;">
                     <form id="class" action="/dashboard/academic/class" method="POST">
                         @csrf
                         <div class="mb-4">

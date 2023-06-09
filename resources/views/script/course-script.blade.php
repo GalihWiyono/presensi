@@ -26,4 +26,20 @@
         $("#send-course").text("Add Course");
         $("#send-course").attr('class', 'btn btn-primary');
     });
+
+    $(document).ready(function() {
+        if ($('#toastNotification').hasClass("show")) {
+            if ($('#toast-header').hasClass("text-success")) {
+                setTimeout(function() {
+                    $('#toastNotification').toast('hide');
+                }, 2000);
+            }
+
+            if ($('#toast-header').hasClass("text-danger")) {
+                setTimeout(function() {
+                    $('#toastNotification').toast('hide');
+                }, 10000);
+            }
+        }
+    });
 </script>

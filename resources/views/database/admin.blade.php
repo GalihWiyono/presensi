@@ -6,17 +6,21 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="alert @if (session('status') == true) alert-success @else alert-danger @endif  alert-dismissible fade show mt-3 mx-3"
-            id="notification" role="alert">
-            @if (session('status') == true)
-                <span class="me-1" data-feather="check-circle"></span>
-            @else
-                <span class="me-1" data-feather="alert-triangle"></span>
-            @endif
-            {{ session('message') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="position-fixed mt-5 top-0 end-0 p-3" style="z-index: 11">
+            <div id="toastNotification" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="toast-header"
+                    class="toast-header @if (session('status') == true) text-success @else text-danger @endif">
+                    <i class="fa-solid fa-square fa-xl"></i>
+                    <strong class="ms-2 me-auto">{{ session('status') == true ? 'Success' : 'Failed' }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    {{ session('message') }}
+                </div>
+            </div>
         </div>
     @endif
+    
     <div class="body-white border rounded shadow">
         <div class="container mt-3">
             <div class="d-flex justify-content-between mb-3">

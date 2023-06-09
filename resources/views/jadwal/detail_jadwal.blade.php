@@ -19,102 +19,109 @@
     @endif
 
     {{-- Detail Kelas --}}
+
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-sm-12">
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="id" id="id" type="hidden" placeholder="ID"
-                        data-sb-validations="" value="{{ $detail->id }}" readonly />
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="mataKuliah" id="mataKuliah" type="text" placeholder="Mata Kuliah"
-                        data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}" readonly />
-                    <label for="mataKuliah">Mata Kuliah</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
-                        data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
-                    <label for="kelas">Kelas</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
-                        data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
-                        readonly />
-                    <label for="hari">Hari</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
-                        data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}" readonly />
-                    <label for="jam">Jam</label>
-                </div>
-                <div class="row gx-1">
-                    <div class="form-floating mb-3 col-lg-6">
-                        <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                            placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
-                            readonly />
-                        <label for="jam">Jam Mulai Presensi</label>
+                <div class="body-white border rounded shadow py-4 px-3">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="id" id="id" type="hidden" placeholder="ID"
+                            data-sb-validations="" value="{{ $detail->id }}" readonly />
                     </div>
-                    <div class="form-floating mb-3 col-lg-6">
-                        <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                            placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
+                            placeholder="Mata Kuliah" data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}"
                             readonly />
-                        <label for="jam">Jam Akhir Presensi</label>
+                        <label for="mataKuliah">Mata Kuliah</label>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <a href="../../dashboard/presensi" class="btn btn-primary py-3 w-100">Presensi</a>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
+                            data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
+                        <label for="kelas">Kelas</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
+                            data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
+                            readonly />
+                        <label for="hari">Hari</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
+                            data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}"
+                            readonly />
+                        <label for="jam">Jam</label>
+                    </div>
+                    <div class="row gx-1">
+                        <div class="form-floating mb-3 col-lg-6">
+                            <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
+                                placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
+                                readonly />
+                            <label for="jam">Jam Mulai Presensi</label>
+                        </div>
+                        <div class="form-floating mb-3 col-lg-6">
+                            <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
+                                placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
+                                readonly />
+                            <label for="jam">Jam Akhir Presensi</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <a href="../../dashboard/presensi" class="btn btn-primary py-3 w-100">Presensi</a>
+                    </div>
                 </div>
             </div>
 
             {{-- Daftar Hadir --}}
             <div class="col-lg-8 col-sm-12">
-                <div class="row">
-                    <div class="col-6">
-                        <h3>History Presensi</h3>
+                <div class="body-white border rounded shadow py-2 px-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <h3>History Presensi</h3>
+                        </div>
                     </div>
-                </div>
 
-                <div class="div table-responsive">
-                    <table class="table table-striped text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Pekan</th>
-                                <th>Tanggal</th>
-                                <th>Waktu Presensi</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sesi as $item)
+                    <div class="div table-responsive">
+                        <table class="table table-striped text-center align-middle">
+                            <thead>
                                 <tr>
-                                    <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
-                                    <td>Pekan {{ $item->sesi }}</td>
-                                    <td>{{ $item->tanggal }}</td>
-                                    <td>
-                                        @foreach ($presensi as $item2)
-                                            @if ($item->id == $item2->sesi_id)
-                                                {{ $item2->waktu_presensi }}
-                                                @if ($item2->status == 'Tidak Hadir' || $item2->status == "Izin")
-                                                    -
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($presensi as $item2)
-                                            @if ($item->id == $item2->sesi_id)
-                                                {{ $item2->status }}
-                                            @endif
-                                        @endforeach
-                                    </td>
+                                    <th>#</th>
+                                    <th>Pekan</th>
+                                    <th>Tanggal</th>
+                                    <th>Waktu Presensi</th>
+                                    <th>Status</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="d-flex justify-content-center">
-                    {{ $sesi->links() }}
+                            </thead>
+                            <tbody>
+                                @foreach ($sesi as $item)
+                                    <tr>
+                                        <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
+                                        <td>Pekan {{ $item->sesi }}</td>
+                                        <td>{{ $item->tanggal }}</td>
+                                        <td>
+                                            @foreach ($presensi as $item2)
+                                                @if ($item->id == $item2->sesi_id)
+                                                    {{ $item2->waktu_presensi }}
+                                                    @if ($item2->status == 'Tidak Hadir' || $item2->status == 'Izin')
+                                                        -
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach ($presensi as $item2)
+                                                @if ($item->id == $item2->sesi_id)
+                                                    {{ $item2->status }}
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        {{ $sesi->links() }}
+                    </div>
                 </div>
             </div>
         </div>
