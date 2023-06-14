@@ -150,6 +150,12 @@ class ClassController extends Controller
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
         $sesi = new Sesi;
         $jadwal = Jadwal::with('matkul')->where('kelas_id', $id)->get();
+        if(count($jadwal) == 0) {
+            return back()->with([
+                "message" => "Jadwal tidak tersedia pada kelas ini, mohon isi terlebih dahulu!",
+                "status" => false,
+            ]);
+        }
         $getData = $sesi->where('jadwal_id', $jadwal->first()->id);
         
         if(request('kelas')) {

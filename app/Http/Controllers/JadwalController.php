@@ -183,6 +183,7 @@ class JadwalController extends Controller
     {
         try {
             if (Jadwal::find($request->id)->delete()) {
+                Sesi::where('jadwal_id', $request->id)->delete();
                 return back()->with([
                     "message" => "Berhasil menghapus data jadwal",
                     "status" => true,

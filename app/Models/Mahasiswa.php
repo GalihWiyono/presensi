@@ -24,6 +24,8 @@ class Mahasiswa extends Model
         'kelas_id'
     ];
 
+    public $incrementing = false;
+
     public function user()
     {
         return $this->belongsTo(User::class);

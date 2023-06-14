@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnggotaKelas;
 use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use App\Models\User;
@@ -75,7 +76,20 @@ class MahasiswaController extends Controller
             ]);
 
             $mahasiswa->user_id = User::where('username', $request->nim)->first()->id;
-            $mahasiswa->save();
+
+            if ($mahasiswa->save()) {
+                //add mahasiswa to anggota kelas
+                AnggotaKelas::create([
+                    'nim' => $mahasiswa->nim,
+                    'kelas_id' => $mahasiswa->kelas_id
+                ]);
+
+            } else {
+                return back()->with([
+                    "message" => "Gagal membuat data mahasiswa dengan NIM $request->nim",
+                    "status" => false,
+                ]);
+            }
 
             return back()->with([
                 "message" => "Berhasil membuat data mahasiswa dengan NIM $request->nim",
@@ -121,13 +135,20 @@ class MahasiswaController extends Controller
     public function update(Request $request)
     {
         try {
-            Mahasiswa::where('nim', $request->nim)->update([
+            $mahasiswa = Mahasiswa::where('nim', $request->nim)->first();
+
+            $mahasiswa->update([
                 'nama_mahasiswa' => $request->nama_mahasiswa,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'user_id' => $request->user_id,
                 'gender' => $request->gender,
                 'kelas_id' => $request->kelas_id,
             ]);
+
+            $mahasiswa->anggota_kelas()->update([
+                'kelas_id' => $request->kelas_id
+            ]);
+
             return back()->with([
                 "message" => "Berhasil mengedit data mahasiswa",
                 "status" => true,
@@ -154,6 +175,7 @@ class MahasiswaController extends Controller
                 "nim" => $request->nim
             ])->delete();
             User::find($request->user_id)->delete();
+            AnggotaKelas::where('nim', $request->nim)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data mahasiswa",
                 "status" => true,

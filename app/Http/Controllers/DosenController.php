@@ -48,10 +48,10 @@ class DosenController extends Controller
     public function store(Request $request)
     {
         try {
-            $cekDosen = Dosen::where('nim', $request->nim)->first();
+            $cekDosen = Dosen::where('nip', $request->nip)->first();
             if ($cekDosen) {
                 return back()->with([
-                    "message" => "Gagal membuat data admin, NIP $request->nip sudah ada!",
+                    "message" => "Gagal membuat data dosen, NIP $request->nip sudah ada!",
                     "status" => false,
                 ]);
             }
