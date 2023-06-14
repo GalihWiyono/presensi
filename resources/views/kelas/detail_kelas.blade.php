@@ -79,7 +79,7 @@
                         </div>
                     </form>
                     <div class="mb-3">
-                        <button href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
+                        <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
                             data-bs-target="#qrModal" {!! $detail->mulai_absen == null || $detail->akhir_absen == null || $activeSesi->status != 'Belum'
                                 ? 'disabled'
                                 : '' !!}>Generate QRCode</button>
@@ -190,6 +190,66 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Presensi --}}
+    <div class="modal fade" id="presensiModal" tabindex="-1" aria-labelledby="presensiModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="presensiModal">Presensi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="div table-responsive">
+                        <table class="table table-striped text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nim</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($anggotaKelas as $item)
+                                    <tr>
+                                        <th>{{ $loop->index + 1 }}</th>
+                                        <td name="nim">{{ $item->nim }}</td>
+                                        <td>{{ $item->nama_mahasiswa }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group" id="{{ $loop->index }}">
+                                                <input type="radio" name="status{{ $loop->index }}"
+                                                    id="btnradio4_{{ $loop->index }}" value="Tidak Hadir" checked>
+                                                <label class="btn" for="btnradio4_{{ $loop->index }}">Tidak
+                                                    Hadir</label>
+
+                                                <input type="radio" name="status{{ $loop->index }}"
+                                                    id="btnradio1_{{ $loop->index }}" value="Hadir">
+                                                <label class="btn" for="btnradio1_{{ $loop->index }}">Hadir</label>
+
+                                                <input type="radio" name="status{{ $loop->index }}"
+                                                    id="btnradio2_{{ $loop->index }}" value="Izin">
+                                                <label class="btn" for="btnradio2_{{ $loop->index }}">Izin</label>
+
+                                                <input type="radio" name="status{{ $loop->index }}"
+                                                    id="btnradio3_{{ $loop->index }}" value="Terlambat">
+                                                <label class="btn"
+                                                    for="btnradio3_{{ $loop->index }}">Terlambat</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,17 @@
 <script type='text/javascript'>
     console.log("script detail kelas running");
 
+    $(document).ready(function() {
+        var sessionStatusKelas = sessionStorage.getItem("statusKelas");
+        if (sessionStatusKelas == "Online") {
+            $("#btnForPresensi").html('Presensi');
+            $("#btnForPresensi").attr("data-bs-target", "#presensiModal");
+        } else {
+            $("#btnForPresensi").html('Generate QRCode');
+            $("#btnForPresensi").attr("data-bs-target", "#qrModal");
+        }
+    });
+
     $('#searchPekan').on('change', function(e) {
         var select = $(this),
             form = select.closest('form');

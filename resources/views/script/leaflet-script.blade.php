@@ -23,12 +23,18 @@
     }
 
     initMap();
+    getLocation();
 
-    if (!navigator.geolocation) {
-        console.log("Your browser doesn't support geolocation feature!")
-    } else {
-        navigator.geolocation.getCurrentPosition(getPosition, positionError)
-    };
+    function getLocation() {
+        console.log("get Location called");
+        if (!navigator.geolocation) {
+            console.log("Your browser doesn't support geolocation feature!")
+        } else {
+            if (sessionStorage.getItem("statusKelas") != "Online") {
+                navigator.geolocation.getCurrentPosition(getPosition, positionError)
+            }
+        };
+    }
 
     var marker, circle, lat, long, accuracy;
 
@@ -57,7 +63,27 @@
 
         console.log("Your coordinate is: Lat: " + lat + " Long: " + long + " Accuracy: " + accuracy)
 
-        checkIfInsidePolygon(marker);
+        var check = checkIfInsidePolygon(marker);
+        window.onload = function() {
+            if (!check) {
+                if (window.jQuery) {
+                    sessionStorage.setItem("statusKelas", null)
+                    sessionStorage.setItem("location", null);
+                    $('#lokasiOutsideModal').modal('show');
+                }
+            } else {
+                console.log('make session');
+                sessionStorage.setItem("statusKelas", 'Offline')
+                var lokasi = {
+                    'Lat': lat,
+                    'Long': long
+                }
+                sessionStorage.setItem("location", JSON.stringify(lokasi));
+                $('#statusBtn').removeClass('btn-outline-dark');
+                $('#statusBtn').addClass('btn-dark');
+                $("#statusBtn").html('Offline');
+            }
+        }
     }
 
     function positionError() {
@@ -112,6 +138,7 @@
         color: 'red'
     }).addTo(map);
 
+    //test
     var latlngsTest = [
         [-6.212544497743618, 106.59501766365489],
         [-6.212533831914748, 106.59541451471308],
@@ -122,21 +149,52 @@
     var polygonTest = L.polygon(latlngsTest, {
         color: 'red'
     }).addTo(map);
+    //test
 
     map.on('click', onMapClick);
 
     function onMapClick(e) {
         var marker = L.marker(e.latlng).addTo(map);
-        checkIfInsidePolygon(marker);
+        var check = checkIfInsidePolygon(marker);
+        console.log("Log in onMapCLick: " + check);
         console.log(e.latlng);
     }
 
     function checkIfInsidePolygon(marker) {
         var check = (polygon1.contains(marker.getLatLng()) || polygon2.contains(marker.getLatLng())) ? true : false;
+        var check = (polygonTest.contains(marker.getLatLng())) ? true : false;
         console.log(check);
-        // if (!check) {
-        //     $('#lokasiOutsideModal').modal('show');
-        // }
         return check;
     }
+
+    $(document).on('click', '#btnOnline', function() {
+        sessionStorage.setItem("statusKelas", "Online")
+        sessionStorage.setItem("location", "Online");
+        console.log('session set to online');
+        console.log(sessionStorage.getItem("statusKelas"));
+        $('#statusBtn').addClass('btn-outline-dark');
+        $('#statusBtn').removeClass('btn-dark');
+        $("#statusBtn").html('Online');
+        location.reload();
+    });
+
+    $(document).on('click', '#statusBtn', function() {
+        if (sessionStorage.getItem("statusKelas") == "Online") {
+            $('#statusKelasOfflineModal').modal('show');
+        } else {
+            $('#statusKelasOnlineModal').modal('show');
+        }
+    });
+
+    $(document).on('click', '#btnChangeToOnline', function() {
+        console.log("btn change to online clicked");
+        $("#btnOnline").click()
+    });
+
+
+    $(document).on('click', '#btnChangeToOffline', function() {
+        console.log("btn change to offline clicked");
+        sessionStorage.setItem("statusKelas", "Offline");
+        location.reload();
+    });
 </script>

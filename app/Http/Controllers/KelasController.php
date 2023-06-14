@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnggotaKelas;
 use App\Models\Jadwal;
 use App\Models\Mahasiswa;
 use App\Models\Sesi;
@@ -26,7 +27,7 @@ class KelasController extends Controller
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $sesiRequest = 0;
-        $jadwal_kelas = Jadwal::where('id', $id)->first();
+        $jadwal_kelas = Jadwal::where('id', $id)->with('kelas','kelas.mahasiswa')->first();
         $allSesi = Sesi::where(['jadwal_id' => $id])->get();
 
         if (request('searchPekan')) {
@@ -39,11 +40,11 @@ class KelasController extends Controller
         // if ($sesiRequest == 0) {
         //     $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
         // }
-
+        
         $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
         $presensi = Presensi::where('sesi_id', $activeSesiData->id)->with('mahasiswa')->orderBy('nim', 'asc');
         $qrcode = "";
-
+        
         //generate QRCode
         if ($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen) {
             $qrcode = $this->generate($jadwal_kelas, $activeSesiData);
@@ -55,7 +56,8 @@ class KelasController extends Controller
             'absen' => $presensi->paginate(8)->withQueryString(),
             'qrcode' => $qrcode,
             "sesiNow" => $sesiRequest,
-            "activeSesi" => $activeSesiData
+            "activeSesi" => $activeSesiData,
+            'anggotaKelas' => $jadwal_kelas->kelas->mahasiswa
         ]);
     }
 

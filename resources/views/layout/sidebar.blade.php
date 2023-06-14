@@ -111,7 +111,7 @@
                 <li class="nav-item">
                     <form action="/logout" method="POST">
                         @csrf
-                        <button class="btn btn-secondary px-5" type="submit">
+                        <button class="btn btn-secondary px-5" type="submit" onclick="logout()">
                             <span data-feather="log-out"></span>
                             Sign out
                         </button>
@@ -121,3 +121,6 @@
         </div>
     </div>
 </nav>
+@include('../script/sidebar-script')
+
+
