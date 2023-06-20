@@ -102,7 +102,7 @@ class DashboardController extends Controller
 
         //upcoming activities
         $now = Carbon::today();
-        $weekStartDate = $now->startOfWeek(CarbonInterface::MONDAY);
+        $weekStartDate = $now;
         $weekEndDate = $now->copy()->endOfWeek(CarbonInterface::SUNDAY);
 
         // $now = Carbon::today();
@@ -117,7 +117,7 @@ class DashboardController extends Controller
         $activity = Sesi::with('jadwal', 'jadwal.matkul', 'jadwal.kelas')->whereBetween('tanggal', [$weekStartDate, $weekEndDate])->whereIn('jadwal_id', $sesiIds)->where('status', 'Belum')->orderBy('tanggal', 'ASC');
 
         //log
-        $log = LogDosen::where('nip', $dataUser->nip);
+        $log = LogDosen::where('nip', $dataUser->nip)->latest();
 
         return (object)[
             'jadwal' => $jadwalObj,
@@ -145,7 +145,7 @@ class DashboardController extends Controller
 
         //upcoming activities
         $now = Carbon::today();
-        $weekStartDate = $now->startOfWeek(CarbonInterface::MONDAY);
+        $weekStartDate = $now;
         $weekEndDate = $now->copy()->endOfWeek(CarbonInterface::SUNDAY);
 
         // $now = Carbon::today();
@@ -160,7 +160,7 @@ class DashboardController extends Controller
         $activity = Sesi::with('jadwal', 'jadwal.matkul', 'jadwal.kelas')->whereBetween('tanggal', [$weekStartDate, $weekEndDate])->whereIn('jadwal_id', $sesiIds)->where('status', 'Belum')->orderBy('tanggal', 'ASC');
 
         //log
-        $log = LogMahasiswa::where('nim', $dataUser->nim);
+        $log = LogMahasiswa::where('nim', $dataUser->nim)->latest();
 
         return (object)[
             'jadwal' => $jadwalObj,

@@ -153,7 +153,8 @@ class JadwalController extends Controller
     public function update(Request $request)
     {
         try {
-            Jadwal::where('id', $request->id)->update([
+            $jadwal = Jadwal::where('id', $request->id)->first();
+            $jadwal->update([
                 "matkul_id" => $request->matkul_id,
                 'kelas_id' => $request->kelas_id,
                 'nip' => $request->dosen_id,
@@ -182,13 +183,14 @@ class JadwalController extends Controller
     public function destroy(Request $request)
     {
         try {
-            if (Jadwal::find($request->id)->delete()) {
-                Sesi::where('jadwal_id', $request->id)->delete();
-                return back()->with([
-                    "message" => "Berhasil menghapus data jadwal",
-                    "status" => true,
-                ]);
+            foreach (Jadwal::where('id', $request->id)->get() as $deleteItem) {
+                $deleteItem->delete();
             }
+            Sesi::where('jadwal_id', $request->id)->delete();
+            return back()->with([
+                "message" => "Berhasil menghapus data jadwal",
+                "status" => true,
+            ]);
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Gagal menghapus data jadwal, Error: " . json_encode($th->getMessage(), true),

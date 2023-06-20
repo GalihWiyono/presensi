@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('log_admin', function (Blueprint $table) {
             $table->id();
             $table->string('nip');
-            $table->enum('affected', ['Mahasiswa','Dosen','Admin','Kelas','Mata Kuliah', 'Jadwal']);
+            $table->enum('affected', ['Mahasiswa','Dosen','Admin','Kelas','Mata Kuliah', 'Jadwal', 'Presensi']);
             $table->text('activity');
             $table->timestamps();
         });

@@ -2,6 +2,22 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
+use App\Models\Dosen;
+use App\Models\Jadwal;
+use App\Models\Kelas;
+use App\Models\Mahasiswa;
+use App\Models\MataKuliah;
+use App\Models\Presensi;
+use App\Models\Sesi;
+use App\Observers\adminObserver;
+use App\Observers\dosenObserver;
+use App\Observers\jadwalObserver;
+use App\Observers\kelasObserver;
+use App\Observers\mahasiswaObserver;
+use App\Observers\matkulObserver;
+use App\Observers\presensiObserver;
+use App\Observers\sesiObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -27,7 +43,14 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Mahasiswa::observe(mahasiswaObserver::class);
+        Dosen::observe(dosenObserver::class);
+        Kelas::observe(kelasObserver::class);
+        MataKuliah::observe(matkulObserver::class);
+        Admin::observe(adminObserver::class);
+        Jadwal::observe(jadwalObserver::class);
+        Presensi::observe(presensiObserver::class);
+        Sesi::observe(sesiObserver::class);
     }
 
     /**

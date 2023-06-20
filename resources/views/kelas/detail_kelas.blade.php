@@ -272,13 +272,13 @@
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
                                     placeholder="Jam Mulai Absen" data-sb-validations=""
-                                    value="{{ $detail->mulai_absen }}" />
+                                    value="{{ \Carbon\Carbon::parse($detail->mulai_absen)->format('H:i') }}" />
                                 <label for="jam">Mulai Absen</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
                                     placeholder="Jam Akhir Absen" data-sb-validations=""
-                                    value="{{ $detail->akhir_absen }}" />
+                                    value="{{ \Carbon\Carbon::parse($detail->akhir_absen)->format('H:i') }}" />
                                 <label for="jam">Akhir Absen</label>
                             </div>
                         </div>

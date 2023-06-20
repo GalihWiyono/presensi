@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnggotaKelas;
 use App\Models\Kelas;
+use App\Models\LogAdmin;
 use App\Models\Mahasiswa;
 use App\Models\User;
 use Exception;
@@ -83,7 +84,6 @@ class MahasiswaController extends Controller
                     'nim' => $mahasiswa->nim,
                     'kelas_id' => $mahasiswa->kelas_id
                 ]);
-
             } else {
                 return back()->with([
                     "message" => "Gagal membuat data mahasiswa dengan NIM $request->nim",
@@ -170,10 +170,12 @@ class MahasiswaController extends Controller
     public function destroy(Request $request)
     {
         try {
-            Mahasiswa::where([
+            foreach (Mahasiswa::where([
                 "user_id" => $request->user_id,
                 "nim" => $request->nim
-            ])->delete();
+            ])->get() as $deleteItem) {
+                $deleteItem->delete();
+            }
             User::find($request->user_id)->delete();
             AnggotaKelas::where('nim', $request->nim)->delete();
             return back()->with([

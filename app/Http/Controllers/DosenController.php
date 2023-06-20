@@ -116,7 +116,8 @@ class DosenController extends Controller
     public function update(Request $request)
     {
         try {
-            Dosen::where('nip', $request->nip)->update([
+            $dosen = Dosen::where('nip', $request->nip)->first();
+            $dosen->update([
                 'nama_dosen' => $request->nama_dosen,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'user_id' => $request->user_id,
@@ -143,10 +144,12 @@ class DosenController extends Controller
     public function destroy(Request $request)
     {
         try {
-            Dosen::where([
+            foreach (Dosen::where([
                 "user_id" => $request->user_id,
                 "nip" => $request->nip
-            ])->delete();
+            ])->get() as $deleteItem) {
+                $deleteItem->delete();
+            }
             User::find($request->user_id)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data dosen",

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnggotaKelas;
 use App\Models\Jadwal;
+use App\Models\LogDosen;
 use App\Models\Mahasiswa;
 use App\Models\Sesi;
 use App\Models\Presensi;
@@ -128,6 +129,14 @@ class KelasController extends Controller
             ]);
 
             if ($presensi->wasRecentlyCreated) {
+                $loggedIn = auth()->user();
+                LogDosen::create([
+                    'nip' =>$loggedIn->dosen->nip,
+                    'nim' =>$presensi->nim,
+                    'kelas_id' => $presensi->sesi->jadwal->kelas_id,
+                    'activity' => "Menambah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
+                ]);
+                
                 return back()->with([
                     "message" => "Presensi berhasil!",
                     "status" => true,
@@ -152,8 +161,7 @@ class KelasController extends Controller
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         //tutup sesi
         try {
-            $sesi = Sesi::where('id', $request->sesi_id);
-
+            $sesi = Sesi::where('id', $request->sesi_id)->first();
 
             $jadwal = Jadwal::find($request->jadwal_id);
             $anggotaKelas = $jadwal->kelas->anggota_kelas;
@@ -168,7 +176,7 @@ class KelasController extends Controller
                 ]);
             };
 
-            $affectedRow = $sesi->update(['status' => 'Selesai']);
+            $sesi->update(['status' => 'Selesai']);
 
             return back()->with([
                 "message" => "Tutup pekan berhasil!",
@@ -189,7 +197,9 @@ class KelasController extends Controller
             $affectedRows = Presensi::where([
                 ['sesi_id', $request->sesi_id],
                 ['nim', $request->nim]
-            ])->update(["waktu_presensi" => $request->waktu_presensi, "status" => $request->status]);
+            ])->first();
+
+            $affectedRows->update(["waktu_presensi" => $request->waktu_presensi, "status" => $request->status]);
 
             return back()->with([
                 "message" => "Edit Presensi Berhasil!",

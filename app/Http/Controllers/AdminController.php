@@ -19,11 +19,11 @@ class AdminController extends Controller
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
         $admin =  Admin::latest();
-        
-        if(request('search')) {
-            $admin->where('nama_admin', 'like', '%' . request('search'). '%')
-            ->orWhere('nip', 'like', '%' . request('search'). '%');;
-        } 
+
+        if (request('search')) {
+            $admin->where('nama_admin', 'like', '%' . request('search') . '%')
+                ->orWhere('nip', 'like', '%' . request('search') . '%');;
+        }
 
         return view('database/admin', [
             "admin" => $admin->paginate(7)->withQueryString()
@@ -49,7 +49,7 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         try {
-            $cekAdmin = Admin::where('nim', $request->nim)->first();
+            $cekAdmin = Admin::where('nip', $request->nip)->first();
             if ($cekAdmin) {
                 return back()->with([
                     "message" => "Gagal membuat data admin, NIP $request->nip sudah ada!",
@@ -117,7 +117,8 @@ class AdminController extends Controller
     public function update(Request $request)
     {
         try {
-            Admin::where('nip', $request->nip)->update([
+            $admin = Admin::where('nip', $request->nip)->first();
+            $admin->update([
                 'nama_admin' => $request->nama_admin,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'user_id' => $request->user_id,
@@ -144,10 +145,12 @@ class AdminController extends Controller
     public function destroy(Request $request)
     {
         try {
-            Admin::where([
+            foreach (Admin::where([
                 "user_id" => $request->user_id,
                 "nip" => $request->nip
-            ])->delete();
+            ])->get() as $deleteItem) {
+                $deleteItem->delete();
+            }
             User::find($request->user_id)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data admin",

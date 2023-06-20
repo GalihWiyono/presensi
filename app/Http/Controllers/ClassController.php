@@ -108,9 +108,11 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            Kelas::where('id', $id)->update([
+            $kelas = Kelas::where('id', $id)->first();
+            $kelas->update([
                 'nama_kelas' => $request->nama_kelas,
             ]);
+            
             return back()->with([
                 "message" => "Berhasil mengedit data class",
                 "status" => true,
@@ -132,7 +134,9 @@ class ClassController extends Controller
     public function destroy(Request $request)
     {
         try {
-            Kelas::find($request->id)->delete();
+            foreach (Kelas::where('id', $request->id)->get() as $deleteItem) {
+                $deleteItem->delete();
+            }
             return back()->with([
                 "message" => "Berhasil menghapus data class",
                 "status" => true,

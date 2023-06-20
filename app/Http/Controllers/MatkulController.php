@@ -96,9 +96,11 @@ class MatkulController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            MataKuliah::where('id', $id)->update([
+            $matkul = MataKuliah::where('id', $id)->first();
+            $matkul->update([
                 'nama_matkul' => $request->nama_matkul,
             ]);
+
             return back()->with([
                 "message" => "Berhasil mengedit data course",
                 "status" => true,
@@ -120,7 +122,10 @@ class MatkulController extends Controller
     public function destroy(Request $request)
     {
         try {
-            MataKuliah::find($request->id_matkul)->delete();
+            foreach (MataKuliah::where('id', $request->id_matkul)->get() as $deleteItem) {
+                $deleteItem->delete();
+            }
+
             return back()->with([
                 "message" => "Berhasil menghapus data course",
                 "status" => true,

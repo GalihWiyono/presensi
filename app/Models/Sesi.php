@@ -14,7 +14,8 @@ class Sesi extends Model
     protected $fillable = [
         'jadwal_id',
         'sesi',
-        'tanggal'
+        'tanggal',
+        'status'
     ];
 
     public function jadwal()
