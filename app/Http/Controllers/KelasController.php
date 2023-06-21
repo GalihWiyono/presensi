@@ -9,6 +9,7 @@ use App\Models\Mahasiswa;
 use App\Models\Sesi;
 use App\Models\Presensi;
 use App\Models\Qrcode as ModelsQrcode;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -28,7 +29,7 @@ class KelasController extends Controller
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $sesiRequest = 0;
-        $jadwal_kelas = Jadwal::where('id', $id)->with('kelas','kelas.mahasiswa')->first();
+        $jadwal_kelas = Jadwal::where('id', $id)->with('kelas', 'kelas.mahasiswa')->first();
         $allSesi = Sesi::where(['jadwal_id' => $id])->get();
 
         if (request('searchPekan')) {
@@ -41,15 +42,35 @@ class KelasController extends Controller
         // if ($sesiRequest == 0) {
         //     $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
         // }
-        
+
         $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
         $presensi = Presensi::where('sesi_id', $activeSesiData->id)->with('mahasiswa')->orderBy('nim', 'asc');
         $qrcode = "";
-        
+
         //generate QRCode
         if ($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen) {
             $qrcode = $this->generate($jadwal_kelas, $activeSesiData);
         }
+
+        $data = $jadwal_kelas->kelas->mahasiswa;
+        $dataPush = [];
+        foreach ($data as $anggota) {
+            $addData = (object) [
+                'nim' => $anggota->nim,
+                'nama_mahasiswa' => $anggota->nama_mahasiswa,
+                'status' => "Tidak Hadir"
+            ];
+            (object) array_push($dataPush, $addData);
+        }
+
+        foreach ($data as $key => $value) {
+            foreach ($presensi->get() as $dataPresensi) {
+                if ($dataPresensi->nim == $value->nim) {
+                    $dataPush[$key]->status = $dataPresensi->status;
+                }
+            }
+        }
+        $dataPush = collect($dataPush);
 
         return view('kelas/detail_kelas', [
             'detail' => $jadwal_kelas,
@@ -58,7 +79,7 @@ class KelasController extends Controller
             'qrcode' => $qrcode,
             "sesiNow" => $sesiRequest,
             "activeSesi" => $activeSesiData,
-            'anggotaKelas' => $jadwal_kelas->kelas->mahasiswa
+            'anggotaKelas' => $dataPush
         ]);
     }
 
@@ -131,12 +152,12 @@ class KelasController extends Controller
             if ($presensi->wasRecentlyCreated) {
                 $loggedIn = auth()->user();
                 LogDosen::create([
-                    'nip' =>$loggedIn->dosen->nip,
-                    'nim' =>$presensi->nim,
+                    'nip' => $loggedIn->dosen->nip,
+                    'nim' => $presensi->nim,
                     'kelas_id' => $presensi->sesi->jadwal->kelas_id,
                     'activity' => "Menambah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
                 ]);
-                
+
                 return back()->with([
                     "message" => "Presensi berhasil!",
                     "status" => true,
@@ -147,10 +168,59 @@ class KelasController extends Controller
                     "status" => false,
                 ]);
             }
-            
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Presensi dengan nim {$request->nim} Gagal, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function presensiOnline(Request $request)
+    {
+        try {
+            $currentTime = Carbon::now()->format('H:i:s');
+            $data = [];
+
+            for ($i = 0; $i < count($request->nim); $i++) {
+                $addData = (object) [
+                    'nim' => $request->nim[$i],
+                    'status' => $request->status[$i],
+                    'waktu_presensi' => ($request->status[$i] == "Izin" || $request->status[$i] == "Tidak Hadir") ? null : $currentTime
+                ];
+                (object) array_push($data, $addData);
+            }
+
+            $data = collect($data);
+
+            foreach ($data as $presensi) {
+                $absen = Presensi::firstOrCreate([
+                    'nim' => $presensi->nim,
+                    'sesi_id' => $request->sesi_id
+                ], [
+                    'sesi_id' => $request->sesi_id,
+                    'nim' => $presensi->nim,
+                    'waktu_presensi' => $presensi->waktu_presensi,
+                    'status' => $presensi->status
+                ]);
+
+                if(!$absen->wasRecentlyCreated){
+                    $absen->update([
+                        'sesi_id' => $request->sesi_id,
+                        'nim' => $presensi->nim,
+                        'waktu_presensi' => $presensi->waktu_presensi,
+                        'status' => $presensi->status
+                    ]);
+                }
+            }
+
+            return back()->with([
+                "message" => "Presensi online berhasil!",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Presensi online gagal, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
