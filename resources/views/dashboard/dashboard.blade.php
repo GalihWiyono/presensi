@@ -63,7 +63,7 @@
                     <div class="mt-3 mt-lg-0">
                         <div class="row g-3 mb-0 align-items-center">
                             <div class="col-sm-3">
-                                <button type="button" class="btn btn-dark" id="statusBtn">Offline</button>
+                                <button type="button" class="btn btn-outline-dark" id="statusBtn">Online</button>
                             </div>
                             <div class="col-sm-9">
                                 <div class="input-group">

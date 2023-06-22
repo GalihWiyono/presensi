@@ -168,14 +168,16 @@
     }
 
     $(document).on('click', '#btnOnline', function() {
-        sessionStorage.setItem("statusKelas", "Online")
-        sessionStorage.setItem("location", "Online");
-        console.log('session set to online');
-        console.log(sessionStorage.getItem("statusKelas"));
-        $('#statusBtn').addClass('btn-outline-dark');
-        $('#statusBtn').removeClass('btn-dark');
-        $("#statusBtn").html('Online');
-        location.reload();
+        $(document).ready(function() {
+            sessionStorage.setItem("statusKelas", "Online")
+            sessionStorage.setItem("location", "Online");
+            console.log('session set to online');
+            console.log(sessionStorage.getItem("statusKelas"));
+            $('#statusBtn').addClass('btn-outline-dark');
+            $('#statusBtn').removeClass('btn-dark');
+            $("#statusBtn").html('Online');
+            location.reload();
+        });
     });
 
     $(document).on('click', '#statusBtn', function() {

@@ -104,7 +104,7 @@
                         </li>
                     @endforeach
                 </ul>
-                <div class="align-items-center row g-3 text-center text-sm-start">
+                <div class="align-items-center row g-3 text-center text-sm-start mt-1">
                     <div class="col-sm">
                         <div class="text-muted">Showing <span
                                 class="fw-semibold">{{ ($dashboard->activity->currentpage() - 1) * $dashboard->activity->perpage() + $dashboard->activity->count() }}

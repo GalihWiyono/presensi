@@ -98,3 +98,4 @@ Route::post('/dashboard/kelas/{id}/presensiOnline', [KelasController::class, "pr
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');;
+Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');;
