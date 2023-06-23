@@ -75,6 +75,8 @@ Route::post('/dashboard/academic/class', [ClassController::class, "store"])->mid
 Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
 Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");
 Route::get('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "detail"])->middleware("auth");
+Route::put('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "updatePresensi"])->middleware("auth");
+Route::post('/dashboard/academic/check', [ClassController::class, "getData"])->middleware("auth");
 
 //academic->matkul
 Route::get('/dashboard/academic/course', [MatkulController::class, "index"])->middleware("auth");

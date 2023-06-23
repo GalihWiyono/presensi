@@ -8,6 +8,7 @@ use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use App\Models\Presensi;
 use App\Models\Sesi;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -112,7 +113,7 @@ class ClassController extends Controller
             $kelas->update([
                 'nama_kelas' => $request->nama_kelas,
             ]);
-            
+
             return back()->with([
                 "message" => "Berhasil mengedit data class",
                 "status" => true,
@@ -154,16 +155,16 @@ class ClassController extends Controller
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
         $sesi = new Sesi;
         $jadwal = Jadwal::with('matkul')->where('kelas_id', $id)->get();
-        if(count($jadwal) == 0) {
+        if (count($jadwal) == 0) {
             return back()->with([
                 "message" => "Jadwal tidak tersedia pada kelas ini, mohon isi terlebih dahulu!",
                 "status" => false,
             ]);
         }
         $getData = $sesi->where('jadwal_id', $jadwal->first()->id);
-        
-        if(request('kelas')) {
-           $getData = $sesi->where('jadwal_id', request('kelas'));
+
+        if (request('kelas')) {
+            $getData = $sesi->where('jadwal_id', request('kelas'));
         }
 
         $presensi = Presensi::where('nim', $nim)->get();
@@ -173,5 +174,48 @@ class ClassController extends Controller
             'presensi' => $presensi,
             'mahasiswa' => $presensi->first()->mahasiswa
         ]);
+    }
+
+    public function updatePresensi($id, $nim, Request $request)
+    {
+        try {
+            $presensi = Presensi::where("id", $request->id)->first();
+            $presensi->update([
+                'status' => $request->status,
+                'waktu_presensi' => $request->waktu_presensi
+            ]);
+
+            return back()->with([
+                "message" => "Berhasil mengedit data presensi",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Gagal mengedit data presensi, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function getData(Request $request)
+    {
+        if ($request->ajax()) {
+            $errorMessage = "";
+            $status = "Valid";
+            $presensi = Presensi::where([
+                ['nim', $request->nim],
+                ['sesi_id', $request->sesi_id]
+            ])->first();
+
+            $dataResponse = [
+                'nim' => $presensi->nim,
+                'status' => $presensi->status,
+                'waktu_presensi' => Carbon::parse($presensi->waktu_presensi)->format('H:i'),
+                'id' => $presensi->id,
+                'nama_mahasiswa' => $presensi->mahasiswa->nama_mahasiswa
+            ];
+            $objectResponse = (object)$dataResponse;
+            return response()->json(['data' => $objectResponse, 'status' => $status, 'errorMessage' => $errorMessage]);
+        }
     }
 }

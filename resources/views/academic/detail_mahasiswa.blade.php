@@ -58,9 +58,10 @@
                                     <td>
                                         @foreach ($presensi as $item2)
                                             @if ($item->id == $item2->sesi_id)
-                                                {{ $item2->waktu_presensi }}
                                                 @if ($item2->status == 'Tidak Hadir' || $item2->status == 'Izin')
                                                     -
+                                                @else
+                                                    {{ \Carbon\Carbon::parse($item2->waktu_presensi)->format('H:i') }}
                                                 @endif
                                             @endif
                                         @endforeach
@@ -73,7 +74,10 @@
                                         @endforeach
                                     </td>
                                     <td>
-                                        <a class="btn btn-warning btn-sm px-3"><span data-feather="edit"></span></a>
+                                        <button type="button" class="btn btn-warning btn-sm" id="editPresensi"
+                                            data-nim="{{ $mahasiswa->nim }}" data-nama="{{ $mahasiswa->nama_mahasiswa }}"
+                                            data-sesi="{{ $item->id }}"><span data-feather="edit">
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -87,23 +91,50 @@
         </div>
     </div>
 
-    {{-- Modal Preview Mahasiswa --}}
-    <div class="modal fade" id="presensiModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="presensiModal" aria-hidden="true">
+    {{-- Modal edit presensi --}}
+    <div class="modal fade" id="showDataMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showDataMahasiswaModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/academic/class/" method="POST">
+                <form action="/dashboard/academic/class/{{ $jadwal->first()->kelas_id }}/{{ $mahasiswa->nim }}"
+                    method="POST">
                     @csrf
-                    @method('delete')
+                    @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title">Presensi Mahasiswa</h5>
+                        <h5 class="modal-title" id="qrModal">Edit Presensi</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input class="form-control" name="id" id="id_edit" type="hidden" />
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nim" id="nim_edit" type="text" placeholder="NIM"
+                                readonly />
+                            <label for="nim">NIM</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nama_mahasiswa" id="nama_edit" type="text"
+                                placeholder="Nama Mahasiswa" readonly />
+                            <label for="nim">Nama Mahasiswa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" name="status" id="status_edit">
+                                <option value="Hadir">Hadir</option>
+                                <option value="Terlambat">Terlambat</option>
+                                <option value="Izin">Izin</option>
+                                <option value="Tidak Hadir">Tidak Hadir</option>
+                            </select>
+                            <label for="nim">Status</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="waktu_hidden" type="hidden" />
+                            <input class="form-control" name="waktu_presensi" id="waktu_edit" type="time"
+                                placeholder="Waktu Presensi" required />
+                            <label for="waktu_presensi">Waktu Presensi</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-danger" type="submit">Hapus</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>
