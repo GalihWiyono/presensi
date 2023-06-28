@@ -26,8 +26,9 @@
                                 <td>{{ $item->kelas->nama_kelas }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('l') }}</td>
                                 <td>{{ $item->jam_mulai . ' - ' . $item->jam_berakhir }}</td>
-                                <td><a class="btn btn-secondary btn-sm"
-                                        href="{{ url('dashboard/kelas/' . $item->id . '') }}">Check</a></td>
+                                <td><a class="btn btn-primary btn-sm px-3"
+                                        href="{{ url('dashboard/kelas/' . $item->id . '') }}"><span data-feather="eye"></a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

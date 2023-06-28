@@ -2,15 +2,18 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Class Detail </h1>
-        <div>
-            <a href="{{ url('dashboard/kelas/pending') }}">
-                <button class="btn {{ (count($sesiPending) == 0) ? "d-none" : "" }}" data-bs-placement="bottom" title="{{ (count($sesiPending) == 1) ? "There is a pending week" : "There are several pending weeks"  }}">
-                    <i class="fa-solid fa-circle-exclamation fa-2xl" style="color: #df4759;"></i>
-                </button>
-            </a>
+        <div class="col-lg-9">
+            <h1 class="h2">Class Pending Detail </h1>
+        </div>
+        <div class="input-group">
+            <input type="text" class="form-control dash-filter-picker border-dark "
+                value="Pending Week {{ $pendingData->sesi->sesi }} - {{ $pendingData->tanggal }}" readonly>
+            <div class="input-group-text bg-dark border-dark text-white">
+                <span data-feather="calendar"></span>
+            </div>
         </div>
     </div>
+
 
     @if (session()->has('message'))
         <div class="position-fixed mt-5 top-0 end-0 p-3" style="z-index: 11">
@@ -52,29 +55,27 @@
                         <label for="kelas">Class</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
-                            data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
-                            readonly />
-                        <label for="hari">Day</label>
+                        <input class="form-control" name="hari" id="hari" type="date" placeholder="Hari"
+                            data-sb-validations="" value="{{ $pendingData->tanggal }}" readonly />
+                        <label for="hari">Old Date</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
-                            data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}"
-                            readonly />
-                        <label for="jam">Time</label>
+                        <input class="form-control" name="jam" id="jam" type="date" placeholder="Jam"
+                            data-sb-validations="" value="{{ $pendingData->tanggal_baru }}" readonly />
+                        <label for="jam">New Date</label>
                     </div>
                     <form action="" method="POST">
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-5">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                                    placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
-                                    readonly />
+                                    placeholder="Jam Mulai Absen" data-sb-validations=""
+                                    value="{{ $pendingData->mulai_absen_baru }}" readonly />
                                 <label for="jam">Presence Start Time</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-5">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                                    placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
-                                    readonly />
+                                    placeholder="Jam Akhir Absen" data-sb-validations=""
+                                    value="{{ $pendingData->akhir_absen_baru }}" readonly />
                                 <label for="jam">Presence End Time</label>
                             </div>
                             <div class="mb-3 col-lg-2 ">
@@ -86,18 +87,14 @@
                         </div>
                     </form>
                     <div class="mb-3">
-                        <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100" data-bs-toggle="modal"
-                            data-bs-target="#qrModal" {!! $detail->mulai_absen == null ||
-                            $detail->akhir_absen == null ||
-                            $activeSesi->status != 'Belum' ||
-                            $status == 'Inactive'
-                                ? 'disabled'
-                                : '' !!}>Generate QRCode</button>
+                        <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100"
+                            data-bs-toggle="modal" data-bs-target="#qrModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>Generate
+                            QRCode</button>
                     </div>
                     {{-- </form> --}}
                     <div class="">
-                        <button class="btn btn-warning py-3 w-100" {!! $activeSesi->status != 'Belum' || $status == 'Inactive' ? 'disabled' : '' !!} data-bs-toggle="modal"
-                            data-bs-target="#closeWeekModal">Close / Pending Week</button>
+                        <button class="btn btn-warning py-3 w-100" data-bs-toggle="modal"
+                            data-bs-target="#closeWeekModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>Close Week</button>
                     </div>
                 </div>
             </div>
@@ -105,27 +102,14 @@
             <div class="col-lg-8 col-sm-12">
                 <div class="body-white border rounded shadow py-4 px-3">
                     <div class="row">
-                        <div class="col-lg-6 col-9">
+                        <div class="col-lg-10 col-9">
                             <h3>Attendance List</h3>
                         </div>
-                        <div class="col-lg-1 col-3 mb-3">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPresensiModal"
-                                {!! $activeSesi->status != 'Belum' || $status == 'Inactive' ? 'disabled' : '' !!}>
+                        <div class="col-lg-2 col-3">
+                            <button class="btn btn-primary px-4" data-bs-toggle="modal"
+                                data-bs-target="#addPresensiModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>
                                 <span class="feather-24" data-feather="plus-circle">
                             </button>
-                        </div>
-                        <div class="col-lg-5 col-12">
-                            <form action="/dashboard/kelas/{{ $detail->id }}" method="GET">
-                                <select class="form-select" id="week" name="week">
-                                    @foreach ($sesi as $item)
-                                        <option value="{{ $item->sesi }}" {!! $item->sesi == $sesiNow ? 'selected' : '' !!}>Week
-                                            {{ $item->sesi }}
-                                            -
-                                            {{ $item->tanggal }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </form>
                         </div>
                     </div>
 
@@ -169,7 +153,7 @@
                         </table>
                     </div>
                     <div class="d-flex justify-content-center">
-                        {{ $absen->links() }}
+                        {{-- {{ $absen->links() }} --}}
                     </div>
                 </div>
             </div>
@@ -180,7 +164,7 @@
     <div class="modal fade" id="closeWeekModal" tabindex="-1" aria-labelledby="closeWeekModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/kelas/tutup" method="POST">
+                <form action="/dashboard/kelas/pending/tutup" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="closeWeekModal">Close / Pending Week</h5>
@@ -194,67 +178,23 @@
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="sesi_id" id="sesi_id" type="hidden" placeholder="Sesi"
-                                value="{{ $sesiToday == null ? 0 : $sesiToday->id }}" readonly />
+                                value="{{ $pendingData->sesi_id }}" readonly />
                         </div>
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6 col-sm-12">
                                 <input class="form-control" id="Week" type="text" placeholder="Week"
-                                    value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" readonly />
+                                    value="{{ $pendingData->sesi->sesi }}" readonly />
                                 <label for="Week">Week</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6 col-sm-12">
                                 <input class="form-control" id="Date" type="text" placeholder="Date"
-                                    value="{{ $sesiToday == null ? 0 : $sesiToday->tanggal }}" readonly />
+                                    value="{{ $pendingData->tanggal_baru }}" readonly />
                                 <label for="Date">Date</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#pendingWeekModal">Pending Week</button>
                         <button type="submit" class="btn btn-warning">Close Week</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="pendingWeekModal" tabindex="-1" aria-labelledby="pendingWeekModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form action="/dashboard/kelas/pending" method="POST">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="pendingWeekModal">Pending Week</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Pending this week?
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="jadwal_id" id="jadwal_id" type="hidden"
-                                placeholder="Jadwal" value="{{ $detail->id }}" readonly />
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="sesi_id" id="sesi_id" type="hidden" placeholder="Sesi"
-                                value="{{ $sesiToday == null ? 0 : $sesiToday->id }}" readonly />
-                        </div>
-                        <div class="row gx-1">
-                            <div class="form-floating mb-3 col-lg-6 col-sm-12">
-                                <input class="form-control" id="Week" type="text" placeholder="Week"
-                                    value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" readonly />
-                                <label for="Week">Week</label>
-                            </div>
-                            <div class="form-floating mb-3 col-lg-6 col-sm-12">
-                                <input class="form-control" id="Date" type="text" placeholder="Date"
-                                    value="{{ $sesiToday == null ? 0 : $sesiToday->tanggal }}" readonly />
-                                <label for="Date">Date</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Close</button>
-                        <button type="submit" class="btn btn-warning">Pending Week</button>
                     </div>
                 </form>
             </div>
@@ -283,7 +223,7 @@
     </div>
 
     {{-- Modal Presensi --}}
-    <div class="modal fade" id="presensiModal" tabindex="-1" aria-labelledby="presensiModal" aria-hidden="true">
+    <div class="modal fade" id="presensiModal" tabindex="-1" aria-labelledby="presensiModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <form action="/dashboard/kelas/{{ $detail->id }}/presensiOnline" method="POST">
@@ -355,31 +295,38 @@
         </div>
     </div>
 
-    {{-- Modal Edit Waktu --}}
+    {{-- Modal edit waktu --}}
     <div class="modal fade" id="editWaktuModal" tabindex="-1" aria-labelledby="editWaktuModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/kelas/{{ $detail->id }}/update_jam" method="POST">
+                <form action="/dashboard/kelas/pending" method="POST">
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Edit Waktu Presensi</h5>
+                        <h5 class="modal-title" id="qrModal">Register Pending Class Date</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-
+                        <input class="form-control" name="id" id="id" value="{{ $pendingData->id }}"
+                            type="hidden" />
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="tanggal_baru" id="new_date" type="date"
+                                placeholder="New Date" min="{{ date('Y-m-d') }}"
+                                value="{{ $pendingData->tanggal_baru }}" required />
+                            <label for="new_date">New Date</label>
+                        </div>
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                                    placeholder="Jam Mulai Absen" data-sb-validations=""
-                                    value="{{ \Carbon\Carbon::parse($detail->mulai_absen)->format('H:i') }}" />
-                                <label for="jam">Mulai Absen</label>
+                                    placeholder="Start Presence Time" value="{{ $pendingData->mulai_absen_baru }}"
+                                    required />
+                                <label for="mulai_absen">Start Presence Time</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                                    placeholder="Jam Akhir Absen" data-sb-validations=""
-                                    value="{{ \Carbon\Carbon::parse($detail->akhir_absen)->format('H:i') }}" />
-                                <label for="jam">Akhir Absen</label>
+                                    placeholder="End Presence Time" value="{{ $pendingData->akhir_absen_baru }}"
+                                    required />
+                                <label for="akhir_absen">End Presence Time</label>
                             </div>
                         </div>
 
@@ -395,7 +342,7 @@
 
     {{-- Modal Edit Presensi --}}
     <div class="modal fade" id="editPresensiModal" tabindex="-1" aria-labelledby="editPresensiModal"
-        aria-hidden="true">
+        data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form action="/dashboard/kelas/{{ $detail->id }}/edit_presensi" method="POST">
@@ -408,7 +355,7 @@
                     <div class="modal-body">
                         <div class="form-floating mb-3">
                             <input class="form-control" name="sesi_id" id="sesi_edit" type="hidden"
-                                placeholder="Sesi" />
+                                value="{{ $pendingData->sesi_id }}" placeholder="Sesi" />
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nim" id="nim_edit" type="text" placeholder="NIM"
@@ -459,8 +406,8 @@
                 </div>
                 <div class="modal-body">
                     <input class="form-control" id="kelas_id_search" value="{{ $detail->kelas_id }}" type="hidden" />
-                    <input class="form-control" id="sesi_id_search"
-                        value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" type="hidden" />
+                    <input class="form-control" id="sesi_id_search" value="{{ $pendingData->sesi_id }}"
+                        type="hidden" />
                     <form action="">
                         <div class="form-floating mb-3">
                             <input class="form-control" id="nim_search" type="text" placeholder="NIM"
@@ -491,8 +438,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input class="form-control" name="sesi_id" id="sesi_id"
-                            value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" type="hidden" />
+                        <input class="form-control" name="sesi_id" id="sesi_id" value="{{ $pendingData->sesi_id }}"
+                            type="hidden" />
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nim" id="nim_show" type="text" placeholder="NIM"
                                 readonly />

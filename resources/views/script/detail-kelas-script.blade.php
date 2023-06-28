@@ -4,7 +4,7 @@
     $(document).ready(function() {
         var sessionStatusKelas = sessionStorage.getItem("statusKelas");
         if (sessionStatusKelas == "Online") {
-            $("#btnForPresensi").html('Presensi');
+            $("#btnForPresensi").html('Presence');
             $("#btnForPresensi").attr("data-bs-target", "#presensiModal");
         } else {
             $("#btnForPresensi").html('Generate QRCode');
@@ -12,7 +12,7 @@
         }
     });
 
-    $('#searchPekan').on('change', function(e) {
+    $('#week').on('change', function(e) {
         var select = $(this),
             form = select.closest('form');
         form.submit();

@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="div col-lg-8 col-sm-12 table-responsive">
+                <div class="col-lg-8 col-sm-12 table-responsive">
                     <table class="table table-striped text-center align-middle">
                         <thead>
                             <tr>

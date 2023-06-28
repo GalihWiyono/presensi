@@ -6,6 +6,7 @@ use App\Models\AnggotaKelas;
 use App\Models\Jadwal;
 use App\Models\LogDosen;
 use App\Models\Mahasiswa;
+use App\Models\Pending;
 use App\Models\Sesi;
 use App\Models\Presensi;
 use App\Models\Qrcode as ModelsQrcode;
@@ -30,10 +31,12 @@ class KelasController extends Controller
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $sesiRequest = 0;
         $jadwal_kelas = Jadwal::where('id', $id)->with('kelas', 'kelas.mahasiswa')->first();
-        $allSesi = Sesi::where(['jadwal_id' => $id])->get();
+        $startDate = Carbon::parse($jadwal_kelas->tanggal_mulai)->format('Y-m-d');
+        $dateToday = Carbon::now()->addDays(7)->toDateString();
+        $allSesi = Sesi::where(['jadwal_id' => $id])->whereBetween('tanggal', [$startDate, $dateToday])->get();
 
-        if (request('searchPekan')) {
-            $sesiRequest = request('searchPekan');
+        if (request('week')) {
+            $sesiRequest = request('week');
         } else {
             $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
         }
@@ -44,8 +47,17 @@ class KelasController extends Controller
         // }
 
         $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
+        if($activeSesiData == null) {
+            abort(404);
+        }
+        $dateToday = Carbon::now()->toDateString();
+        $sesiToday = $allSesi->where('tanggal', $dateToday)->first();
         $presensi = Presensi::where('sesi_id', $activeSesiData->id)->with('mahasiswa')->orderBy('nim', 'asc');
         $qrcode = "";
+        $sesiPending = Pending::where([
+            'jadwal_id' => $id,
+            'status' => "Belum"
+        ])->get();
 
         //generate QRCode
         if ($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen) {
@@ -72,14 +84,25 @@ class KelasController extends Controller
         }
         $dataPush = collect($dataPush);
 
+        $status = "Active";
+
+        if($sesiToday == null) {
+            $status = "Inactive";
+        } else if($sesiToday->id != $activeSesiData->id) {
+            $status = "Inactive";
+        }
+
         return view('kelas/detail_kelas', [
             'detail' => $jadwal_kelas,
             'sesi' => $allSesi,
             'absen' => $presensi->paginate(8)->withQueryString(),
             'qrcode' => $qrcode,
             "sesiNow" => $sesiRequest,
-            "activeSesi" => $activeSesiData,
-            'anggotaKelas' => $dataPush
+            "activeSesi" => $activeSesiData, 
+            'anggotaKelas' => $dataPush,
+            'sesiToday' => $sesiToday,
+            'status' => $status,
+            'sesiPending' => $sesiPending
         ]);
     }
 
@@ -314,6 +337,36 @@ class KelasController extends Controller
                 $objectResponse = (object)$dataResponse;
                 return response()->json(['data' => $objectResponse, 'status' => "Valid", 'errorMessage' => $errorMessage]);
             }
+        }
+    }
+
+    public function pendingPekan(Request $request) {
+        try {
+            $user = auth()->user()->dosen->nip;
+            $sesi = Sesi::find($request->sesi_id);
+            $sesi->update([
+                'status' => "Pending"
+            ]);
+            $sesiPending = Pending::firstOrCreate([
+                'jadwal_id' => $sesi->jadwal_id,
+                'sesi' => $sesi->sesi,
+            ],[
+                'nip' => $user,
+                'jadwal_id' => $sesi->jadwal_id,
+                'sesi' => $sesi->sesi,
+                'tanggal' => $sesi->tanggal,
+                'status' => "Belum"
+            ]);
+
+            return back()->with([
+                "message" => "Pending Week $sesi->sesi Success!",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Pending Week Failed, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
         }
     }
 }

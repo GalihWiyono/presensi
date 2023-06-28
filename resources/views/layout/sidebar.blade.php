@@ -76,8 +76,19 @@
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/kelas">
                             <span data-feather="hard-drive"></span>
-                            Kelas
+                            Class
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="d-flex justify-content-start">
+                            <a class="nav-link {{ Request::is('dashboard/pending*') ? 'active' : '' }}" href="/dashboard/pending">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span class="ms-2">Pending Week</span>
+                            </a>
+                            <button class="btn d-none" id="pendingNotif">
+                                <i class="fa-solid fa-circle-exclamation" style="color: #df4759;"></i>
+                            </button>
+                        </div>
                     </li>
                 @endcan
 

@@ -5,16 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sesi extends Model
+class Pending extends Model
 {
     use HasFactory;
 
-    protected $table = 'sesi';
+    protected $table = 'pending';
 
     protected $fillable = [
+        'nip',
         'jadwal_id',
-        'sesi',
+        'sesi_id',
         'tanggal',
+        'tanggal_baru',
+        'mulai_absen_baru',
+        'akhir_absen_baru',
         'status'
     ];
 
@@ -28,13 +32,8 @@ class Sesi extends Model
         return $this->hasMany(Presensi::class);
     }
 
-    public function qrcode()
+    public function sesi()
     {
-        return $this->hasOne(Qrcode::class);
-    }
-
-    public function pending()
-    {
-        return $this->hasOne(Pending::class);
+        return $this->belongsTo(Sesi::class);
     }
 }

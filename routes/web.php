@@ -11,6 +11,8 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatkulController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PendingController;
 use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,9 +76,11 @@ Route::get('/dashboard/academic/class/{id}', [ClassController::class, "show"])->
 Route::post('/dashboard/academic/class', [ClassController::class, "store"])->middleware("auth");
 Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
 Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");
+Route::get('/dashboard/academic/class/{id}/pdf', [ClassController::class, "generatePdf"])->middleware("auth");
 Route::get('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "detail"])->middleware("auth");
 Route::put('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "updatePresensi"])->middleware("auth");
 Route::post('/dashboard/academic/check', [ClassController::class, "getData"])->middleware("auth");
+
 
 //academic->matkul
 Route::get('/dashboard/academic/course', [MatkulController::class, "index"])->middleware("auth");
@@ -91,10 +95,18 @@ Route::post('/dashboard/kelas/{id}/generate', [KelasController::class, 'generate
 Route::put('/dashboard/kelas/{id}/update_jam', [KelasController::class, 'updateWaktuAbsen'])->middleware("auth");
 Route::post('/dashboard/kelas/{id}/sesi', [KelasController::class, 'gantiSesi'])->middleware("auth");
 Route::post('/dashboard/kelas/tutup', [KelasController::class, 'closePekan'])->middleware("auth");
+Route::post('/dashboard/kelas/pending', [KelasController::class, 'pendingPekan'])->middleware("auth");
 Route::put('/dashboard/kelas/{id}/edit_presensi', [KelasController::class, 'editPresensi'])->middleware("auth");
 Route::post('/dashboard/kelas/check', [KelasController::class, "checkNim"])->middleware('auth');
 Route::post('/dashboard/kelas/{id}/presensi', [KelasController::class, "presence"])->middleware('auth');
 Route::post('/dashboard/kelas/{id}/presensiOnline', [KelasController::class, "presensiOnline"])->middleware('auth');
+
+//pending
+Route::get('/dashboard/pending', [PendingController::class, "showPending"])->middleware("auth");
+Route::put('/dashboard/pending', [PendingController::class, "updateDate"])->middleware("auth");
+Route::post('/dashboard/pending/tutup', [PendingController::class, "closePendingWeek"])->middleware("auth");
+Route::get('/dashboard/pending/{id}', [PendingController::class, "showDetailPending"])->middleware("auth");
+Route::post('/dashboard/pending/checkPending', [PendingController::class, "checkPending"])->middleware("auth");
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

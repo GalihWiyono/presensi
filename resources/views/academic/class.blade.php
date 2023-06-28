@@ -82,25 +82,21 @@
                     </div>
                 </div>
                 <div class="div col-lg-4 col-sm-12 mb-3" style="padding-left:20px; border-left: 1px solid #ccc;">
-                    <form id="class" action="/dashboard/academic/class" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <h5 class="text-center" id="title-class">Report Presensi</h5>
+                    <div class="mb-4">
+                        <h5 class="text-center" id="title-class">Report Presensi</h5>
+                    </div>
+                    <div class="">
+                        <input class="form-control" name="id" id="id_kelas" type="hidden" placeholder="" required />
+                        <div class="form-floating mb-4">
+                            <select class="form-select" name="kelas_id" id="kelas_id_edit" required>
+                                <option value="PDF" selected>PDF</option>
+                            </select>
+                            <label for="nama_kelas">File Type</label>
                         </div>
-                        <div class="">
-                            <input class="form-control" name="id" id="id_kelas" type="hidden" placeholder=""
-                                required />
-                            <div class="form-floating mb-4">
-                                <select class="form-select" name="kelas_id" id="kelas_id_edit" required>
-                                    <option value="PDF" selected>PDF</option>
-                                </select>
-                                <label for="nama_kelas">File Type</label>
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <button class="btn btn-success" type="submit" id="send-class" disabled>Download</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="mb-4">
+                        <a class="btn btn-success" href="/dashboard/academic/class/{{ $kelas->id }}/pdf">Download</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -13,12 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sesi', function (Blueprint $table) {
+        Schema::create('pending', function (Blueprint $table) {
             $table->id();
+            $table->string('nip');
             $table->unsignedBigInteger('jadwal_id');
-            $table->bigInteger('sesi');
+            $table->unsignedBigInteger('sesi_id');
             $table->date('tanggal');
-            $table->enum('status', ['Belum', 'Selesai', 'Pending']);
+            $table->date('tanggal_baru')->nullable();
+            $table->time('mulai_absen_baru')->nullable();
+            $table->time('akhir_absen_baru')->nullable();
+            $table->enum('status', ['Belum', 'Selesai']);
             $table->timestamps();
         });
     }
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sesis');
+        Schema::dropIfExists('pending');
     }
 };
