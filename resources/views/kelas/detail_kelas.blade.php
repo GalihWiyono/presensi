@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Class Detail </h1>
         <div>
-            <a href="{{ url('dashboard/kelas/pending') }}">
+            <a href="{{ url('dashboard/pending') }}">
                 <button class="btn {{ (count($sesiPending) == 0) ? "d-none" : "" }}" data-bs-placement="bottom" title="{{ (count($sesiPending) == 1) ? "There is a pending week" : "There are several pending weeks"  }}">
                     <i class="fa-solid fa-circle-exclamation fa-2xl" style="color: #df4759;"></i>
                 </button>
@@ -310,6 +310,7 @@
                                             <td>{{ $item->nim }}</td>
                                             <input type="hidden" value="{{ $item->nim }}" name="nim[]">
                                             <input type="hidden" value="{{ $activeSesi->id }}" name="sesi_id" />
+                                            <input type="hidden" value="{{ $detail->id }}" name="jadwal_id" />
                                             <td>{{ $item->nama_mahasiswa }}</td>
                                             <td>
                                                 <div class="btn-group" role="group" id="{{ $loop->index }}">
@@ -460,7 +461,7 @@
                 <div class="modal-body">
                     <input class="form-control" id="kelas_id_search" value="{{ $detail->kelas_id }}" type="hidden" />
                     <input class="form-control" id="sesi_id_search"
-                        value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" type="hidden" />
+                        value="{{ $sesiToday == null ? 0 : $sesiToday->id }}" type="hidden" />
                     <form action="">
                         <div class="form-floating mb-3">
                             <input class="form-control" id="nim_search" type="text" placeholder="NIM"
@@ -491,8 +492,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input class="form-control" name="jadwal_id" id="jadwal_id"
+                            value="{{ $detail->id }}" type="hidden" />
                         <input class="form-control" name="sesi_id" id="sesi_id"
-                            value="{{ $sesiToday == null ? 0 : $sesiToday->sesi }}" type="hidden" />
+                            value="{{ $sesiToday == null ? 0 : $sesiToday->id }}" type="hidden" />
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nim" id="nim_show" type="text" placeholder="NIM"
                                 readonly />

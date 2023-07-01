@@ -36,7 +36,7 @@
 
     <div class="body-white border rounded shadow">
         <div class="container mt-3">
-            <div class="d-flex col-8 justify-content-between mb-3">
+            <div class="d-flex col-12 justify-content-between mb-3">
                 <div class="">
                     <form action="/dashboard/academic/class">
                         <div class="input-group">
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="div col-lg-8 col-sm-12 table-responsive">
+                <div class="div col-lg-12 col-sm-12 table-responsive">
                     <table class="table table-striped text-center align-middle">
                         <thead>
                             <tr>
@@ -79,23 +79,6 @@
                     </table>
                     <div class="d-flex justify-content-center">
                         {{ $anggota->links() }}
-                    </div>
-                </div>
-                <div class="div col-lg-4 col-sm-12 mb-3" style="padding-left:20px; border-left: 1px solid #ccc;">
-                    <div class="mb-4">
-                        <h5 class="text-center" id="title-class">Report Presensi</h5>
-                    </div>
-                    <div class="">
-                        <input class="form-control" name="id" id="id_kelas" type="hidden" placeholder="" required />
-                        <div class="form-floating mb-4">
-                            <select class="form-select" name="kelas_id" id="kelas_id_edit" required>
-                                <option value="PDF" selected>PDF</option>
-                            </select>
-                            <label for="nama_kelas">File Type</label>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <a class="btn btn-success" href="/dashboard/academic/class/{{ $kelas->id }}/pdf">Download</a>
                     </div>
                 </div>
             </div>

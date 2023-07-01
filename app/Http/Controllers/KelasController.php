@@ -160,13 +160,13 @@ class KelasController extends Controller
     public function presence(Request $request)
     {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
-
         try {
             $presensi = Presensi::firstOrCreate([
                 'nim' => $request->nim,
                 'sesi_id' => $request->sesi_id
             ], [
                 'sesi_id' => $request->sesi_id,
+                'jadwal_id' => $request->jadwal_id,
                 'nim' => $request->nim,
                 'waktu_presensi' => $request->waktu_presensi,
                 'status' => $request->status
@@ -222,6 +222,7 @@ class KelasController extends Controller
                     'sesi_id' => $request->sesi_id
                 ], [
                     'sesi_id' => $request->sesi_id,
+                    'jadwal_id' => $request->jadwal_id,
                     'nim' => $presensi->nim,
                     'waktu_presensi' => $presensi->waktu_presensi,
                     'status' => $presensi->status
@@ -264,6 +265,7 @@ class KelasController extends Controller
                     'sesi_id' => $request->sesi_id
                 ], [
                     'sesi_id' => $request->sesi_id,
+                    'jadwal_id' => $request->jadwal_id,
                     'nim' => $mahasiswa->nim,
                     'status' => "Tidak Hadir"
                 ]);

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('presensi', function (Blueprint $table) {
             $table->foreign('sesi_id')->references('id')->on('sesi')->onDelete('cascade');
+            $table->foreign('jadwal_id')->references('id')->on('jadwal')->onDelete('cascade');
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('presensi', function (Blueprint $table) {
             $table->dropForeign(['sesi_id']);
+            $table->dropForeign(['jadwal_id']);
         });
     }
 };

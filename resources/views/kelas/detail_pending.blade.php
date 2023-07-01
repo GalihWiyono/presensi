@@ -164,10 +164,10 @@
     <div class="modal fade" id="closeWeekModal" tabindex="-1" aria-labelledby="closeWeekModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/kelas/pending/tutup" method="POST">
+                <form action="/dashboard/pending/tutup" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="closeWeekModal">Close / Pending Week</h5>
+                        <h5 class="modal-title" id="closeWeekModal">Close Week</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -250,6 +250,7 @@
                                             <td>{{ $item->nim }}</td>
                                             <input type="hidden" value="{{ $item->nim }}" name="nim[]">
                                             <input type="hidden" value="{{ $activeSesi->id }}" name="sesi_id" />
+                                            <input type="hidden" value="{{ $detail->id }}" name="jadwal_id" />
                                             <td>{{ $item->nama_mahasiswa }}</td>
                                             <td>
                                                 <div class="btn-group" role="group" id="{{ $loop->index }}">
@@ -299,7 +300,7 @@
     <div class="modal fade" id="editWaktuModal" tabindex="-1" aria-labelledby="editWaktuModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/kelas/pending" method="POST">
+                <form action="/dashboard/pending" method="POST">
                     @csrf
                     @method('put')
                     <div class="modal-header">
@@ -438,6 +439,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input class="form-control" name="jadwal_id" id="jadwal_id" value="{{ $detail->id }}"
+                            type="hidden" />
                         <input class="form-control" name="sesi_id" id="sesi_id" value="{{ $pendingData->sesi_id }}"
                             type="hidden" />
                         <div class="form-floating mb-3">

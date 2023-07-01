@@ -10,9 +10,10 @@ class Presensi extends Model
     use HasFactory;
 
     protected $table = 'presensi';
-    
+
     protected $fillable = [
         'sesi_id',
+        'jadwal_id',
         'nim',
         'waktu_presensi',
         'status'
@@ -35,4 +36,8 @@ class Presensi extends Model
         return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
     }
 
+    public function jadwal()
+    {
+        return $this->belongsTo(Jadwal::class);
+    }
 }

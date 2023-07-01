@@ -220,43 +220,4 @@ class ClassController extends Controller
         }
     }
 
-    public function generatePdf($id) {
-        $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $id)->get();
-        $data = [];
-        foreach ($anggotaKelas as $mahasiswa) {
-            $addData = (object)[
-                'nim' => $mahasiswa->mahasiswa->nim,
-                'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
-                'pekan1' => 'H',
-                'pekan2' => 'T',
-                'pekan3' => 'I',
-                'pekan4' => 'A',
-                'pekan5' => 'H',
-                'pekan6' => 'A',
-                'pekan7' => 'H',
-                'pekan8' => 'H',
-                'pekan9' => 'H',
-                'pekan10' => 'H',
-                'pekan11' => 'H',
-                'pekan12' => 'A',
-                'pekan13' => 'H',
-                'pekan14' => 'H',
-                'pekan15' => 'H',
-                'pekan16' => 'H',
-                'pekan17' => 'H',
-                'pekan18' => 'H',
-                'hadir' => 13,
-                'terlambat' => 1,
-                'izin' => 1,
-                'tidakHadir' => 3
-            ];
-            (object) array_push($data, $addData);
-        }
-        $data = collect($data);
-        $pdf = Pdf::loadView('academic/pdf', [
-            'data' => $data
-        ]);
-        $pdf->setPaper('a3', 'landscape');
-        return $pdf->stream('Presensi '.$anggotaKelas->first()->kelas->nama_kelas);
-    }
 }

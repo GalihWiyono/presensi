@@ -48,4 +48,9 @@ class Jadwal extends Model
     {
         return $this->hasMany(Qrcode::class);
     }
+
+    public function presensi()
+    {
+        return $this->hasMany(Presensi::class);
+    }
 }

@@ -74,6 +74,7 @@
                                 <td>{{ $item->mulai_absen ?: '-' }}</td>
                                 <td>{{ $item->akhir_absen ?: '-' }}</td>
                                 <td>
+                                    <a href="/dashboard/academic/schedule/{{ $item->id }}/pdf" class="btn btn-success btn-sm px-3"><i class="fa-solid fa-download"></i></a>
                                     <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editJadwalModal" data-id="{{ $item->id }}"
                                         data-matkul="{{ $item->matkul_id }}" data-kelas="{{ $item->kelas_id }}"

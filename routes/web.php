@@ -11,7 +11,6 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatkulController;
-use App\Http\Controllers\PdfController;
 use App\Http\Controllers\PendingController;
 use App\Http\Controllers\PresensiController;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +65,7 @@ Route::put('/dashboard/database/admin/', [AdminController::class, "update"])->mi
 
 //academic->jadwal
 Route::get('/dashboard/academic/schedule', [JadwalController::class, "index"])->middleware("auth");
+Route::get('/dashboard/academic/schedule/{id}/pdf', [JadwalController::class, "generatePdf"])->middleware("auth");
 Route::post('/dashboard/academic/schedule', [JadwalController::class, "store"])->middleware("auth");
 Route::delete('/dashboard/academic/schedule', [JadwalController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/academic/schedule', [JadwalController::class, "update"])->middleware("auth");
@@ -76,7 +76,6 @@ Route::get('/dashboard/academic/class/{id}', [ClassController::class, "show"])->
 Route::post('/dashboard/academic/class', [ClassController::class, "store"])->middleware("auth");
 Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
 Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");
-Route::get('/dashboard/academic/class/{id}/pdf', [ClassController::class, "generatePdf"])->middleware("auth");
 Route::get('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "detail"])->middleware("auth");
 Route::put('/dashboard/academic/class/{id}/{nim}', [ClassController::class, "updatePresensi"])->middleware("auth");
 Route::post('/dashboard/academic/check', [ClassController::class, "getData"])->middleware("auth");

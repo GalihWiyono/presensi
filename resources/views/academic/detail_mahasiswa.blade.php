@@ -73,12 +73,17 @@
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td>
-                                        <button type="button" class="btn btn-warning btn-sm" id="editPresensi"
-                                            data-nim="{{ $mahasiswa->nim }}" data-nama="{{ $mahasiswa->nama_mahasiswa }}"
-                                            data-sesi="{{ $item->id }}"><span data-feather="edit">
-                                        </button>
-                                    </td>
+                                    @if ((($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1) <= count($presensi))
+                                        <td>
+                                            <button type="button" class="btn btn-warning btn-sm" id="editPresensi"
+                                                data-nim="{{ $mahasiswa->nim }}"
+                                                data-nama="{{ $mahasiswa->nama_mahasiswa }}"
+                                                data-sesi="{{ $item->id }}"><span data-feather="edit">
+                                            </button>
+                                        </td>
+                                    @else
+                                        <td></td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

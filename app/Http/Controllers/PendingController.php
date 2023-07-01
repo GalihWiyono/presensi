@@ -127,6 +127,7 @@ class PendingController extends Controller
                     'sesi_id' => $request->sesi_id
                 ], [
                     'sesi_id' => $request->sesi_id,
+                    'jadwal_id' => $request->jadwal_id,
                     'nim' => $mahasiswa->nim,
                     'status' => "Tidak Hadir"
                 ]);

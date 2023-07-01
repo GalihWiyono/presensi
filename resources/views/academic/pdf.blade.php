@@ -362,11 +362,96 @@
         .text-center {
             text-align: center
         }
+
+        .class-td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        .info-table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 20%;
+            margin-bottom: 10px;
+        }
+
+        .span-table {
+            padding-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .span-title {
+            font-size: 40px;
+            font-weight: bold
+        }
+
+        .footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 2px solid #555555;
+        }
+
+        /* .footer p {
+            border-top: 2px solid #555555;
+            margin-top: 10px;
+        } */
+
+        .footer-text {
+            padding-top: 5px;
+            padding-left: 3px;
+            padding-right: 3px;
+        }
+
+        .footer .page-number:after {
+            content: counter(page);
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
     </style>
 </head>
 
 <body>
-    <div class="table-responsive-sm">
+    <footer class="footer">
+        <span class="footer-text left">{{ \Carbon\Carbon::now()->format('d/m/Y H:m:s') }}</span>
+        <span class="footer-text page-number right"> </span>
+    </footer>
+
+    <div class="text-center">
+        <span class="span-title">Attendance Report</span>
+    </div>
+    <br>
+    <div>
+        <table class="info-table">
+            <tbody>
+                <tr>
+                    <td class="class-td">
+                        <span class="span-table"><b>Class</b></span>
+                    </td>
+                    <td class="class-td">
+                        <span class="span-table">: {{ $jadwal->kelas->nama_kelas }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="class-td">
+                        <span class="span-table"><b>Course</b></span>
+                    </td>
+                    <td class="class-td">
+                        <span class="span-table">: {{ $jadwal->matkul->nama_matkul }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="table-data">
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
@@ -401,33 +486,59 @@
                 @foreach ($data as $item)
                     <tr>
                         <th>{{ $loop->index + 1 }}</th>
-                        <td>{{ $item->nim }}</td>
-                        <td>{{ $item->nama_mahasiswa }}</td>
-                        <td>{{ $item->pekan1 }}</td>
-                        <td>{{ $item->pekan2 }}</td>
-                        <td>{{ $item->pekan3 }}</td>
-                        <td>{{ $item->pekan4 }}</td>
-                        <td>{{ $item->pekan5 }}</td>
-                        <td>{{ $item->pekan6 }}</td>
-                        <td>{{ $item->pekan7 }}</td>
-                        <td>{{ $item->pekan8 }}</td>
-                        <td>{{ $item->pekan9 }}</td>
-                        <td>{{ $item->pekan10 }}</td>
-                        <td>{{ $item->pekan11 }}</td>
-                        <td>{{ $item->pekan12 }}</td>
-                        <td>{{ $item->pekan13 }}</td>
-                        <td>{{ $item->pekan14 }}</td>
-                        <td>{{ $item->pekan15 }}</td>
-                        <td>{{ $item->pekan16 }}</td>
-                        <td>{{ $item->pekan17 }}</td>
-                        <td>{{ $item->pekan18 }}</td>
-                        <td>{{ $item->hadir }}</td>
-                        <td>{{ $item->terlambat }}</td>
-                        <td>{{ $item->izin }}</td>
-                        <td>{{ $item->tidakHadir }}</td>
+                        <th>{{ $item->nim }}</th>
+                        <th>{{ $item->nama_mahasiswa }}</th>
+
+                        @for ($i = 0; $i < 18; $i++)
+                            @if (isset($item->presensi[$i]) && $item->presensi[$i]->pekan == $i + 1)
+                                <td>{{ $item->presensi[$i]->status }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                        @endfor
+                        {{-- @php
+                            $check = false;
+                            for ($i = 0; $i < 18; $i++) { 
+                                foreach ($item->presensi as $item2) {
+                                    if(isset($item2) && $item2->pekan == $i+1) {
+                                        echo('<td>'. $item2->status .'</td>');
+                                        $check = true;
+                                    } else {
+                                        $check = false;
+                                    }
+                                }
+
+                                if (empty($item->presensi[$i]) && !$check) {
+                                    echo('<td>'.$i.'</td>');
+                                    // echo('<td></td>');
+                                } else if(!empty($item->presensi[$i]) && !$check){
+                                    echo('<td>*</td>');
+                                } else {
+
+                                }
+                            }
+                        @endphp
+                        {{-- @for ($i = 0; $i < 18; $i++)
+                            @foreach ($item->presensi as $item2)
+                                @if (isset($item2) && $item2->pekan == $i + 1)
+                                    <td>{{ $item2->status }}</td>
+                                @endif
+                            @endforeach
+
+                            @if (isset($item->presensi[$i]) && $item->presensi[$i]->pekan == $i + 1)
+                                @continue
+                            @else
+                                <td>-</td>
+                            @endif
+                        @endfor --}}
+                        <th>{{ $item->hadir }}</th>
+                        <th>{{ $item->terlambat }}</th>
+                        <th>{{ $item->izin }}</th>
+                        <th>{{ $item->tidakHadir }}</th>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
 </body>
