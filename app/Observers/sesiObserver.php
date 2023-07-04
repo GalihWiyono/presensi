@@ -26,13 +26,17 @@ class sesiObserver
      */
     public function updated(Sesi $sesi)
     {
-        $loggedIn = auth()->user()->dosen;
-        LogDosen::create([
-            'nip' =>$loggedIn->nip,
-            'kelas_id' => $sesi->jadwal->kelas_id,
-            'affected' => 'Kelas',
-            'activity' => "Menutup Pekan $sesi->sesi pada Mata Kuliah " . $sesi->jadwal->matkul->nama_matkul . " Kelas " . $sesi->jadwal->kelas->nama_kelas . ": Manual"
-        ]);
+        $loggedIn = auth()->user();
+        if(!is_null($loggedIn->role)) {
+            if($loggedIn->role = "Dosen") {
+                LogDosen::create([
+                    'nip' =>$loggedIn->dosen->nip,
+                    'kelas_id' => $sesi->jadwal->kelas_id,
+                    'affected' => 'Kelas',
+                    'activity' => "Menutup Pekan $sesi->sesi pada Mata Kuliah " . $sesi->jadwal->matkul->nama_matkul . " Kelas " . $sesi->jadwal->kelas->nama_kelas . ": Manual"
+                ]);
+            }
+        }
     }
 
     /**

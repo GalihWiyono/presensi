@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\LogMahasiswa;
 use App\Models\Mahasiswa;
 use App\Models\Presensi;
 use App\Models\Qrcode;
@@ -65,6 +66,13 @@ class PresensiController extends Controller
             ]);
 
             if ($presensi->wasRecentlyCreated) {
+
+                LogMahasiswa::create([
+                    'nim' => $presensi->nim,
+                    'jadwal_id' => $presensi->sesi->jadwal->id,
+                    'activity' => "Presensi Pekan " . $presensi->sesi->sesi . " " . $presensi->sesi->jadwal->matkul->nama_matkul . " : $presensi->status"
+                ]);
+                
                 return back()->with([
                     "message" => "Presensi berhasil!",
                     "status" => true,

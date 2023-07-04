@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\AnggotaKelas;
 use App\Models\Jadwal;
 use App\Models\Kelas;
+use App\Models\LogAdmin;
+use App\Models\LogDosen;
 use App\Models\Mahasiswa;
 use App\Models\Presensi;
 use App\Models\Sesi;
@@ -186,6 +188,21 @@ class ClassController extends Controller
                 'waktu_presensi' => $request->waktu_presensi
             ]);
 
+            $loggedIn = auth()->user();
+            LogAdmin::create([
+                'nip' => $loggedIn->admin->nip,
+                'affected' => 'Presensi',
+                'activity' => "Mengubah data Presensi: $presensi->nim pada Jadwal " . $presensi->sesi->jadwal->matkul->nama_matkul . " Status : $presensi->status"
+            ]);
+
+            LogDosen::create([
+                'nip' => $presensi->sesi->jadwal->nip,
+                'nim' => $presensi->nim,
+                'kelas_id' => $presensi->sesi->jadwal->kelas_id,
+                'affected' => 'Mahasiswa',
+                'activity' => "Admin " . $loggedIn->admin->nip . "=> Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
+            ]);
+
             return back()->with([
                 "message" => "Berhasil mengedit data presensi",
                 "status" => true,
@@ -220,4 +237,91 @@ class ClassController extends Controller
         }
     }
 
+    public function generatePdf($id)
+    {
+        try {
+            $jadwal = Jadwal::where('kelas_id', $id)->get();
+            $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $id)->get();
+            $jadwal_id = [];
+    
+            foreach ($jadwal as $item) {
+                $jadwal_id[] = $item->id;
+            }
+    
+            $presensi = Presensi::whereIn('jadwal_id', $jadwal_id)->orderBy('sesi_id')->get();
+    
+            $data = [];
+    
+            foreach ($anggotaKelas as $mahasiswa) {
+                $dataMahasiswa = $presensi->where('nim', $mahasiswa->nim);
+                $totalKompensasi = 0;
+                $sp = "-";
+    
+                //get kompen tidak hadir
+                foreach ($jadwal as $dataJadwal) {
+                    foreach ($presensi as $dataPresensi) {
+                        if($dataPresensi->jadwal_id == $dataJadwal->id && $mahasiswa->nim == $dataPresensi->nim) {
+                            if($dataPresensi->status == "Tidak Hadir") {
+                                $akhir_absen = Carbon::parse ( $dataJadwal->jam_berakhir);
+                                $mulai_absen = Carbon::parse( $dataJadwal->jam_mulai);
+                                $selisih = $akhir_absen->diffInMinutes($mulai_absen);
+                                $totalKompensasi += $selisih;
+                            }
+    
+                            if($dataPresensi->status == "Terlambat") {
+                                $dataAkhirAbsen = ($dataJadwal->akhir_absen == null) ? $dataJadwal->jam_mulai : $dataJadwal->akhir_absen;
+                                $akhir_absen = Carbon::parse ($dataAkhirAbsen);
+                                $jam_absen = Carbon::parse($dataPresensi->waktu_presensi);
+                                $selisih = $akhir_absen->diffInMinutes($jam_absen);
+                                $totalKompensasi += $selisih;
+                            }
+                        }
+                    }
+                }
+
+                if($totalKompensasi >= 750 && $totalKompensasi < 1500) {
+                    $sp = "1";
+                }
+
+                if($totalKompensasi >= 1500 && $totalKompensasi < 1850) {
+                    $sp = "2";
+                }
+
+                if($totalKompensasi >= 1850) {
+                    $sp = "3";
+                }
+    
+                $addData = (object)[
+                    'nim' => $mahasiswa->mahasiswa->nim,
+                    'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
+                    'hadir' => $dataMahasiswa->where('status', "Hadir")->count(),
+                    'terlambat' => $dataMahasiswa->where('status', "Terlambat")->count(),
+                    'izin' => $dataMahasiswa->where('status', "Izin")->count(),
+                    'tidakHadir' => $dataMahasiswa->where('status', "Tidak Hadir")->count(),
+                    'total_kompensasi' => $totalKompensasi,
+                    'sp' => $sp
+                ];
+                (object) array_push($data, $addData);
+            }
+    
+            // for ($i = 0; $i < 4; $i++) {
+            //     $data = array_merge($data, $data);
+            // }
+    
+            $data = collect($data);
+    
+            // dd($data);
+            $pdf = Pdf::loadView('academic/class-pdf', [
+                'data' => $data,
+                'jadwal' => $jadwal
+            ]);
+            $pdf->setPaper('a4', 'landscape');
+            return $pdf->stream('Kompensasi Kelas ' . $jadwal->first()->kelas->nama_kelas .'.pdf');
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Kelas tidak memiliki jadwal, pastikan menambahkan jadwal terlebih dahulu!",
+                "status" => false,
+            ]);
+        }
+    }
 }

@@ -49,8 +49,8 @@ class EventServiceProvider extends ServiceProvider
         MataKuliah::observe(matkulObserver::class);
         Admin::observe(adminObserver::class);
         Jadwal::observe(jadwalObserver::class);
-        Presensi::observe(presensiObserver::class);
-        Sesi::observe(sesiObserver::class);
+        // Presensi::observe(presensiObserver::class);
+        // Sesi::observe(sesiObserver::class);
     }
 
     /**

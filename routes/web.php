@@ -73,6 +73,7 @@ Route::put('/dashboard/academic/schedule', [JadwalController::class, "update"])-
 //academic->kelas
 Route::get('/dashboard/academic/class', [ClassController::class, "index"])->middleware("auth");
 Route::get('/dashboard/academic/class/{id}', [ClassController::class, "show"])->middleware("auth");
+Route::get('/dashboard/academic/class/{id}/pdf', [ClassController::class, "generatePdf"])->middleware("auth");
 Route::post('/dashboard/academic/class', [ClassController::class, "store"])->middleware("auth");
 Route::delete('/dashboard/academic/class', [ClassController::class, "destroy"])->middleware("auth");
 Route::post('/dashboard/academic/class/{id}', [ClassController::class, "update"])->middleware("auth");

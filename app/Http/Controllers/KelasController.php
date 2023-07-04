@@ -47,7 +47,7 @@ class KelasController extends Controller
         // }
 
         $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
-        if($activeSesiData == null) {
+        if ($activeSesiData == null) {
             abort(404);
         }
         $dateToday = Carbon::now()->toDateString();
@@ -86,9 +86,9 @@ class KelasController extends Controller
 
         $status = "Active";
 
-        if($sesiToday == null) {
+        if ($sesiToday == null) {
             $status = "Inactive";
-        } else if($sesiToday->id != $activeSesiData->id) {
+        } else if ($sesiToday->id != $activeSesiData->id) {
             $status = "Inactive";
         }
 
@@ -98,7 +98,7 @@ class KelasController extends Controller
             'absen' => $presensi->paginate(8)->withQueryString(),
             'qrcode' => $qrcode,
             "sesiNow" => $sesiRequest,
-            "activeSesi" => $activeSesiData, 
+            "activeSesi" => $activeSesiData,
             'anggotaKelas' => $dataPush,
             'sesiToday' => $sesiToday,
             'status' => $status,
@@ -228,7 +228,7 @@ class KelasController extends Controller
                     'status' => $presensi->status
                 ]);
 
-                if(!$absen->wasRecentlyCreated){
+                if (!$absen->wasRecentlyCreated) {
                     $absen->update([
                         'sesi_id' => $request->sesi_id,
                         'nim' => $presensi->nim,
@@ -272,6 +272,13 @@ class KelasController extends Controller
             };
 
             $sesi->update(['status' => 'Selesai']);
+            $loggedIn = auth()->user();
+            LogDosen::create([
+                'nip' => $loggedIn->dosen->nip,
+                'kelas_id' => $sesi->jadwal->kelas_id,
+                'affected' => 'Kelas',
+                'activity' => "Menutup Pekan $sesi->sesi pada Mata Kuliah " . $sesi->jadwal->matkul->nama_matkul . " Kelas " . $sesi->jadwal->kelas->nama_kelas . ": Manual"
+            ]);
 
             return back()->with([
                 "message" => "Tutup pekan berhasil!",
@@ -289,12 +296,21 @@ class KelasController extends Controller
     {
         try {
 
-            $affectedRows = Presensi::where([
+            $presensi = Presensi::where([
                 ['sesi_id', $request->sesi_id],
                 ['nim', $request->nim]
             ])->first();
 
-            $affectedRows->update(["waktu_presensi" => $request->waktu_presensi, "status" => $request->status]);
+            $presensi->update(["waktu_presensi" => $request->waktu_presensi, "status" => $request->status]);
+            
+            $loggedIn = auth()->user();
+            LogDosen::create([
+                'nip' => $loggedIn->dosen->nip,
+                'nim' => $presensi->nim,
+                'kelas_id' => $presensi->sesi->jadwal->kelas_id,
+                'affected' => 'Mahasiswa',
+                'activity' => "Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
+            ]);
 
             return back()->with([
                 "message" => "Edit Presensi Berhasil!",
@@ -342,7 +358,8 @@ class KelasController extends Controller
         }
     }
 
-    public function pendingPekan(Request $request) {
+    public function pendingPekan(Request $request)
+    {
         try {
             $user = auth()->user()->dosen->nip;
             $sesi = Sesi::find($request->sesi_id);
@@ -352,7 +369,7 @@ class KelasController extends Controller
             $sesiPending = Pending::firstOrCreate([
                 'jadwal_id' => $sesi->jadwal_id,
                 'sesi' => $sesi->sesi,
-            ],[
+            ], [
                 'nip' => $user,
                 'jadwal_id' => $sesi->jadwal_id,
                 'sesi' => $sesi->sesi,

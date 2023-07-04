@@ -363,20 +363,11 @@
             text-align: center
         }
 
-        .center {
-            display: table;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         .class-td {
             text-align: left;
-            padding: 8px;
         }
 
         .info-table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
             width: 20%;
             margin-bottom: 10px;
         }
@@ -386,9 +377,15 @@
             font-size: 18px;
         }
 
+        .center {
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .span-title {
             font-size: 40px;
-            font-weight: bold
+            font-weight: bold;
         }
 
         .footer {
@@ -400,10 +397,6 @@
             border-top: 2px solid #555555;
         }
 
-        /* .footer p {
-            border-top: 2px solid #555555;
-            margin-top: 10px;
-        } */
 
         .footer-text {
             padding-top: 5px;
@@ -432,7 +425,7 @@
     </footer>
 
     <div class="center">
-        <span class="span-title">Attendance Report</span>
+        <span class="span-title">Compensation Report</span>
     </div>
     <br>
     <div>
@@ -441,17 +434,8 @@
                 <tr>
                     <td class="class-td">
                         <span class="span-table"><b>Class</b></span>
-                    </td>
                     <td class="class-td">
-                        <span class="span-table">: {{ $jadwal->kelas->nama_kelas }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="class-td">
-                        <span class="span-table"><b>Course</b></span>
-                    </td>
-                    <td class="class-td">
-                        <span class="span-table">: {{ $jadwal->matkul->nama_matkul }}</span>
+                        <span class="span-table">: {{ $jadwal->first()->kelas->nama_kelas }}</span>
                     </td>
                 </tr>
             </tbody>
@@ -464,28 +448,12 @@
                     <th>#</th>
                     <th>NIM</th>
                     <th>Nama Mahasiswa</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                    <th>10</th>
-                    <th>11</th>
-                    <th>12</th>
-                    <th>13</th>
-                    <th>14</th>
-                    <th>15</th>
-                    <th>16</th>
-                    <th>17</th>
-                    <th>18</th>
                     <th>Hadir</th>
                     <th>Terlambat</th>
                     <th>Izin
                     <th>Alpa</th>
+                    <th>Total Kompensasi</th>
+                    <th>Ket. SP</th>
                 </tr>
             </thead>
             <tbody class="text-center">
@@ -494,53 +462,12 @@
                         <th>{{ $loop->index + 1 }}</th>
                         <th>{{ $item->nim }}</th>
                         <th>{{ $item->nama_mahasiswa }}</th>
-
-                        @for ($i = 0; $i < 18; $i++)
-                            @if (isset($item->presensi[$i]) && $item->presensi[$i]->pekan == $i + 1)
-                                <td>{{ $item->presensi[$i]->status }}</td>
-                            @else
-                                <td>-</td>
-                            @endif
-                        @endfor
-                        {{-- @php
-                            $check = false;
-                            for ($i = 0; $i < 18; $i++) { 
-                                foreach ($item->presensi as $item2) {
-                                    if(isset($item2) && $item2->pekan == $i+1) {
-                                        echo('<td>'. $item2->status .'</td>');
-                                        $check = true;
-                                    } else {
-                                        $check = false;
-                                    }
-                                }
-
-                                if (empty($item->presensi[$i]) && !$check) {
-                                    echo('<td>'.$i.'</td>');
-                                    // echo('<td></td>');
-                                } else if(!empty($item->presensi[$i]) && !$check){
-                                    echo('<td>*</td>');
-                                } else {
-
-                                }
-                            }
-                        @endphp
-                        {{-- @for ($i = 0; $i < 18; $i++)
-                            @foreach ($item->presensi as $item2)
-                                @if (isset($item2) && $item2->pekan == $i + 1)
-                                    <td>{{ $item2->status }}</td>
-                                @endif
-                            @endforeach
-
-                            @if (isset($item->presensi[$i]) && $item->presensi[$i]->pekan == $i + 1)
-                                @continue
-                            @else
-                                <td>-</td>
-                            @endif
-                        @endfor --}}
                         <th>{{ $item->hadir }}</th>
                         <th>{{ $item->terlambat }}</th>
                         <th>{{ $item->izin }}</th>
                         <th>{{ $item->tidakHadir }}</th>
+                        <th>{{ $item->total_kompensasi }} Menit</th>
+                        <th>{{ $item->sp }}</th>
                     </tr>
                 @endforeach
             </tbody>

@@ -35,7 +35,7 @@ class presensiObserver
         //     ]);
         // }
 
-        if ($loggedIn->role == "Mahasiswa") {
+        if ($loggedIn->role != null && $loggedIn->role == "Mahasiswa") {
             LogMahasiswa::create([
                 'nim' => $presensi->nim,
                 'jadwal_id' => $presensi->sesi->jadwal->id,
@@ -53,30 +53,32 @@ class presensiObserver
     public function updated(Presensi $presensi)
     {
         $loggedIn = auth()->user();
-        if ($loggedIn->role == "Admin") {
-            LogAdmin::create([
-                'nip' => $loggedIn->admin->nip,
-                'affected' => 'Presensi',
-                'activity' => "Mengubah data Presensi: $presensi->nim pada Jadwal " . $presensi->sesi->jadwal->matkul->nama_matkul . " Status : $presensi->status"
-            ]);
+        if ($loggedIn->role != null) {
+            if ($loggedIn->role == "Admin") {
+                LogAdmin::create([
+                    'nip' => $loggedIn->admin->nip,
+                    'affected' => 'Presensi',
+                    'activity' => "Mengubah data Presensi: $presensi->nim pada Jadwal " . $presensi->sesi->jadwal->matkul->nama_matkul . " Status : $presensi->status"
+                ]);
 
-            LogDosen::create([
-                'nip' => $presensi->sesi->jadwal->nip,
-                'nim' => $presensi->nim,
-                'kelas_id' => $presensi->sesi->jadwal->kelas_id,
-                'affected' => 'Mahasiswa',
-                'activity' => "Admin " . $loggedIn->admin->nip . "=> Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
-            ]);
-        }
+                LogDosen::create([
+                    'nip' => $presensi->sesi->jadwal->nip,
+                    'nim' => $presensi->nim,
+                    'kelas_id' => $presensi->sesi->jadwal->kelas_id,
+                    'affected' => 'Mahasiswa',
+                    'activity' => "Admin " . $loggedIn->admin->nip . "=> Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
+                ]);
+            }
 
-        if ($loggedIn->role == "Dosen") {
-            LogDosen::create([
-                'nip' => $loggedIn->dosen->nip,
-                'nim' => $presensi->nim,
-                'kelas_id' => $presensi->sesi->jadwal->kelas_id,
-                'affected' => 'Mahasiswa',
-                'activity' => "Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
-            ]);
+            if ($loggedIn->role == "Dosen") {
+                LogDosen::create([
+                    'nip' => $loggedIn->dosen->nip,
+                    'nim' => $presensi->nim,
+                    'kelas_id' => $presensi->sesi->jadwal->kelas_id,
+                    'affected' => 'Mahasiswa',
+                    'activity' => "Mengubah Presensi: Kelas " . $presensi->sesi->jadwal->kelas->nama_kelas . " NIM $presensi->nim Pekan " . $presensi->sesi->sesi . " Status $presensi->status"
+                ]);
+            }
         }
     }
 
