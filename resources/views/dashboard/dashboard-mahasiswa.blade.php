@@ -16,7 +16,7 @@
                                     data-target="825">{{ $dashboard->akun->nim }}</span>
                             </h4>
                         </div>
-                        <a class="text-decoration-none text-muted">{{ $dashboard->akun->kelas->nama_kelas }}</a>
+                        <a class="text-decoration-none text-muted">{{ ($dashboard->akun->kelas == null) ? "-" : $dashboard->akun->kelas->nama_kelas }}</a>
                     </div>
                 </div>
             </div>

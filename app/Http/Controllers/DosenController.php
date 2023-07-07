@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Models\Jadwal;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class DosenController extends Controller
 {
@@ -144,13 +146,23 @@ class DosenController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $data = Jadwal::where('nip', $request->nip)->get();
+            
+            if ($data != null) {
+                return back()->with([
+                    "message" => "Failed to delete the lecturer because there are schedules that utilize this lecturer, please double-check the Schedule data!",
+                    "status" => false,
+                ]);
+            }
+
+            
             foreach (Dosen::where([
                 "user_id" => $request->user_id,
                 "nip" => $request->nip
             ])->get() as $deleteItem) {
                 $deleteItem->delete();
             }
-            User::find($request->user_id)->delete();
+            User::where("id", $request->user_id)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data dosen",
                 "status" => true,
@@ -158,6 +170,34 @@ class DosenController extends Controller
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Gagal menghapus data dosen, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            #Match The Admin Password
+            if (!Hash::check($request->admin_password, auth()->user()->password)) {
+                return back()->with([
+                    "message" => "Admin Password Doesn't match!",
+                    "status" => false,
+                ]);
+            }
+
+            #Update the new Password
+            User::whereId($request->user_id)->update([
+                'password' => bcrypt($request->student_password)
+            ]);
+
+            return back()->with([
+                "message" => "Change Password Success",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

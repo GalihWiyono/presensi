@@ -132,8 +132,8 @@
                     <h5 class="modal-title">QRCode Invalid</h5>
                 </div>
                 <div class="modal-body">
-                    <h6 class="text-justify">Anda tidak terdaftar pada kelas ini atau QRCode invalid, periksa
-                        kembali QRCode yang akan anda scan!</h6>
+                    <h6 class="text-justify">You are not registered for this class or the QRCode is invalid, please
+                        double-check the QRCode you are scanning!!</h6>
                 </div>
             </div>
         </div>

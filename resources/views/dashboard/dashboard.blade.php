@@ -3,6 +3,22 @@
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
+        @if (session()->has('message'))
+            <div class="position-fixed mt-5 top-0 end-0 p-3" style="z-index: 11">
+                <div id="toastNotification" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div id="toast-header"
+                        class="toast-header @if (session('status') == true) text-success @else text-danger @endif">
+                        <i class="fa-solid fa-square fa-xl"></i>
+                        <strong class="ms-2 me-auto">{{ session('status') == true ? 'Success' : 'Failed' }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ session('message') }}
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @can('isAdmin')
             <div class="col-12">
                 <div class="d-flex align-items-lg-center flex-lg-row flex-column">
@@ -104,7 +120,8 @@
                             agar dapat menggunakan
                             fitur yang ada pada website ini!</h6>
 
-                        <h6>Silakan aktifkan kembali lokasi dengan mengikuti <a href="#" id="lokasiLink">tutorial ini.</a></h6>
+                        <h6>Silakan aktifkan kembali lokasi dengan mengikuti <a href="#" id="lokasiLink">tutorial ini.</a>
+                        </h6>
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-secondary col-2" href="">Refresh</a>
@@ -145,7 +162,8 @@
                         <h5 class="modal-title">Location Not Found</h5>
                     </div>
                     <div class="modal-body">
-                        <h6 class="text-justify">Lokasi anda tidak ditemukan, apakah kelas akan dilaksanakan secara online?</h6>
+                        <h6 class="text-justify">Lokasi anda tidak ditemukan, apakah kelas akan dilaksanakan secara online?
+                        </h6>
                     </div>
 
                     <div class="modal-footer">
@@ -178,15 +196,16 @@
         </div>
 
         {{-- Modal Change Status To Online --}}
-        <div class="modal fade" id="statusKelasOnlineModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="statusKelasOnlineModal" aria-hidden="true">
+        <div class="modal fade" id="statusKelasOnlineModal" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="statusKelasOnlineModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Change Status to Online?</h5>
                     </div>
                     <div class="modal-body">
-                        <h6 class="text-justify">Status kelas akan diubah menjadi online dan tidak memerlukan izin lokasi, apakah
+                        <h6 class="text-justify">Status kelas akan diubah menjadi online dan tidak memerlukan izin lokasi,
+                            apakah
                             anda setuju?</h6>
                     </div>
 
@@ -199,8 +218,8 @@
         </div>
 
         {{-- Modal Change Status To Offline --}}
-        <div class="modal fade" id="statusKelasOfflineModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="statusKelasOfflineModal" aria-hidden="true">
+        <div class="modal fade" id="statusKelasOfflineModal" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="statusKelasOfflineModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">

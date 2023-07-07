@@ -29,7 +29,7 @@
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/dosen') ? 'active' : '' }}"
                                         href="/dashboard/database/dosen"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Lecture</a></li>
+                                            data-feather="chevrons-right"></span>Lecturer</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/admin') ? 'active' : '' }}"
                                         href="/dashboard/database/admin"><span class="me-2"
@@ -63,6 +63,27 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item accordion">
+                        <a type="button" class="nav-link {{ Request::is('dashboard/account') ? 'active' : '' }}"
+                            data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                            aria-controls="collapseThree">
+                            <span data-feather="settings"></span>
+                            Account
+                        </a>
+                        <div id="collapseThree"
+                            class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-2">
+                                <li class="nav-item">
+                                    <a class="nav-link dropdown-item {{ Request::is('dashboard/account/admin/*') ? 'active' : '' }}"
+                                        href="/dashboard/account/admin/changePassword">
+                                        <span class="me-2" data-feather="chevrons-right">
+                                        </span>Change Password
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 @endcan
 
                 @can('isDosen')
@@ -75,19 +96,41 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/kelas">
-                            <span data-feather="hard-drive"></span>
-                            Class
+                            <i class="fa-solid fa-chalkboard"></i>
+                            <span class="ms-1">Class</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <div class="d-flex justify-content-start">
-                            <a class="nav-link {{ Request::is('dashboard/pending*') ? 'active' : '' }}" href="/dashboard/pending">
+                            <a class="nav-link {{ Request::is('dashboard/pending*') ? 'active' : '' }}"
+                                href="/dashboard/pending">
                                 <i class="fa-solid fa-clock-rotate-left"></i>
-                                <span class="ms-2">Pending Week</span>
+                                <span class="ms-1">Pending Week</span>
                             </a>
                             <button class="btn d-none" id="pendingNotif">
                                 <i class="fa-solid fa-circle-exclamation" style="color: #df4759;"></i>
                             </button>
+                        </div>
+                    </li>
+                    <li class="nav-item accordion">
+                        <a type="button" class="nav-link {{ Request::is('dashboard/account') ? 'active' : '' }}"
+                            data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            <span data-feather="settings"></span>
+                            Account
+                        </a>
+                        <div id="collapseOne"
+                            class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-2">
+                                <li class="nav-item">
+                                    <a class="nav-link dropdown-item {{ Request::is('dashboard/account/dosen/*') ? 'active' : '' }}"
+                                        href="/dashboard/account/dosen/changePassword">
+                                        <span class="me-2" data-feather="chevrons-right">
+                                        </span>Change Password
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </li>
                 @endcan
@@ -101,7 +144,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('dashboard/jadwal*') ? 'active' : '' }}" href="/dashboard/jadwal">
+                        <a class="nav-link {{ Request::is('dashboard/jadwal*') ? 'active' : '' }}"
+                            href="/dashboard/jadwal">
                             <span data-feather="file-text"></span>
                             Jadwal
                         </a>
@@ -112,6 +156,27 @@
                             <span data-feather="camera"></span>
                             Presensi
                         </a>
+                    </li>
+                    <li class="nav-item accordion">
+                        <a type="button" class="nav-link {{ Request::is('dashboard/account') ? 'active' : '' }}"
+                            data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            <span data-feather="settings"></span>
+                            Account
+                        </a>
+                        <div id="collapseOne"
+                            class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
+                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <ul class="acoordion-body list-unstyled container ms-2">
+                                <li class="nav-item">
+                                    <a class="nav-link dropdown-item {{ Request::is('dashboard/account/mahasiswa/*') ? 'active' : '' }}"
+                                        href="/dashboard/account/mahasiswa/changePassword">
+                                        <span class="me-2" data-feather="chevrons-right">
+                                        </span>Change Password
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 @endcan
 
@@ -133,5 +198,3 @@
     </div>
 </nav>
 @include('../script/sidebar-script')
-
-

@@ -51,6 +51,13 @@ class PresensiController extends Controller
             $statusPresensi = "Hadir";
             $nim = auth()->user()->mahasiswa->nim;
 
+            if($waktuPresensi > $request->jam_berakhir) {
+                return back()->with([
+                    "message" => "The class time has ended, you cannot mark attendance!",
+                    "status" => false,
+                ]);
+            }
+
             if ($waktuPresensi > $request->akhir_absen) {
                 $statusPresensi = "Terlambat";
             }
@@ -60,6 +67,7 @@ class PresensiController extends Controller
                 'sesi_id' => $request->sesi_id
             ], [
                 'sesi_id' => $request->sesi_id,
+                'jadwal_id' => $request->id,
                 'nim' => $nim,
                 'waktu_presensi' => $waktuPresensi,
                 'status' => $statusPresensi
@@ -69,7 +77,7 @@ class PresensiController extends Controller
 
                 LogMahasiswa::create([
                     'nim' => $presensi->nim,
-                    'jadwal_id' => $presensi->sesi->jadwal->id,
+                    'jadwal_id' => $request->id,
                     'activity' => "Presensi Pekan " . $presensi->sesi->sesi . " " . $presensi->sesi->jadwal->matkul->nama_matkul . " : $presensi->status"
                 ]);
                 

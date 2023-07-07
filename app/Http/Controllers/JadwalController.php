@@ -30,33 +30,32 @@ class JadwalController extends Controller
         $matkul = new MataKuliah;
         $kelas = new Kelas;
         $dosen = new Dosen;
-        $filter = "";
-
-        //get ID for filter
-        if (request('filter') == "Course") {
-            $filter = $matkul->where('nama_matkul', 'like', '%' . request('search') . '%')->first()->id;
-        }
-
-        if (request('filter') == "Class") {
-            $filter = $kelas->where('nama_kelas', 'like', '%' . request('search') . '%')->first()->id;
-        }
-
-        if (request('filter') == "Lecture") {
-            $filter = $dosen->where('nama_dosen', 'like', '%' . request('search') . '%')->first()->nip;
-        }
 
         if (request('search')) {
-            $jadwal->when(request('filter') == 'Course', function ($q) use ($filter) {
-                return $q->where('matkul_id', $filter);
+
+            $jadwal->when(request('filter') == 'Course', function ($q) use ($matkul) {
+                $dataLoop = [];
+                $data = $matkul->where('nama_matkul', 'like', '%' . request('search') . '%')->get();
+                foreach ($data as $item) {
+                    $dataLoop[] = $item->id;
+                }
+                return $q->whereIn('matkul_id', $dataLoop);
             });
-            $jadwal->when(request('filter') == 'Class', function ($q) use ($filter) {
-                return $q->where('kelas_id', $filter);
+            $jadwal->when(request('filter') == 'Class', function ($q) use ($kelas) {
+                $dataLoop = [];
+                $data = $kelas->where('nama_kelas', 'like', '%' . request('search') . '%')->get();
+                foreach ($data as $item) {
+                    $dataLoop[] = $item->id;
+                }
+                return $q->whereIn('kelas_id', $dataLoop);
             });
-            $jadwal->when(request('filter') == 'Lecture', function ($q) use ($filter) {
-                return $q->where('nip', $filter);
-            });
-            $jadwal->when(request('filter') == 'Course', function ($q) use ($filter) {
-                return $q->where('matkul_id', $filter);
+            $jadwal->when(request('filter') == 'Lecture', function ($q) use ($dosen) {
+                $dataLoop = [];
+                $data = $dosen->where('nama_dosen', 'like', '%' . request('search') . '%')->get();
+                foreach ($data as $item) {
+                    $dataLoop[] = $item->nip;
+                }
+                return $q->whereIn('nip', $dataLoop);
             });
         }
 

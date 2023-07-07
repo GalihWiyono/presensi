@@ -83,10 +83,15 @@ class ClassController extends Controller
     public function show($id)
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
-        $anggotaKelas = AnggotaKelas::with(['mahasiswa'])->where('kelas_id', $id);
+        $mahasiswa = Mahasiswa::where('kelas_id', $id);
+
+        if (request('search')) {
+            $mahasiswa->where('nama_mahasiswa', 'like', '%' . request('search') . '%');
+        }
+
         $kelas = Kelas::find($id);
         return view('academic/class', [
-            'anggota' => $anggotaKelas->paginate(7),
+            'anggota' => $mahasiswa->paginate(7),
             'kelas' => $kelas
         ]);
     }
@@ -138,16 +143,25 @@ class ClassController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $data = Jadwal::where('kelas_id', $request->id)->get();
+            
+            if ($data != null) {
+                return back()->with([
+                    "message" => "Failed to delete the class because there are schedules that utilize this class, please double-check the Schedule data!",
+                    "status" => false,
+                ]);
+            }
+
             foreach (Kelas::where('id', $request->id)->get() as $deleteItem) {
                 $deleteItem->delete();
             }
             return back()->with([
-                "message" => "Berhasil menghapus data class",
+                "message" => "Delete Class Success",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data class, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete class, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -160,7 +174,7 @@ class ClassController extends Controller
         $jadwal = Jadwal::with('matkul')->where('kelas_id', $id)->get();
         if (count($jadwal) == 0) {
             return back()->with([
-                "message" => "Jadwal tidak tersedia pada kelas ini, mohon isi terlebih dahulu!",
+                "message" => "The schedule is not available for this class, please add it first!",
                 "status" => false,
             ]);
         }
@@ -243,34 +257,34 @@ class ClassController extends Controller
             $jadwal = Jadwal::where('kelas_id', $id)->get();
             $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $id)->get();
             $jadwal_id = [];
-    
+
             foreach ($jadwal as $item) {
                 $jadwal_id[] = $item->id;
             }
-    
+
             $presensi = Presensi::whereIn('jadwal_id', $jadwal_id)->orderBy('sesi_id')->get();
-    
+
             $data = [];
-    
+
             foreach ($anggotaKelas as $mahasiswa) {
                 $dataMahasiswa = $presensi->where('nim', $mahasiswa->nim);
                 $totalKompensasi = 0;
                 $sp = "-";
-    
+
                 //get kompen tidak hadir
                 foreach ($jadwal as $dataJadwal) {
                     foreach ($presensi as $dataPresensi) {
-                        if($dataPresensi->jadwal_id == $dataJadwal->id && $mahasiswa->nim == $dataPresensi->nim) {
-                            if($dataPresensi->status == "Tidak Hadir") {
-                                $akhir_absen = Carbon::parse ( $dataJadwal->jam_berakhir);
-                                $mulai_absen = Carbon::parse( $dataJadwal->jam_mulai);
+                        if ($dataPresensi->jadwal_id == $dataJadwal->id && $mahasiswa->nim == $dataPresensi->nim) {
+                            if ($dataPresensi->status == "Tidak Hadir") {
+                                $akhir_absen = Carbon::parse($dataJadwal->jam_berakhir);
+                                $mulai_absen = Carbon::parse($dataJadwal->jam_mulai);
                                 $selisih = $akhir_absen->diffInMinutes($mulai_absen);
                                 $totalKompensasi += $selisih;
                             }
-    
-                            if($dataPresensi->status == "Terlambat") {
+
+                            if ($dataPresensi->status == "Terlambat") {
                                 $dataAkhirAbsen = ($dataJadwal->akhir_absen == null) ? $dataJadwal->jam_mulai : $dataJadwal->akhir_absen;
-                                $akhir_absen = Carbon::parse ($dataAkhirAbsen);
+                                $akhir_absen = Carbon::parse($dataAkhirAbsen);
                                 $jam_absen = Carbon::parse($dataPresensi->waktu_presensi);
                                 $selisih = $akhir_absen->diffInMinutes($jam_absen);
                                 $totalKompensasi += $selisih;
@@ -279,18 +293,18 @@ class ClassController extends Controller
                     }
                 }
 
-                if($totalKompensasi >= 750 && $totalKompensasi < 1500) {
+                if ($totalKompensasi >= 750 && $totalKompensasi < 1500) {
                     $sp = "1";
                 }
 
-                if($totalKompensasi >= 1500 && $totalKompensasi < 1850) {
+                if ($totalKompensasi >= 1500 && $totalKompensasi < 1850) {
                     $sp = "2";
                 }
 
-                if($totalKompensasi >= 1850) {
+                if ($totalKompensasi >= 1850) {
                     $sp = "3";
                 }
-    
+
                 $addData = (object)[
                     'nim' => $mahasiswa->mahasiswa->nim,
                     'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
@@ -303,20 +317,20 @@ class ClassController extends Controller
                 ];
                 (object) array_push($data, $addData);
             }
-    
+
             // for ($i = 0; $i < 4; $i++) {
             //     $data = array_merge($data, $data);
             // }
-    
+
             $data = collect($data);
-    
+
             // dd($data);
             $pdf = Pdf::loadView('academic/class-pdf', [
                 'data' => $data,
                 'jadwal' => $jadwal
             ]);
             $pdf->setPaper('a4', 'landscape');
-            return $pdf->stream('Kompensasi Kelas ' . $jadwal->first()->kelas->nama_kelas .'.pdf');
+            return $pdf->stream('Kompensasi Kelas ' . $jadwal->first()->kelas->nama_kelas . '.pdf');
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Kelas tidak memiliki jadwal, pastikan menambahkan jadwal terlebih dahulu!",

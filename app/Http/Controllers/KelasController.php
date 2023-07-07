@@ -272,6 +272,13 @@ class KelasController extends Controller
             };
 
             $sesi->update(['status' => 'Selesai']);
+            $qrcode = ModelsQrcode::where([
+                'jadwal_id' => $request->jadwal_id,
+                'sesi_id' => $request->sesi_id
+            ])->first();
+
+            $qrcode->update(['status' => 'Inactive']);
+
             $loggedIn = auth()->user();
             LogDosen::create([
                 'nip' => $loggedIn->dosen->nip,
@@ -363,18 +370,20 @@ class KelasController extends Controller
         try {
             $user = auth()->user()->dosen->nip;
             $sesi = Sesi::find($request->sesi_id);
-            $sesi->update([
-                'status' => "Pending"
-            ]);
+
             $sesiPending = Pending::firstOrCreate([
-                'jadwal_id' => $sesi->jadwal_id,
-                'sesi' => $sesi->sesi,
+                'jadwal_id' => $request->jadwal_id,
+                'sesi_id' => $request->sesi_id,
             ], [
                 'nip' => $user,
                 'jadwal_id' => $sesi->jadwal_id,
                 'sesi' => $sesi->sesi,
                 'tanggal' => $sesi->tanggal,
                 'status' => "Belum"
+            ]);
+
+            $sesi->update([
+                'status' => "Pending"
             ]);
 
             return back()->with([

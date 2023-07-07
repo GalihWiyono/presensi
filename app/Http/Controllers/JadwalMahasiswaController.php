@@ -21,8 +21,14 @@ class JadwalMahasiswaController extends Controller
     {
         Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
         $kelas =  auth()->user()->mahasiswa->kelas;
+        if ($kelas == null) {
+            return back()->with([
+                "message" => "You are not registered in any class, please report to the Admin for further action.",
+                "status" => false,
+            ]);
+        }
         $jadwal = Jadwal::with('matkul', 'dosen')->where('kelas_id', $kelas->id);
-        return view('jadwal/jadwal', ['jadwal' => $jadwal->paginate(8) , 'kelas' => $kelas]);
+        return view('jadwal/jadwal', ['jadwal' => $jadwal->paginate(8), 'kelas' => $kelas]);
     }
 
     /**

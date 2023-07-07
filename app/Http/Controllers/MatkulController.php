@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jadwal;
 use App\Models\MataKuliah;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
@@ -122,6 +123,15 @@ class MatkulController extends Controller
     public function destroy(Request $request)
     {
         try {
+            $data = Jadwal::where('matkul_id', $request->id_matkul)->get();
+            
+            if ($data != null) {
+                return back()->with([
+                    "message" => "Failed to delete the course because there are schedules that utilize this coure, please double-check the Schedule data!",
+                    "status" => false,
+                ]);
+            }
+            
             foreach (MataKuliah::where('id', $request->id_matkul)->get() as $deleteItem) {
                 $deleteItem->delete();
             }

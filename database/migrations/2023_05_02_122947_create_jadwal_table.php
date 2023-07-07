@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('matkul_id')->require();
             $table->unsignedBigInteger('kelas_id')->require();
             $table->string('nip')->require();
-            $table->enum('hari', ['Senin','Selasa',"Rabu","Kamis","Jumat","Sabtu"]);
+            $table->date('tanggal_mulai');
             $table->time('jam_mulai');
             $table->time('jam_berakhir');
             $table->time('mulai_absen')->nullable();

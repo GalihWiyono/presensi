@@ -299,7 +299,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nim</th>
-                                        <th>Nama Mahasiswa</th>
+                                        <th>Student Name</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -364,7 +364,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Edit Waktu Presensi</h5>
+                        <h5 class="modal-title" id="qrModal">Edit Attendance Time</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -372,15 +372,15 @@
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                                    placeholder="Jam Mulai Absen" data-sb-validations=""
-                                    value="{{ \Carbon\Carbon::parse($detail->mulai_absen)->format('H:i') }}" />
-                                <label for="jam">Mulai Absen</label>
+                                    placeholder="Start Attendance Time" data-sb-validations=""
+                                    value="{{ ($detail->mulai_absen == null) ? null : \Carbon\Carbon::parse($detail->mulai_absen)->format('H:i') }}" />
+                                <label for="jam">Start Attendance Time</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                                    placeholder="Jam Akhir Absen" data-sb-validations=""
-                                    value="{{ \Carbon\Carbon::parse($detail->akhir_absen)->format('H:i') }}" />
-                                <label for="jam">Akhir Absen</label>
+                                    placeholder="End Attendance Time" data-sb-validations=""
+                                    value="{{ ($detail->akhir_absen == null) ? null : \Carbon\Carbon::parse($detail->akhir_absen)->format('H:i') }}" />
+                                <label for="jam">End Attendance Time</label>
                             </div>
                         </div>
 

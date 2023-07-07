@@ -61,6 +61,9 @@
                                 <td>{{ $item->tanggal_lahir }}</td>
                                 <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
                                 <td>
+                                    <a class="btn btn-success btn-sm px-3" id="changePassword" data-bs-toggle="modal"
+                                    data-bs-target="#gantiPasswordModal" data-user-id="{{ $item->user_id }}"
+                                    data-nip="{{ $item->nip }}"><i class="fa-solid fa-unlock-keyhole"></i></a>
                                     <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editDosenModal" data-user-id="{{ $item->user_id }}"
                                         data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_dosen }}"
@@ -81,6 +84,7 @@
             </div>
         </div>
     </div>
+
     {{-- Modal Tambah dosen --}}
     <div class="modal fade" id="tambahdosenModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="tambahdosenModal" aria-hidden="true">
@@ -204,6 +208,52 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button class="btn btn-danger" type="submit">Hapus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Change Password User --}}
+    <div class="modal fade" id="gantiPasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gantiPasswordModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/dashboard/database/dosen/changePassword" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Lecturer Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nip" id="nip_password" type="text"
+                                placeholder="nip_password" readonly />
+                            <label for="nip">NIP</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="user_id" id="user_id_password" type="hidden" readonly />
+                        </div>
+                        <div class="row gx-1 input-group">
+                            <div class="form-floating mb-3 col-10">
+                                <input class="form-control" name="admin_password" id="admin_password" type="password"
+                                    placeholder="Admin Password" required />
+                                <label for="admin_password">Admin Password</label>
+                            </div>
+                            <div class="col-2 input-group-text mb-3">
+                                <a class="ms-2 text-decoration-none text-primary" id="togglePasword"
+                                    style="cursor: pointer">Show</a>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="student_password" id="student_password" type="text"
+                                placeholder="Student Password" required />
+                            <label for="student_password">Lecturer New Password</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Change</button>
                     </div>
                 </form>
             </div>

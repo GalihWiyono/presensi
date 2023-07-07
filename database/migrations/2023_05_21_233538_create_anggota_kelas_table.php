@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('anggota_kelas', function (Blueprint $table) {
             $table->id();
             $table->string('nim');
-            $table->unsignedBigInteger('kelas_id');
+            $table->unsignedBigInteger('kelas_id')->nullable();
             $table->timestamps();
         });
     }

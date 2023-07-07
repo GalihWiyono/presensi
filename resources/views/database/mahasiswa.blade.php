@@ -61,8 +61,11 @@
                                 <td>{{ $item->nama_mahasiswa }}</td>
                                 <td>{{ $item->tanggal_lahir }}</td>
                                 <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                                <td>{{ $item->kelas->nama_kelas }}</td>
+                                <td>{{ ($item->kelas == null) ? "-" : $item->kelas->nama_kelas }}</td>
                                 <td>
+                                    <a class="btn btn-success btn-sm px-3" id="changePassword" data-bs-toggle="modal"
+                                        data-bs-target="#gantiPasswordModal" data-user-id="{{ $item->user_id }}"
+                                        data-nim="{{ $item->nim }}"><i class="fa-solid fa-unlock-keyhole"></i></a>
                                     <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editMahasiswaModal" data-user-id="{{ $item->user_id }}"
                                         data-nim="{{ $item->nim }}" data-nama="{{ $item->nama_mahasiswa }}"
@@ -83,6 +86,7 @@
             </div>
         </div>
     </div>
+
     {{-- Modal Tambah Mahasiswa --}}
     <div class="modal fade" id="tambahMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="tambahMahasiswaModal" aria-hidden="true">
@@ -132,6 +136,51 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button class="btn btn-primary" type="submit">Tambah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Change Password User --}}
+    <div class="modal fade" id="gantiPasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gantiPasswordModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/dashboard/database/mahasiswa/changePassword" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Student Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nim" id="nim_password" type="text"
+                                placeholder="NIM" readonly />
+                            <label for="nim">NIM</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="user_id" id="user_id_password" type="hidden" readonly />
+                        </div>
+                        <div class="row gx-1 input-group">
+                            <div class="form-floating mb-3 col-10">
+                                <input class="form-control" name="admin_password" id="admin_password" type="password"
+                                    placeholder="Admin Password" required />
+                                <label for="admin_password">Admin Password</label>
+                            </div>
+                            <div class="col-2 input-group-text mb-3">
+                                <a class="ms-2 text-decoration-none text-primary" id="togglePasword" style="cursor: pointer">Show</a>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="student_password" id="student_password" type="text"
+                                placeholder="Student Password" required />
+                            <label for="student_password">Student New Password</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Change</button>
                     </div>
                 </form>
             </div>

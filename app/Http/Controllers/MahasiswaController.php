@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class MahasiswaController extends Controller
 {
@@ -176,7 +177,7 @@ class MahasiswaController extends Controller
             ])->get() as $deleteItem) {
                 $deleteItem->delete();
             }
-            User::find($request->user_id)->delete();
+            User::where("id", $request->user_id)->delete();
             AnggotaKelas::where('nim', $request->nim)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data mahasiswa",
@@ -185,6 +186,34 @@ class MahasiswaController extends Controller
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Gagal menghapus data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            #Match The Admin Password
+            if (!Hash::check($request->admin_password, auth()->user()->password)) {
+                return back()->with([
+                    "message" => "Admin Password Doesn't match!",
+                    "status" => false,
+                ]);
+            }
+
+            #Update the new Password
+            User::whereId($request->user_id)->update([
+                'password' => bcrypt($request->student_password)
+            ]);
+
+            return back()->with([
+                "message" => "Change Password Success",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

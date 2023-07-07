@@ -13,7 +13,7 @@ class LogMahasiswa extends Model
 
     protected $fillable = [
         'nim',
-        'kelas_id',
+        'jadwal_id',
         'activity'
     ];
 

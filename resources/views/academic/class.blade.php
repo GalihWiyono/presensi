@@ -38,7 +38,7 @@
         <div class="container mt-3">
             <div class="d-flex col-12 justify-content-between mb-3">
                 <div class="">
-                    <form action="/dashboard/academic/class">
+                    <form action="/dashboard/academic/class/{{ $kelas->id }}">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
                                 placeholder="Search Student" value="{{ request('search') }}" />
@@ -66,8 +66,8 @@
                                 <tr>
                                     <th>{{ ($anggota->currentpage() - 1) * $anggota->perpage() + $loop->index + 1 }}</th>
                                     <td>{{ $item->nim }}</td>
-                                    <td>{{ $item->mahasiswa->nama_mahasiswa }}</td>
-                                    <td>{{ $item->mahasiswa->tanggal_lahir }}</td>
+                                    <td>{{ $item->nama_mahasiswa }}</td>
+                                    <td>{{ $item->tanggal_lahir }}</td>
                                     <td>
                                         <a class="btn btn-primary btn-sm px-3"
                                             href="/dashboard/academic/class/{{ $item->kelas_id }}/{{ $item->nim }}"><span

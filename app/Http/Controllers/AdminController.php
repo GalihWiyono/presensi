@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -19,6 +20,7 @@ class AdminController extends Controller
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
         $admin =  Admin::latest();
+        $loggedIn = auth()->user()->admin;
 
         if (request('search')) {
             $admin->where('nama_admin', 'like', '%' . request('search') . '%')
@@ -26,7 +28,8 @@ class AdminController extends Controller
         }
 
         return view('database/admin', [
-            "admin" => $admin->paginate(7)->withQueryString()
+            "admin" => $admin->paginate(7)->withQueryString(),
+            'userLoggedIn' => $loggedIn
         ]);
     }
 
@@ -145,13 +148,13 @@ class AdminController extends Controller
     public function destroy(Request $request)
     {
         try {
+            User::where("id", $request->user_id)->delete();
             foreach (Admin::where([
                 "user_id" => $request->user_id,
                 "nip" => $request->nip
             ])->get() as $deleteItem) {
                 $deleteItem->delete();
             }
-            User::find($request->user_id)->delete();
             return back()->with([
                 "message" => "Berhasil menghapus data admin",
                 "status" => true,
@@ -159,6 +162,34 @@ class AdminController extends Controller
         } catch (\Throwable $th) {
             return back()->with([
                 "message" => "Gagal menghapus data admin, Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            #Match The Admin Password
+            if (!Hash::check($request->admin_password, auth()->user()->password)) {
+                return back()->with([
+                    "message" => "Admin Password Doesn't match!",
+                    "status" => false,
+                ]);
+            }
+
+            #Update the new Password
+            User::whereId($request->user_id)->update([
+                'password' => bcrypt($request->student_password)
+            ]);
+
+            return back()->with([
+                "message" => "Change Password Success",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

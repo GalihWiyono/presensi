@@ -20,7 +20,7 @@
             </div>
         </div>
     @endif
-    
+
     <div class="body-white border rounded shadow">
         <div class="container mt-3">
             <div class="d-flex justify-content-between mb-3">
@@ -28,7 +28,7 @@
                     <form action="/dashboard/database/admin">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
-                                placeholder="Cari Admin" value="{{ request('search') }}" />
+                                placeholder="Search Admin Name" value="{{ request('search') }}" />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -36,7 +36,7 @@
                     </form>
                 </div>
                 <div class="">
-                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Tambah
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Add
                         Admin</a>
                 </div>
             </div>
@@ -46,10 +46,10 @@
                         <tr>
                             <th>#</th>
                             <th>NIP</th>
-                            <th>Nama Admin</th>
-                            <th>Tanggal Lahir</th>
+                            <th>Admin Name</th>
+                            <th>Date Of Birth</th>
                             <th>Gender</th>
-                            <th>Aksi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,15 +61,18 @@
                                 <td>{{ $item->tanggal_lahir }}</td>
                                 <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
                                 <td>
+                                    <a class="btn btn-success btn-sm px-3" id="changePassword" data-bs-toggle="modal"
+                                        data-bs-target="#gantiPasswordModal" data-user-id="{{ $item->user_id }}"
+                                        data-nip="{{ $item->nip }}"><i class="fa-solid fa-unlock-keyhole"></i></a>
                                     <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editAdminModal" data-user-id="{{ $item->user_id }}"
                                         data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_admin }}"
                                         data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
                                             data-feather="edit"></span></a>
-                                    <a class="btn btn-danger btn-sm px-3" id='deleteBtn'
+                                    <button class="btn btn-danger btn-sm px-3" id='deleteBtn'
                                         data-user-id="{{ $item->user_id }}" data-id="{{ $item->nip }}"
-                                        data-bs-toggle="modal" data-bs-target="#deleteAdminModal"><span
-                                            data-feather="x-circle"></span></a>
+                                        data-bs-toggle="modal" data-bs-target="#deleteAdminModal"
+                                        {!! $userLoggedIn->nip == $item->nip ? 'disabled' : '' !!}><span data-feather="x-circle"></span></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -205,6 +208,52 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button class="btn btn-danger" type="submit">Hapus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Change Password User --}}
+    <div class="modal fade" id="gantiPasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="gantiPasswordModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/dashboard/database/admin/changePassword" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Admin Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nip" id="nip_password" type="text"
+                                placeholder="nip_password" readonly />
+                            <label for="nip">NIP</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="user_id" id="user_id_password" type="hidden" readonly />
+                        </div>
+                        <div class="row gx-1 input-group">
+                            <div class="form-floating mb-3 col-10">
+                                <input class="form-control" name="admin_password" id="admin_password" type="password"
+                                    placeholder="Admin Password" required />
+                                <label for="admin_password">Admin Password</label>
+                            </div>
+                            <div class="col-2 input-group-text mb-3">
+                                <a class="ms-2 text-decoration-none text-primary" id="togglePasword"
+                                    style="cursor: pointer">Show</a>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="student_password" id="student_password" type="text"
+                                placeholder="Student Password" required />
+                            <label for="student_password">Admin New Password</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Change</button>
                     </div>
                 </form>
             </div>

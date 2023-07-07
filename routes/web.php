@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashboardController;
@@ -41,25 +42,27 @@ Route::post('/dashboard/presensi/check', [PresensiController::class, "checkPrese
 Route::get('/dashboard/jadwal', [JadwalMahasiswaController::class, "index"])->middleware('auth');
 Route::get('/dashboard/jadwal/{id}', [JadwalMahasiswaController::class, "show"])->middleware("auth");
 
-
 //database
 Route::get('/dashboard/database', [DatabaseController::class, "index"])->middleware("auth");
 
 //database->mahasiswa
 Route::get('/dashboard/database/mahasiswa', [MahasiswaController::class, "index"])->middleware("auth");
 Route::post('/dashboard/database/mahasiswa/', [MahasiswaController::class, "store"])->middleware("auth");
+Route::post('/dashboard/database/mahasiswa/changePassword', [MahasiswaController::class, "changePassword"])->middleware("auth");
 Route::delete('/dashboard/database/mahasiswa/', [MahasiswaController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/database/mahasiswa/', [MahasiswaController::class, "update"])->middleware("auth");
 
 //database->dosen
 Route::get('/dashboard/database/dosen', [DosenController::class, "index"])->middleware("auth");
 Route::post('/dashboard/database/dosen/', [DosenController::class, "store"])->middleware("auth");
+Route::post('/dashboard/database/dosen/changePassword', [DosenController::class, "changePassword"])->middleware("auth");
 Route::delete('/dashboard/database/dosen/', [DosenController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/database/dosen/', [DosenController::class, "update"])->middleware("auth");
 
 //database->admin
 Route::get('/dashboard/database/admin', [AdminController::class, "index"])->middleware("auth");
 Route::post('/dashboard/database/admin/', [AdminController::class, "store"])->middleware("auth");
+Route::post('/dashboard/database/admin/changePassword', [AdminController::class, "changePassword"])->middleware("auth");
 Route::delete('/dashboard/database/admin/', [AdminController::class, "destroy"])->middleware("auth");
 Route::put('/dashboard/database/admin/', [AdminController::class, "update"])->middleware("auth");
 
@@ -107,6 +110,14 @@ Route::put('/dashboard/pending', [PendingController::class, "updateDate"])->midd
 Route::post('/dashboard/pending/tutup', [PendingController::class, "closePendingWeek"])->middleware("auth");
 Route::get('/dashboard/pending/{id}', [PendingController::class, "showDetailPending"])->middleware("auth");
 Route::post('/dashboard/pending/checkPending', [PendingController::class, "checkPending"])->middleware("auth");
+
+//account
+Route::get('/dashboard/account/mahasiswa/changePassword', [AccountController::class, 'showChangePassword'])->middleware("auth");
+Route::post('/dashboard/account/mahasiswa/changePassword', [AccountController::class, 'changePassword'])->middleware("auth");
+Route::get('/dashboard/account/dosen/changePassword', [AccountController::class, 'showChangePassword'])->middleware("auth");
+Route::post('/dashboard/account/dosen/changePassword', [AccountController::class, 'changePassword'])->middleware("auth");
+Route::get('/dashboard/account/admin/changePassword', [AccountController::class, 'showChangePassword'])->middleware("auth");
+Route::post('/dashboard/account/admin/changePassword', [AccountController::class, 'changePassword'])->middleware("auth");
 
 //login
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

@@ -21,6 +21,23 @@
         $('#user_id_edit').val(user_id);
     });
 
+    $(document).on('click', '#changePassword', function() {
+        let user_id = $(this).attr('data-user-id');
+        let nip = $(this).attr('data-nip');
+        $('#nip_password').val(nip);
+        $('#user_id_password').val(user_id);
+    });
+
+    $(document).on('click', '#togglePasword', function() {
+        let type = $("#admin_password").attr('type');
+        console.log(type);
+        if (type == "password") {
+            $("#admin_password").prop("type", "text");
+        } else {
+            $("#admin_password").prop("type", "password");
+        }
+    });
+
     $(document).ready(function() {
         if ($('#toastNotification').hasClass("show")) {
             if ($('#toast-header').hasClass("text-success")) {

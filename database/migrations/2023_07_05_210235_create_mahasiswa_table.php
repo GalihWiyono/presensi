@@ -19,8 +19,12 @@ return new class extends Migration
             $table->date('tanggal_lahir')->require();
             $table->unsignedBigInteger('user_id')->require();
             $table->enum('gender', ['L','P']);
-            $table->unsignedBigInteger('kelas_id')->require();
+            $table->unsignedBigInteger('kelas_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('set null');
+
         });
     }
 
@@ -31,6 +35,10 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('pending', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['kelas_id']);
+        });
         Schema::dropIfExists('mahasiswa');
     }
 };

@@ -270,6 +270,7 @@
                                 placeholder="Kelas" readonly />
                             <label for="kelas">Class</label>
                         </div>
+                        <span class="text-danger">If you delete this schedule, all the presences and weeks belong to this schedule will be deleted too!</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

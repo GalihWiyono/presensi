@@ -15,7 +15,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('close:cron')->everyTwoMinutes()->timezone('Asia/Jakarta');
+
+        $schedule->command('close:cron')
+        ->weekdays()
+        ->everyTwoMinutes()
+        ->timezone('Asia/Jakarta')
+        ->between("7:00", "18:00");
+
     }
 
     /**

@@ -18,7 +18,7 @@
 
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
-            fps: 60,
+            fps: 500,
             qrbox: qrboxFunction
         },
         /* verbose= */
@@ -64,7 +64,7 @@
     }
 
     function verifyQR(data) {
-
+        console.log("verify");
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
