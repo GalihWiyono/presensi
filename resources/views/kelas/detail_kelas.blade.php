@@ -272,11 +272,11 @@
                 <div class="modal-body">
                     <div class="visible-print text-center">
                         {!! $qrcode !!}
-                        <p class="mt-3">Silakan scan QRCode diatas untuk melakukan presensi</p>
+                        <p class="mt-3">Please scan the QR Code above to register your attendance.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
@@ -442,7 +442,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>

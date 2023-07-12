@@ -34,6 +34,8 @@ class PendingController extends Controller
             $pending = Pending::find($request->id);
             $pending->update([
                 'tanggal_baru' => $request->tanggal_baru,
+                'jam_mulai_baru' => $request->jam_mulai,
+                'jam_berakhir_baru' => $request->jam_berakhir,
                 'mulai_absen_baru' => $request->mulai_absen,
                 'akhir_absen_baru' => $request->akhir_absen,
             ]);
@@ -143,12 +145,12 @@ class PendingController extends Controller
             $pendingSesi->update(['status' => 'Selesai']);
 
             return back()->with([
-                "message" => "Tutup pekan berhasil!",
+                "message" => "Successfully close week!",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Tutup pekan gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to close week, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -166,8 +168,6 @@ class PendingController extends Controller
             'jadwal_id' => $jadwal_kelas->id,
             'sesi_id' => $sesi->id,
             'tanggal' => $sesi->tanggal,
-            'mulai_absen' => $jadwal_kelas->mulai_absen,
-            'akhir_absen' => $jadwal_kelas->akhir_absen,
             'status' => 'Active'
         ]);
 

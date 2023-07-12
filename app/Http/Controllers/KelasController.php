@@ -41,11 +41,6 @@ class KelasController extends Controller
             $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
         }
 
-        //mendapatkan sesi dengan status belum ketika awal membuka (sesiRequest 0 hanya untuk trigger)
-        // if ($sesiRequest == 0) {
-        //     $sesiRequest = $allSesi->where('status', "Belum")->first()->sesi;
-        // }
-
         $activeSesiData = $allSesi->where('sesi', $sesiRequest)->first();
         if ($activeSesiData == null) {
             abort(404);
@@ -58,10 +53,10 @@ class KelasController extends Controller
             'jadwal_id' => $id,
             'status' => "Belum"
         ])->get();
-
+        
         //generate QRCode
-        if ($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen) {
-            $qrcode = $this->generate($jadwal_kelas, $activeSesiData);
+        if ($jadwal_kelas->mulai_absen != null && $jadwal_kelas->akhir_absen != null && $sesiToday != null) {
+            $qrcode = $this->generate($jadwal_kelas, $sesiToday);
         }
 
         $data = $jadwal_kelas->kelas->mahasiswa;
@@ -118,8 +113,6 @@ class KelasController extends Controller
             'jadwal_id' => $jadwal_kelas->id,
             'sesi_id' => $sesi->id,
             'tanggal' => $sesi->tanggal,
-            'mulai_absen' => $jadwal_kelas->mulai_absen,
-            'akhir_absen' => $jadwal_kelas->akhir_absen,
             'status' => 'Active'
         ]);
 
@@ -139,13 +132,13 @@ class KelasController extends Controller
         try {
             if ($jadwal_kelas->save()) {
                 return back()->with([
-                    "message" => "Berhasil mengupdate waktu mulai dan berakhir absen",
+                    "message" => "Successfully updated the start and end time of attendance",
                     "status" => true,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengupdate waktu mulai dan berakhir absen, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to update the start and end time of attendance, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -187,13 +180,13 @@ class KelasController extends Controller
                 ]);
             } else {
                 return back()->with([
-                    "message" => "Presensi dengan nim {$request->nim} Gagal, Error: Sudah melakukan presensi!",
+                    "message" => "Attendance with NIM {$request->nim} failed, Error: Already marked attendance!",
                     "status" => false,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi dengan nim {$request->nim} Gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Attendance with NIM {$request->nim} failed, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -239,12 +232,12 @@ class KelasController extends Controller
             }
 
             return back()->with([
-                "message" => "Presensi online berhasil!",
+                "message" => "Online attendance successful!",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi online gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Online attendance failed!, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -288,12 +281,12 @@ class KelasController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Tutup pekan berhasil!",
+                "message" => "Successfully close week!",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Tutup pekan gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to close week, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -309,7 +302,7 @@ class KelasController extends Controller
             ])->first();
 
             $presensi->update(["waktu_presensi" => $request->waktu_presensi, "status" => $request->status]);
-            
+
             $loggedIn = auth()->user();
             LogDosen::create([
                 'nip' => $loggedIn->dosen->nip,
@@ -320,12 +313,12 @@ class KelasController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Edit Presensi Berhasil!",
+                "message" => "Successfully edited presence!",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Edit Presensi gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit presence, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -341,7 +334,7 @@ class KelasController extends Controller
             ])->first();
 
             if ($mahasiswa == null) {
-                $errorMessage = "NIM " . $request->nim . " tidak ditemukan atau berbeda kelas!";
+                $errorMessage = "NIM " . $request->nim . " Not found or different class!";
                 return response()->json(['status' => "Invalid", 'errorMessage' => $errorMessage]);
             } else {
                 $presensi = Presensi::where([
@@ -350,7 +343,7 @@ class KelasController extends Controller
                 ])->first();
 
                 if ($presensi != null) {
-                    $errorMessage = "NIM " . $request->nim . " sudah melakukan presensi!";
+                    $errorMessage = "NIM " . $request->nim . " already mark attendace!";
                     return response()->json(['status' => "Invalid", 'errorMessage' => $errorMessage]);
                 }
 

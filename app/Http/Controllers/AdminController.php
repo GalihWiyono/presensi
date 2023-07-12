@@ -55,7 +55,7 @@ class AdminController extends Controller
             $cekAdmin = Admin::where('nip', $request->nip)->first();
             if ($cekAdmin) {
                 return back()->with([
-                    "message" => "Gagal membuat data admin, NIP $request->nip sudah ada!",
+                    "message" => "Failed to create admin data, NIP $request->nip already exist!",
                     "status" => false,
                 ]);
             }
@@ -77,12 +77,12 @@ class AdminController extends Controller
             $admin->save();
 
             return back()->with([
-                "message" => "Berhasil membuat data admin dengan NIP $request->nip",
+                "message" => "Successfully created admin data with NIP $request->nip",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal membuat data admin, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create admin data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -128,12 +128,12 @@ class AdminController extends Controller
                 'gender' => $request->gender,
             ]);
             return back()->with([
-                "message" => "Berhasil mengedit data admin",
+                "message" => "Successfully edited admin data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data admin, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit admin data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -148,20 +148,21 @@ class AdminController extends Controller
     public function destroy(Request $request)
     {
         try {
-            User::where("id", $request->user_id)->delete();
             foreach (Admin::where([
                 "user_id" => $request->user_id,
                 "nip" => $request->nip
             ])->get() as $deleteItem) {
                 $deleteItem->delete();
             }
+            User::where("id", $request->user_id)->delete();
+
             return back()->with([
-                "message" => "Berhasil menghapus data admin",
+                "message" => "Successfully deleted admin data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data admin, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete admin data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

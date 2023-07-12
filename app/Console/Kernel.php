@@ -18,7 +18,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('close:cron')
         ->weekdays()
-        ->everyTwoMinutes()
         ->timezone('Asia/Jakarta')
         ->between("7:00", "18:00");
 

@@ -17,6 +17,8 @@ class Pending extends Model
         'sesi_id',
         'tanggal',
         'tanggal_baru',
+        'jam_mulai_baru',
+        'jam_berakhir_baru',
         'mulai_absen_baru',
         'akhir_absen_baru',
         'status'

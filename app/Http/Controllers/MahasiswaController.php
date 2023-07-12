@@ -58,7 +58,7 @@ class MahasiswaController extends Controller
             $cekMahasiswa = Mahasiswa::where('nim', $request->nim)->first();
             if ($cekMahasiswa) {
                 return back()->with([
-                    "message" => "Gagal membuat data mahasiswa, NIM $request->nim sudah ada!",
+                    "message" => "Failed to create student data, NIM $request->nim already exist!",
                     "status" => false,
                 ]);
             }
@@ -87,18 +87,18 @@ class MahasiswaController extends Controller
                 ]);
             } else {
                 return back()->with([
-                    "message" => "Gagal membuat data mahasiswa dengan NIM $request->nim",
+                    "message" => "Failed to create student data with NIM $request->nim",
                     "status" => false,
                 ]);
             }
 
             return back()->with([
-                "message" => "Berhasil membuat data mahasiswa dengan NIM $request->nim",
+                "message" => "Successfully created student data with NIM $request->nim",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal membuat data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create student data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -138,25 +138,27 @@ class MahasiswaController extends Controller
         try {
             $mahasiswa = Mahasiswa::where('nim', $request->nim)->first();
 
+            $kelas = ($request->kelas_id) ? $request->kelas_id : null;
+
             $mahasiswa->update([
                 'nama_mahasiswa' => $request->nama_mahasiswa,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'user_id' => $request->user_id,
                 'gender' => $request->gender,
-                'kelas_id' => $request->kelas_id,
+                'kelas_id' => $kelas,
             ]);
 
             $mahasiswa->anggota_kelas()->update([
-                'kelas_id' => $request->kelas_id
+                'kelas_id' => $kelas
             ]);
 
             return back()->with([
-                "message" => "Berhasil mengedit data mahasiswa",
+                "message" => "Successfully edited student data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit student data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -180,12 +182,12 @@ class MahasiswaController extends Controller
             User::where("id", $request->user_id)->delete();
             AnggotaKelas::where('nim', $request->nim)->delete();
             return back()->with([
-                "message" => "Berhasil menghapus data mahasiswa",
+                "message" => "Successfully deleted student data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data mahasiswa, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete student data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

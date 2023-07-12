@@ -18,7 +18,7 @@
 
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
-            fps: 500,
+            fps: 200,
             qrbox: qrboxFunction
         },
         /* verbose= */
@@ -55,12 +55,16 @@
         var format = 'hh:mm:ss'
         var currentTime = moment(),
             beforeTime = moment(data.mulai_absen, format),
-            afterTime = moment(data.akhir_absen, format)
+            afterTime = moment(data.akhir_absen, format),
+            afterClass = moment(data.jam_berakhir, format)
 
-        if (moment(data.tanggal).isSame(moment(), 'day') && currentTime.isBetween(beforeTime, afterTime)) {
-            return false;
+        var status = true;
+
+        if (moment(data.tanggal).isSame(moment(), 'day') && currentTime.isBetween(beforeTime, afterClass)) {
+            status = false;
         }
-        return false;
+        console.log(status);
+        return status;
     }
 
     function verifyQR(data) {

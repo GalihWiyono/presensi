@@ -53,7 +53,7 @@ class DosenController extends Controller
             $cekDosen = Dosen::where('nip', $request->nip)->first();
             if ($cekDosen) {
                 return back()->with([
-                    "message" => "Gagal membuat data dosen, NIP $request->nip sudah ada!",
+                    "message" => "Failed to create admin data, NIP $request->nip already exist!",
                     "status" => false,
                 ]);
             }
@@ -75,12 +75,12 @@ class DosenController extends Controller
             $dosen->save();
 
             return back()->with([
-                "message" => "Berhasil membuat data dosen dengan NIP $request->nip",
+                "message" => "Successfully created lecturer data with NIP $request->nip",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal membuat data dosen, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create lecturer data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -126,12 +126,12 @@ class DosenController extends Controller
                 'gender' => $request->gender,
             ]);
             return back()->with([
-                "message" => "Berhasil mengedit data dosen",
+                "message" => "Successfully edited lecturer data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data dosen, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit lecturer data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -147,8 +147,8 @@ class DosenController extends Controller
     {
         try {
             $data = Jadwal::where('nip', $request->nip)->get();
-            
-            if ($data != null) {
+
+            if (count($data) != 0) {
                 return back()->with([
                     "message" => "Failed to delete the lecturer because there are schedules that utilize this lecturer, please double-check the Schedule data!",
                     "status" => false,
@@ -164,12 +164,12 @@ class DosenController extends Controller
             }
             User::where("id", $request->user_id)->delete();
             return back()->with([
-                "message" => "Berhasil menghapus data dosen",
+                "message" => "Successfully deleted lecturer data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data dosen, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete lecturer data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

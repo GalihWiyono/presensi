@@ -62,13 +62,13 @@ class ClassController extends Controller
             ]);
             if ($kelas->save()) {
                 return back()->with([
-                    "message" => "Berhasil menambah data kelas",
+                    "message" => "Successfully created class data",
                     "status" => true,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menambah data kelas, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create class data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -123,12 +123,12 @@ class ClassController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Berhasil mengedit data class",
+                "message" => "Successfully edited class data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data class, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit admin data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -145,7 +145,7 @@ class ClassController extends Controller
         try {
             $data = Jadwal::where('kelas_id', $request->id)->get();
             
-            if ($data != null) {
+            if (count($data) != 0) {
                 return back()->with([
                     "message" => "Failed to delete the class because there are schedules that utilize this class, please double-check the Schedule data!",
                     "status" => false,
@@ -218,12 +218,12 @@ class ClassController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Berhasil mengedit data presensi",
+                "message" => "Successfully edited attendance data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data presensi, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit attendance data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -333,7 +333,7 @@ class ClassController extends Controller
             return $pdf->stream('Kompensasi Kelas ' . $jadwal->first()->kelas->nama_kelas . '.pdf');
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Kelas tidak memiliki jadwal, pastikan menambahkan jadwal terlebih dahulu!",
+                "message" => "The class does not have a schedule, please make sure to add a schedule first!",
                 "status" => false,
             ]);
         }

@@ -114,7 +114,7 @@
                         <div class="">
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="matkul_id" id="matkul_id" required>
-                                    <option selected>Choose Course</option>
+                                    <option value selected disabled hidden>Choose Course</option>
                                     @foreach ($matkul as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_matkul }}</option>
                                     @endforeach
@@ -123,7 +123,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="kelas_id" id="kelas_id" required>
-                                    <option selected>Choose Class</option>
+                                    <option value selected disabled hidden>Choose Class</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
                                     @endforeach
@@ -132,7 +132,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="dosen_id" id="dosen_id" required>
-                                    <option selected>Choose Lecture</option>
+                                    <option value selected disabled hidden>Choose Lecture</option>
                                     @foreach ($dosen as $item)
                                         <option value="{{ $item->nip }}">{{ $item->nama_dosen }}</option>
                                     @endforeach
@@ -140,7 +140,7 @@
                                 <label for="dosen_id">Lecture</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" type="date" />
+                                <input class="form-control" name="tanggal_mulai" id="tanggal_mulai" type="date" required/>
                                 <label for="tanggal_mulai">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -187,7 +187,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="matkul_id" id="matkul_edit" required>
-                                    <option selected>Choose Course</option>
+                                    <option value selected disabled hidden>Choose Course</option>
                                     @foreach ($matkul as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_matkul }}</option>
                                     @endforeach
@@ -196,7 +196,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="kelas_id" id="kelas_edit" required>
-                                    <option selected>Choose Class</option>
+                                    <option value selected disabled hidden>Choose Class</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
                                     @endforeach
@@ -205,7 +205,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="dosen_id" id="dosen_edit" required>
-                                    <option selected>Choose Lecture</option>
+                                    <option value selected disabled hidden>Choose Lecture</option>
                                     @foreach ($dosen as $item)
                                         <option value="{{ $item->nip }}">{{ $item->nama_dosen }}</option>
                                     @endforeach
@@ -214,7 +214,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="tanggal_mulai" id="tanggal_mulai_edit"
-                                    type="date" />
+                                    type="date" required/>
                                 <label for="hari">Start Course Date</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -235,7 +235,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Edit</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>

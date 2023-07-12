@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jadwal;
 use App\Models\LogMahasiswa;
 use App\Models\Mahasiswa;
+use App\Models\Pending;
 use App\Models\Presensi;
 use App\Models\Qrcode;
 use Carbon\Carbon;
@@ -47,18 +48,38 @@ class PresensiController extends Controller
     {
         Gate::allows('isMahasiswa') ? Response::allow() : abort(403);
         try {
-            $waktuPresensi = Carbon::now()->format('H:i:s');
-            $statusPresensi = "Hadir";
+            $waktuPresensi = Carbon::now();
+            $jadwal = Jadwal::find($request->id);
             $nim = auth()->user()->mahasiswa->nim;
+            $statusPresensi = "Hadir";
 
-            if($waktuPresensi > $request->jam_berakhir) {
+            $jam_mulai = $jadwal->jam_mulai;
+            $jam_berakhir = $jadwal->jam_berakhir;
+            $mulai_absen = $jadwal->mulai_absen;
+            $akhir_absen =  $jadwal->akhir_absen;
+
+            //check if sesi pending
+            $checkPending = Pending::where([
+                'jadwal_id' => $request->id,
+                'sesi_id' => $request->sesi_id,
+                'status' => "Belum"
+            ])->first();
+            
+            if ($checkPending) {
+                $jam_mulai = $checkPending->jam_mulai_baru;
+                $jam_berakhir = $checkPending->jam_berakhir_baru;
+                $mulai_absen = $checkPending->mulai_absen_baru;
+                $akhir_absen =  $checkPending->akhir_absen_baru;
+            }
+            
+            if (!$waktuPresensi->isBetween($mulai_absen, $jam_berakhir)) {
                 return back()->with([
-                    "message" => "The class time has ended, you cannot mark attendance!",
+                    "message" => "Unable to mark attendance outside the scheduled hours!",
                     "status" => false,
                 ]);
             }
 
-            if ($waktuPresensi > $request->akhir_absen) {
+            if ($waktuPresensi > $akhir_absen) {
                 $statusPresensi = "Terlambat";
             }
 
@@ -80,21 +101,20 @@ class PresensiController extends Controller
                     'jadwal_id' => $request->id,
                     'activity' => "Presensi Pekan " . $presensi->sesi->sesi . " " . $presensi->sesi->jadwal->matkul->nama_matkul . " : $presensi->status"
                 ]);
-                
+
                 return back()->with([
-                    "message" => "Presensi berhasil!",
+                    "message" => "Successful attendance recorded!",
                     "status" => true,
                 ]);
             } else {
                 return back()->with([
-                    "message" => "Anda sudah melakukan presensi untuk jadwal di pekan ini!",
+                    "message" => "You have already marked attendance for the schedule this week!",
                     "status" => false,
                 ]);
             }
-
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Presensi Gagal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to mark attendance, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -109,7 +129,33 @@ class PresensiController extends Controller
 
             $mahasiswa = Mahasiswa::where('user_id', auth()->user()->id)->first();
             $getData = Qrcode::find($request->id);
+            if ($getData == null) {
+                $errorMessage = "QR Invalid";
+                return response()->json(['status' => $status, 'errorMessage' => $errorMessage]);
+            }
             $dataJadwal = $getData->jadwal;
+            
+            //data tidak pending
+            $jam_mulai = $dataJadwal->jam_mulai;
+            $jam_berakhir = $dataJadwal->jam_berakhir;
+            $mulai_absen = $dataJadwal->mulai_absen;
+            $akhir_absen =  $dataJadwal->akhir_absen;
+            $tanggal = $getData->sesi->tanggal;
+
+            $pending = Pending::where([
+                'jadwal_id' => $getData->jadwal_id,
+                'sesi_id' => $getData->sesi_id
+            ])->first();
+
+            //data jika pending
+            if($pending) {
+                $jam_mulai = $pending->jam_mulai_baru;
+                $jam_berakhir = $pending->jam_berakhir_baru;
+                $mulai_absen = $pending->mulai_absen_baru;
+                $akhir_absen =  $pending->akhir_absen_baru;
+                $tanggal = $pending->tanggal_baru;
+            }
+
             $QRCodeUnique = $request->unique;
             $dataUnique = $getData->unique;
 
@@ -130,12 +176,12 @@ class PresensiController extends Controller
                 'matkul' => $dataJadwal->matkul->nama_matkul,
                 'kelas' => $dataJadwal->kelas->nama_kelas,
                 'dosen' => $dataJadwal->dosen->nama_dosen,
-                'jam_mulai' => $dataJadwal->jam_mulai,
-                'jam_berakhir' => $dataJadwal->jam_berakhir,
+                'jam_mulai' => $jam_mulai,
+                'jam_berakhir' => $jam_berakhir,
                 'pekan' => $getData->sesi->sesi,
-                'tanggal' => $getData->tanggal,
-                'mulai_absen' => $getData->mulai_absen,
-                'akhir_absen' => $getData->akhir_absen,
+                'tanggal' => $tanggal,
+                'mulai_absen' => $mulai_absen,
+                'akhir_absen' => $akhir_absen,
             ];
 
             $objectResponse = (object)$dataResponse;

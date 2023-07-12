@@ -19,8 +19,12 @@
         $('#nama_mahasiswa_edit').val(nama);
         $('#tanggal_lahir_edit').val(tanggal);
         $('#gender_edit').val(gender);
-        $('#kelas_id_edit').val(kelas);
         $('#user_id_edit').val(user_id);
+        if(kelas != "") {
+            $('#kelas_id_edit').val(kelas);
+        } else {
+            $('#kelas_id_edit').val("default");
+        }
     });
 
     $(document).on('click', '#changePassword', function() {

@@ -65,15 +65,15 @@ class DashboardController extends Controller
         ];
 
         //log admin
-        $logAdmin = LogAdmin::latest();
+        $logAdmin = LogAdmin::latest()->limit(20);
 
         //log system
         $logSystem = LogSystem::latest();
 
         return (object)[
             'count' => $dataTotal,
-            'logAdmin' => $logAdmin->paginate(3, ['*'], 'logAdmin')->withQueryString(),
-            'logSystem' => $logSystem->paginate(3, ['*'], 'logSystem')->withQueryString()
+            'logAdmin' => $logAdmin->paginate(5, ['*'], 'logAdmin')->withQueryString(),
+            'logSystem' => $logSystem->paginate(5, ['*'], 'logSystem')->withQueryString()
         ];
     }
 

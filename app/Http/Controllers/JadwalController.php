@@ -102,13 +102,13 @@ class JadwalController extends Controller
                 }
 
                 return back()->with([
-                    "message" => "Berhasil membuat data jadwal",
+                    "message" => "Successfully created schedule data",
                     "status" => true,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal membuat jadwal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create schedule data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -166,12 +166,12 @@ class JadwalController extends Controller
                 'jam_berakhir' => $request->jam_berakhir
             ]);
             return back()->with([
-                "message" => "Berhasil mengedit data jadwal",
+                "message" => "Successfully edited schedule data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data jadwal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit schedule data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -191,12 +191,12 @@ class JadwalController extends Controller
             }
             Sesi::where('jadwal_id', $request->id)->delete();
             return back()->with([
-                "message" => "Berhasil menghapus data jadwal",
+                "message" => "Successfully deleted schedule data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data jadwal, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete schedule data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

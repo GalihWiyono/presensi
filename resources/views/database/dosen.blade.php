@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Database Dosen</h1>
+        <h1 class="h2">Lecturers Database</h1>
     </div>
 
     @if (session()->has('message'))
@@ -28,7 +28,7 @@
                     <form action="/dashboard/database/dosen">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
-                                placeholder="Cari Dosen" value="{{ request('search') }}" />
+                                placeholder="Search Lecturer Name" value="{{ request('search') }}" />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -36,8 +36,8 @@
                     </form>
                 </div>
                 <div class="">
-                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahdosenModal">Tambah
-                        Dosen</a>
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahdosenModal">Add
+                        Lecturer</a>
                 </div>
             </div>
             <div class="div table-responsive">
@@ -46,10 +46,10 @@
                         <tr>
                             <th>#</th>
                             <th>NIP</th>
-                            <th>Nama Dosen</th>
-                            <th>Tanggal Lahir</th>
+                            <th>Lecturer Name</th>
+                            <th>Date of Birth</th>
                             <th>Gender</th>
-                            <th>Aksi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,7 +94,7 @@
                     @csrf
                     @method('post')
                     <div class="modal-header">
-                        <h5 class="modal-title">Tambah dosen</h5>
+                        <h5 class="modal-title">Add Lecturer</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -107,12 +107,12 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="nama_dosen" id="nama_dosen" type="text"
                                     placeholder="Nama dosen" required />
-                                <label for="nama_dosen">Nama dosen</label>
+                                <label for="nama_dosen">Lecturer Name</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="tanggal_lahir" id="tanggal_lahir" type="date"
                                     placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Tanggal Lahir</label>
+                                <label for="tanggal_lahir">Date of Birth</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="gender" id="gender" required>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Tambah</button>
+                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
                 </form>
             </div>
@@ -141,7 +141,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Dosen</h5>
+                        <h5 class="modal-title">Edit Lecturer</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -157,12 +157,12 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="nama_dosen" id="nama_dosen_edit" type="text"
                                     placeholder="Nama dosen" required />
-                                <label for="nama_dosen">Nama Dosen</label>
+                                <label for="nama_dosen">Lecturer Name</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="tanggal_lahir" id="tanggal_lahir_edit" type="date"
                                     placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Tanggal Lahir</label>
+                                <label for="tanggal_lahir">Date of Birth</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="gender" id="gender_edit" required>
@@ -175,7 +175,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Simpan</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>
@@ -191,23 +191,24 @@
                     @csrf
                     @method('delete')
                     <div class="modal-header">
-                        <h5 class="modal-title">Hapus Dosen</h5>
+                        <h5 class="modal-title">Delete Lecturer</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h6>Apakah anda yakin akan menghapus data dosen dengan NIP dibawah ini?</h6>
+                        <h6>Are you sure you want to delete the lecturer data with the following NIP?</h6>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nip" id="nip_delete" type="text" placeholder="NIP"
                                 readonly />
                             <label for="nip">NIP</label>
                         </div>
+                        <span class="text-danger">The deleted data cannot be recovered. Be careful when performing this action!</span>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="user_id" id="user_id_delete" type="hidden" readonly />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-danger" type="submit">Hapus</button>
+                        <button class="btn btn-danger" type="submit">Delete</button>
                     </div>
                 </form>
             </div>

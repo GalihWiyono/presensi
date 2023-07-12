@@ -1,7 +1,6 @@
 @extends('/layout/main')
 
 @section('container')
-
     @if (session()->has('message'))
         <div class="position-fixed mt-5 top-0 end-0 p-3" style="z-index: 11">
             <div id="toastNotification" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
@@ -32,9 +31,10 @@
                             <th>Class</th>
                             <th>Week</th>
                             <th>Date</th>
-                            <th>Time</th>
+                            <th>Class Time</th>
                             <th>New Date</th>
-                            <th>New Time</th>
+                            <th>New Class Time</th>
+                            <th>New Presence Time</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -48,11 +48,14 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->jadwal->jam_mulai . ' - ' . $item->jadwal->jam_berakhir }}</td>
                                 <td>{{ $item->tanggal_baru == null ? '-' : $item->tanggal_baru }}</td>
+                                <td>{{ $item->jam_mulai_baru == null || $item->jam_berakhir_baru == null ? '-' : $item->jam_mulai_baru . ' - ' . $item->jam_berakhir_baru }}
                                 <td>{{ $item->mulai_absen_baru == null || $item->akhir_absen_baru == null ? '-' : $item->mulai_absen_baru . ' - ' . $item->akhir_absen_baru }}
                                 </td>
                                 <td><a class="btn btn-warning btn-sm px-3" data-bs-toggle="modal" id="addNewDate"
                                         data-bs-target="#editWaktuModal" data-id="{{ $item->id }}"
                                         data-new-date="{{ $item->tanggal_baru }}"
+                                        data-start-time="{{ $item->jam_mulai_baru }}"
+                                        data-end-time="{{ $item->jam_berakhir_baru }}"
                                         data-start-absen="{{ $item->mulai_absen_baru }}"
                                         data-end-absen="{{ $item->akhir_absen_baru }}"><span data-feather="edit"></i></a>
                                     <a class="btn btn-primary btn-sm px-3"
@@ -85,6 +88,20 @@
                                 placeholder="New Date" min="{{ date('Y-m-d') }}" required />
                             <label for="new_date">New Date</label>
                         </div>
+
+                        <div class="row gx-1">
+                            <div class="form-floating mb-3 col-lg-6">
+                                <input class="form-control" name="jam_mulai" id="jam_mulai" type="time"
+                                    placeholder="Start Class Time" required />
+                                <label for="jam_mulai">Start Class Time</label>
+                            </div>
+                            <div class="form-floating mb-3 col-lg-6">
+                                <input class="form-control" name="jam_berakhir" id="jam_berakhir" type="time"
+                                    placeholder="End Presence Time" required />
+                                <label for="jam_berakhir">End Class Time</label>
+                            </div>
+                        </div>
+
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
@@ -97,7 +114,9 @@
                                 <label for="akhir_absen">End Presence Time</label>
                             </div>
                         </div>
-
+                        <span class="text-danger">
+                            When you save a new attendance date and time, the system will automatically register this
+                            pending week to be closed automatically when the class is finished.</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

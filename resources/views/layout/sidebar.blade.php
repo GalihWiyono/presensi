@@ -147,14 +147,14 @@
                         <a class="nav-link {{ Request::is('dashboard/jadwal*') ? 'active' : '' }}"
                             href="/dashboard/jadwal">
                             <span data-feather="file-text"></span>
-                            Jadwal
+                            Schedules
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/presensi*') ? 'active' : '' }}"
                             href="/dashboard/presensi">
                             <span data-feather="camera"></span>
-                            Presensi
+                            Presence
                         </a>
                     </li>
                     <li class="nav-item accordion">

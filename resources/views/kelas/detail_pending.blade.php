@@ -55,14 +55,17 @@
                         <label for="kelas">Class</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="hari" id="hari" type="date" placeholder="Hari"
-                            data-sb-validations="" value="{{ $pendingData->tanggal }}" readonly />
-                        <label for="hari">Old Date</label>
+                        <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
+                            data-sb-validations=""
+                            value="{{ $pendingData->tanggal_baru == null ? '-' : $pendingData->tanggal_baru }}" readonly />
+                        <label for="jam">New Date</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="jam" id="jam" type="date" placeholder="Jam"
-                            data-sb-validations="" value="{{ $pendingData->tanggal_baru }}" readonly />
-                        <label for="jam">New Date</label>
+                        <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
+                            data-sb-validations=""
+                            value="{{ $pendingData->jam_mulai_baru == null || $pendingData->jam_berakhir_baru == null ? '-' : $pendingData->jam_mulai_baru . ' - ' . $pendingData->jam_berakhir_baru }}"
+                            readonly />
+                        <label for="hari">New Class Time</label>
                     </div>
                     <form action="" method="POST">
                         <div class="row gx-1">
@@ -212,18 +215,19 @@
                 <div class="modal-body">
                     <div class="visible-print text-center">
                         {!! $qrcode !!}
-                        <p class="mt-3">Silakan scan QRCode diatas untuk melakukan presensi</p>
+                        <p class="mt-3">Please scan the QR Code above to register your attendance.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- Modal Presensi --}}
-    <div class="modal fade" id="presensiModal" tabindex="-1" aria-labelledby="presensiModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="presensiModal" tabindex="-1" aria-labelledby="presensiModal" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <form action="/dashboard/kelas/{{ $detail->id }}/presensiOnline" method="POST">
@@ -239,7 +243,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nim</th>
-                                        <th>Nama Mahasiswa</th>
+                                        <th>Student Name</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -308,25 +312,35 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input class="form-control" name="id" id="id" value="{{ $pendingData->id }}"
-                            type="hidden" />
+                        <input class="form-control" name="id" id="id" type="hidden" value="{{ $pendingData->id }}"/>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="tanggal_baru" id="new_date" type="date"
-                                placeholder="New Date" min="{{ date('Y-m-d') }}"
-                                value="{{ $pendingData->tanggal_baru }}" required />
+                                placeholder="New Date" min="{{ date('Y-m-d') }}" value="{{ $pendingData->tanggal_baru }}" required />
                             <label for="new_date">New Date</label>
                         </div>
+
+                        <div class="row gx-1">
+                            <div class="form-floating mb-3 col-lg-6">
+                                <input class="form-control" name="jam_mulai" id="jam_mulai" type="time"
+                                    placeholder="Start Class Time" value="{{ $pendingData->jam_mulai_baru }}" required />
+                                <label for="jam_mulai">Start Class Time</label>
+                            </div>
+                            <div class="form-floating mb-3 col-lg-6">
+                                <input class="form-control" name="jam_berakhir" id="jam_berakhir" type="time"
+                                    placeholder="End Presence Time" value="{{ $pendingData->jam_berakhir_baru }}" required />
+                                <label for="jam_berakhir">End Class Time</label>
+                            </div>
+                        </div>
+
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
-                                    placeholder="Start Presence Time" value="{{ $pendingData->mulai_absen_baru }}"
-                                    required />
+                                    placeholder="Start Presence Time" value="{{ $pendingData->mulai_absen_baru }}" required />
                                 <label for="mulai_absen">Start Presence Time</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
-                                    placeholder="End Presence Time" value="{{ $pendingData->akhir_absen_baru }}"
-                                    required />
+                                    placeholder="End Presence Time" value="{{ $pendingData->akhir_absen_baru }}" required />
                                 <label for="akhir_absen">End Presence Time</label>
                             </div>
                         </div>
@@ -350,7 +364,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Edit Presensi</h5>
+                        <h5 class="modal-title" id="qrModal">Edit Presence</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -366,7 +380,7 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa_edit" type="text"
                                 placeholder="Nama Mahasiswa" readonly />
-                            <label for="nama_mahasiswa">Nama Mahasiswa</label>
+                            <label for="nama_mahasiswa">Student Name</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="status" id="status_edit">
@@ -384,12 +398,12 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="waktu_presensi" id="waktu_presensi_edit" type="time"
                                 placeholder="Waktu Presensi" required />
-                            <label for="waktu_presensi">Waktu Presensi</label>
+                            <label for="waktu_presensi">Presence TIme</label>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>
@@ -402,7 +416,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="qrModal">Tambah Presensi</h5>
+                    <h5 class="modal-title" id="qrModal">Add Presence</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -435,7 +449,7 @@
                 <form action="/dashboard/kelas/{{ $detail->id }}/presensi" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Tambah Presensi</h5>
+                        <h5 class="modal-title" id="qrModal">Add Presence</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -451,12 +465,12 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nama_mahasiswa" id="nama_show" type="text"
                                 placeholder="Nama Mahasiswa" readonly />
-                            <label for="nim">Nama Mahasiswa</label>
+                            <label for="nim">Student Name</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="kelas" id="kelas_show" type="text" placeholder="NIM"
                                 readonly />
-                            <label for="nim">Kelas</label>
+                            <label for="nim">Class</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="status" id="status_show">
@@ -470,7 +484,7 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="waktu_presensi" id="waktu_presensi_show" type="time"
                                 placeholder="Waktu Presensi" required />
-                            <label for="waktu_presensi">Waktu Presensi</label>
+                            <label for="waktu_presensi">Presence Time</label>
                         </div>
                     </div>
                     <div class="modal-footer">

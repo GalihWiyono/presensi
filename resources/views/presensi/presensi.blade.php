@@ -36,7 +36,7 @@
                 <form action="/dashboard/presensi/store" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="presensiModal">Presensi Kelas</h5>
+                        <h5 class="modal-title" id="presensiModal">Presence Class</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -51,37 +51,37 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
                                 value=""readonly />
-                            <label for="mataKuliah">Mata Kuliah</label>
+                            <label for="mataKuliah">Course</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="dosen" id="dosen" type="text"
                                 value=""readonly />
-                            <label for="mataKuliah">Dosen Pengajar</label>
+                            <label for="mataKuliah">Lecturer</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="kelas" id="kelas" type="text" value=""
                                 readonly />
-                            <label for="kelas">Kelas</label>
+                            <label for="kelas">Class</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="pekan" id="pekan" type="text" value=""
                                 readonly />
-                            <label for="Pekan">Pekan</label>
+                            <label for="Pekan">Week</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="jam" id="jam" type="text" value=""
                                 readonly />
-                            <label for="jam">Jam Kelas</label>
+                            <label for="jam">Class Time</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="jam_presensi" id="jam_presensi" type="text" value=""
                                 readonly />
-                            <label for="jam">Jam Presensi</label>
+                            <label for="jam">Presence Time</label>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
-                        <button type="submit" id="presensiBtn" class="btn btn-primary">Presensi</button>
+                        <button type="submit" id="presensiBtn" class="btn btn-primary">Presence</button>
                     </div>
                 </form>
             </div>
@@ -97,11 +97,11 @@
                     <h5 class="modal-title">Location Not Found</h5>
                 </div>
                 <div class="modal-body">
-                    <h6 class="text-justify">Lokasi anda tidak ditemukan, silakan aktifkan izin untuk mendapatkan lokasi
-                        agar dapat menggunakan
-                        fitur yang ada pada website ini!</h6>
+                    <h6 class="text-justify">
+                        Your location was not found. Please enable permission to obtain your location in order to access the
+                        features available on this website!</h6>
 
-                    <h6>Silakan aktifkan kembali lokasi dengan mengikuti tutorial ini</h6>
+                    <h6>Please reactivate the location permission by following this tutorial</h6>
                     <a href="#" id="lokasiLink" class="btn btn-info">Click</a>
 
                 </div>
@@ -118,13 +118,14 @@
                     <h5 class="modal-title">Location Outside The Campus Area</h5>
                 </div>
                 <div class="modal-body">
-                    <h6 class="text-justify">Lokasi anda berada diluar lokasi kampus yang sudah ditentukan,
-                        silakan pergi ke lokasi agar dapat menggunakan fitur yang ada pada website ini!</h6>
+                    <h6 class="text-justify">Your current location is outside the designated campus location. Please go to
+                        the specified location in order to access the features available on this website.</h6>
                 </div>
             </div>
         </div>
     </div>
 
+    {{-- Modal QRCode Invalid --}}
     <div class="modal fade" id="qrInvalid" tabindex="-1" aria-labelledby="qrInvalid" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

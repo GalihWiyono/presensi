@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Database Mahasiswa</h1>
+        <h1 class="h2">Students Database</h1>
     </div>
 
     @if (session()->has('message'))
@@ -28,7 +28,7 @@
                     <form action="/dashboard/database/mahasiswa">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
-                                placeholder="Cari Mahasiswa" value="{{ request('search') }}" />
+                                placeholder="Search Student Name" value="{{ request('search') }}" />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -36,8 +36,8 @@
                     </form>
                 </div>
                 <div class="">
-                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Tambah
-                        Mahasiswa</a>
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Add
+                        Student</a>
                 </div>
             </div>
             <div class="div table-responsive">
@@ -46,11 +46,11 @@
                         <tr>
                             <th>#</th>
                             <th>NIM</th>
-                            <th>Nama Mahasiswa</th>
-                            <th>Tanggal Lahir</th>
+                            <th>Student Name</th>
+                            <th>Date Of Birth</th>
                             <th>Gender</th>
-                            <th>Kelas</th>
-                            <th>Aksi</th>
+                            <th>Class</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,7 +95,7 @@
                 <form action="/dashboard/database/mahasiswa" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Tambah Mahasiswa</h5>
+                        <h5 class="modal-title">Add Student</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -108,12 +108,12 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa" type="text"
                                     placeholder="Nama Mahasiswa" required />
-                                <label for="nama_mahasiswa">Nama Mahasiswa</label>
+                                <label for="nama_mahasiswa">Student Name</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="tanggal_lahir" id="tanggal_lahir" type="date"
                                     placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Tanggal Lahir</label>
+                                <label for="tanggal_lahir">Date of Birth</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="gender" id="gender" required>
@@ -124,18 +124,18 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="kelas_id" id="kelas_id" required>
-                                    <option selected>Pilih Kelas</option>
+                                    <option selected disabled hidden>Choose Class</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
                                     @endforeach
                                 </select>
-                                <label for="kelas_id">Kelas</label>
+                                <label for="kelas_id">Class</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Tambah</button>
+                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
                 </form>
             </div>
@@ -196,7 +196,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Mahasiswa</h5>
+                        <h5 class="modal-title">Edit Student</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -212,12 +212,12 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa_edit"
                                     type="text" placeholder="Nama Mahasiswa" required />
-                                <label for="nama_mahasiswa">Nama Mahasiswa</label>
+                                <label for="nama_mahasiswa">Student Name</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" name="tanggal_lahir" id="tanggal_lahir_edit" type="date"
                                     placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Tanggal Lahir</label>
+                                <label for="tanggal_lahir">Date of Birth</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="gender" id="gender_edit" required>
@@ -228,18 +228,18 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" name="kelas_id" id="kelas_id_edit" required>
-                                    <option selected>Pilih Kelas</option>
+                                    <option value="default" selected disabled hidden>Choose Class</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
                                     @endforeach
                                 </select>
-                                <label for="kelas_id">Kelas</label>
+                                <label for="kelas_id">Class</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Simpan</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
                 </form>
             </div>
@@ -255,23 +255,24 @@
                     @csrf
                     @method('delete')
                     <div class="modal-header">
-                        <h5 class="modal-title">Hapus Mahasiswa</h5>
+                        <h5 class="modal-title">Delete Student</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h6>Apakah anda yakin akan menghapus data mahasiswa dengan NIM dibawah ini?</h6>
+                        <h6>Are you sure you want to delete the student data with the following NIM?</h6>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nim" id="nim_delete" type="text" placeholder="NIM"
                                 readonly />
                             <label for="nim">NIM</label>
                         </div>
+                        <span class="text-danger">The deleted data cannot be recovered. Be careful when performing this action!</span>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="user_id" id="user_id_delete" type="hidden" readonly />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-danger" type="submit">Hapus</button>
+                        <button class="btn btn-danger" type="submit">Delete</button>
                     </div>
                 </form>
             </div>

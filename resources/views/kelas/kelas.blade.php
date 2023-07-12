@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Daftar Kelas</h1>
+        <h1 class="h2">Schedule List</h1>
     </div>
     <div class="body-white border rounded shadow">
         <div class="container">
@@ -11,11 +11,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nama Mata Kuliah</th>
-                            <th>Nama Kelas</th>
-                            <th>Hari</th>
-                            <th>Jam</th>
-                            <th>Aksi</th>
+                            <th>Course</th>
+                            <th>Class</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>

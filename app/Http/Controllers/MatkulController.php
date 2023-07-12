@@ -53,13 +53,13 @@ class MatkulController extends Controller
             ]);
             if ($matkul->save()) {
                 return back()->with([
-                    "message" => "Berhasil menambah data course",
+                    "message" => "Successfully created course data",
                     "status" => true,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menambah data course, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to create course data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -103,12 +103,12 @@ class MatkulController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Berhasil mengedit data course",
+                "message" => "Successfully edited course data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal mengedit data course, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to edit course data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -125,7 +125,7 @@ class MatkulController extends Controller
         try {
             $data = Jadwal::where('matkul_id', $request->id_matkul)->get();
             
-            if ($data != null) {
+            if (count($data) != 0) {
                 return back()->with([
                     "message" => "Failed to delete the course because there are schedules that utilize this coure, please double-check the Schedule data!",
                     "status" => false,
@@ -137,12 +137,12 @@ class MatkulController extends Controller
             }
 
             return back()->with([
-                "message" => "Berhasil menghapus data course",
+                "message" => "Successfully deleted course data",
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Gagal menghapus data course, Error: " . json_encode($th->getMessage(), true),
+                "message" => "Failed to delete course data, Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

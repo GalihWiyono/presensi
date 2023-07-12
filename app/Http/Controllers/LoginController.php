@@ -18,8 +18,8 @@ class LoginController extends Controller
             'username' => 'required',
             'password' => 'required'
         ], [
-            'username.required' => 'Username tidak boleh kosong',
-            'password.required' => 'Password tidak boleh kosong'
+            'username.required' => 'Username cannot be empty',
+            'password.required' => 'Password cannot be empty'
         ]);
 
         $credential = [
@@ -33,7 +33,7 @@ class LoginController extends Controller
         }
 
         return back() -> with([
-            "status" => "Username atau password yang anda masukan salah"
+            "status" => "The username or password you entered is incorrect"
         ]);
 
     }
