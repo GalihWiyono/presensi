@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Detail Mahasiswa: {{ $mahasiswa->nama_mahasiswa }}</h1>
+        <h1 class="h2">{{ __("Student Detail") }}: {{ $mahasiswa->nama_mahasiswa }}</h1>
     </div>
 
     @if (session()->has('message'))
@@ -42,18 +42,18 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Pekan</th>
-                                <th>Tanggal</th>
-                                <th>Waktu Presensi</th>
-                                <th>Status Presensi</th>
-                                <th>Action</th>
+                                <th>{{ __("Week") }}</th>
+                                <th>{{ __("Date") }}</th>
+                                <th>{{ __("Presence Time") }}</th>
+                                <th>Status</th>
+                                <th>{{ __("Action") }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($sesi as $item)
                                 <tr>
                                     <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
-                                    <td>Pekan {{ $item->sesi }}</td>
+                                    <td>{{ __("Week") }} {{ $item->sesi }}</td>
                                     <td>{{ $item->tanggal }}</td>
                                     <td>
                                         @foreach ($presensi as $item2)
@@ -106,7 +106,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Edit Presensi</h5>
+                        <h5 class="modal-title" id="qrModal">{{ __("Edit Presence") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -119,14 +119,14 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nama_mahasiswa" id="nama_edit" type="text"
                                 placeholder="Nama Mahasiswa" readonly />
-                            <label for="nim">Nama Mahasiswa</label>
+                            <label for="nim">{{ __("Student Name") }}</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="status" id="status_edit">
-                                <option value="Hadir">Hadir</option>
-                                <option value="Terlambat">Terlambat</option>
-                                <option value="Izin">Izin</option>
-                                <option value="Tidak Hadir">Tidak Hadir</option>
+                                <option value="Hadir">{{ _("Present") }}</option>
+                                <option value="Terlambat">{{ __("Late") }}</option>
+                                <option value="Izin">{{ __("Permit") }}</option>
+                                <option value="Tidak Hadir">{{ __("Absent") }}</option>
                             </select>
                             <label for="nim">Status</label>
                         </div>
@@ -134,12 +134,12 @@
                             <input class="form-control" id="waktu_hidden" type="hidden" />
                             <input class="form-control" name="waktu_presensi" id="waktu_edit" type="time"
                                 placeholder="Waktu Presensi" required />
-                            <label for="waktu_presensi">Waktu Presensi</label>
+                            <label for="waktu_presensi">{{ __("Presence Time") }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Save") }}</button>
                     </div>
                 </form>
             </div>

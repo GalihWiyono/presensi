@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Detail Class: {{ $kelas->nama_kelas }}</h1>
+        <h1 class="h2">{{ __("Class Detail") }}: {{ $kelas->nama_kelas }}</h1>
     </div>
 
     {{-- @if (session()->has('message'))
@@ -56,9 +56,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>NIM</th>
-                                <th>Nama Mahasiswa</th>
-                                <th>Tanggal Lahir</th>
-                                <th>Action</th>
+                                <th>{{ __("Student Name") }}</th>
+                                <th>{{ __("Date Of Birth") }}</th>
+                                <th>{{ __("Action") }}</th>
                             </tr>
                         </thead>
                         <tbody>

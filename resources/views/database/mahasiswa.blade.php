@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Students Database</h1>
+        <h1 class="h2">{{ __("Students Database") }}</h1>
     </div>
 
     @if (session()->has('message'))
@@ -28,7 +28,7 @@
                     <form action="/dashboard/database/mahasiswa">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
-                                placeholder="Search Student Name" value="{{ request('search') }}" />
+                                placeholder="{{ __("Search Student") }}" value="{{ request('search') }}" />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -36,8 +36,8 @@
                     </form>
                 </div>
                 <div class="">
-                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">Add
-                        Student</a>
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahMahasiswaModal">{{ __("Upload Student") }}</a>
+                    <a class="btn btn-success px-4" href="/dashboard/database/mahasiswa/export">{{ __("Download Student") }}</a>
                 </div>
             </div>
             <div class="div table-responsive">
@@ -46,11 +46,11 @@
                         <tr>
                             <th>#</th>
                             <th>NIM</th>
-                            <th>Student Name</th>
-                            <th>Date Of Birth</th>
-                            <th>Gender</th>
-                            <th>Class</th>
-                            <th>Action</th>
+                            <th>{{ __("Student Name") }}</th>
+                            <th>{{ __("Date Of Birth") }}</th>
+                            <th>{{ __("Gender") }}</th>
+                            <th>{{ __("Class") }}</th>
+                            <th>{{ __("Action") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,13 +60,13 @@
                                 <td>{{ $item->nim }}</td>
                                 <td>{{ $item->nama_mahasiswa }}</td>
                                 <td>{{ $item->tanggal_lahir }}</td>
-                                <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                                <td>{{ ($item->kelas == null) ? "-" : $item->kelas->nama_kelas }}</td>
+                                <td>{{ $item->gender == 'L' ? __("Male") : __("Female") }}</td>
+                                <td>{{ $item->kelas == null ? '-' : $item->kelas->nama_kelas }}</td>
                                 <td>
-                                    <a class="btn btn-success btn-sm px-3" id="changePassword" data-bs-toggle="modal"
+                                    <a class="btn btn-warning btn-sm px-3" id="changePassword" data-bs-toggle="modal"
                                         data-bs-target="#gantiPasswordModal" data-user-id="{{ $item->user_id }}"
                                         data-nim="{{ $item->nim }}"><i class="fa-solid fa-unlock-keyhole"></i></a>
-                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                    {{-- <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editMahasiswaModal" data-user-id="{{ $item->user_id }}"
                                         data-nim="{{ $item->nim }}" data-nama="{{ $item->nama_mahasiswa }}"
                                         data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"
@@ -74,7 +74,7 @@
                                     <a class="btn btn-danger btn-sm px-3" id='deleteBtn'
                                         data-user-id="{{ $item->user_id }}" data-id="{{ $item->nim }}"
                                         data-bs-toggle="modal" data-bs-target="#deleteMahasiswaModal"><span
-                                            data-feather="x-circle"></span></a>
+                                            data-feather="x-circle"></span></a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -92,50 +92,22 @@
         aria-labelledby="tambahMahasiswaModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/database/mahasiswa" method="POST">
+                <form action="/dashboard/database/mahasiswa/import" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Student</h5>
+                        <h5 class="modal-title">{{ __("Upload Student Master Data") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="">
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="nim" id="nim" type="text" placeholder="NIM"
-                                    required />
-                                <label for="nim">NIM</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa" type="text"
-                                    placeholder="Nama Mahasiswa" required />
-                                <label for="nama_mahasiswa">Student Name</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="tanggal_lahir" id="tanggal_lahir" type="date"
-                                    placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Date of Birth</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" name="gender" id="gender" required>
-                                    <option value="L">Laki-Laki</option>
-                                    <option value="P">Perempuan</option>
-                                </select>
-                                <label for="gender">Gender</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" name="kelas_id" id="kelas_id" required>
-                                    <option selected disabled hidden>Choose Class</option>
-                                    @foreach ($kelas as $item)
-                                        <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="kelas_id">Class</label>
-                            </div>
-                        </div>
+                        <input class="form-control" type="file" id="formFile" name="file"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            required>
+                        <span class="text-danger">
+                            {{ __("Only files of types xlsx, xls, and csv are supported") }}.</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Upload") }}</button>
                     </div>
                 </form>
             </div>
@@ -150,7 +122,7 @@
                 <form action="/dashboard/database/mahasiswa/changePassword" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Change Student Password</h5>
+                        <h5 class="modal-title">{{ __("Change Student Password") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -166,21 +138,22 @@
                             <div class="form-floating mb-3 col-10">
                                 <input class="form-control" name="admin_password" id="admin_password" type="password"
                                     placeholder="Admin Password" required />
-                                <label for="admin_password">Admin Password</label>
+                                <label for="admin_password">{{ __("Admin Password") }}</label>
                             </div>
-                            <div class="col-2 input-group-text mb-3">
-                                <a class="ms-2 text-decoration-none text-primary" id="togglePasword" style="cursor: pointer">Show</a>
+                            <div class="col-2 input-group-text mb-3 d-flex justify-content-center">
+                                <a class="text-decoration-none text-primary" id="togglePasword"
+                                    style="cursor: pointer">{{ __("Show") }}</a>
                             </div>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="student_password" id="student_password" type="text"
                                 placeholder="Student Password" required />
-                            <label for="student_password">Student New Password</label>
+                            <label for="student_password">{{ __("Student New Password") }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Change</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Change") }}</button>
                     </div>
                 </form>
             </div>
@@ -188,7 +161,7 @@
     </div>
 
     {{-- Modal Edit Mahasiswa --}}
-    <div class="modal fade" id="editMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    {{-- <div class="modal fade" id="editMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="editMahasiswaModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -244,16 +217,16 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     {{-- Modal Delete Mahasiswa --}}
-    <div class="modal fade" id="deleteMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    {{-- <div class="modal fade" id="deleteMahasiswaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="deleteMahasiswaModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/database/mahasiswa/" method="POST">
+                <form action="/dashboard/database/mahasiswa" method="POST">
+                  	@method('delete')
                     @csrf
-                    @method('delete')
                     <div class="modal-header">
                         <h5 class="modal-title">Delete Student</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -277,7 +250,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @section('footer-scripts')

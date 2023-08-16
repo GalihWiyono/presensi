@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Detail Kelas </h1>
+        <h1 class="h2">{{ __("Schedule Detail") }} </h1>
     </div>
 
     @if (session()->has('message'))
@@ -32,41 +32,41 @@
                         <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
                             placeholder="Mata Kuliah" data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}"
                             readonly />
-                        <label for="mataKuliah">Mata Kuliah</label>
+                        <label for="mataKuliah">{{ __("Course") }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
                             data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
-                        <label for="kelas">Kelas</label>
+                        <label for="kelas">{{ __("Class") }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
                             data-sb-validations="" value="{{ \Carbon\Carbon::parse($detail->tanggal_mulai)->format('l') }}"
                             readonly />
-                        <label for="hari">Hari</label>
+                        <label for="hari">{{ __("Day") }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
                             data-sb-validations="" value="{{ $detail->jam_mulai . ' - ' . $detail->jam_berakhir }}"
                             readonly />
-                        <label for="jam">Jam</label>
+                        <label for="jam">{{ __("Class Time") }}</label>
                     </div>
                     <div class="row gx-1">
                         <div class="form-floating mb-3 col-lg-6">
                             <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
                                 placeholder="Jam Mulai Absen" data-sb-validations="" value="{{ $detail->mulai_absen }}"
                                 readonly />
-                            <label for="jam">Jam Mulai Presensi</label>
+                            <label for="jam">{{ __("Presence Start Time") }}</label>
                         </div>
                         <div class="form-floating mb-3 col-lg-6">
                             <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
                                 placeholder="Jam Akhir Absen" data-sb-validations="" value="{{ $detail->akhir_absen }}"
                                 readonly />
-                            <label for="jam">Jam Akhir Presensi</label>
+                            <label for="jam">{{ __("Presence End Time") }}</label>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <a href="../../dashboard/presensi" class="btn btn-primary py-3 w-100">Presensi</a>
+                        <a href="../../dashboard/presensi" class="btn btn-primary py-3 w-100">{{ __("Presence") }}</a>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 <div class="body-white border rounded shadow py-2 px-3">
                     <div class="row">
                         <div class="col-6">
-                            <h3>History Presensi</h3>
+                            <h3>{{ __("Attendance History") }}</h3>
                         </div>
                     </div>
 
@@ -85,9 +85,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Pekan</th>
-                                    <th>Tanggal</th>
-                                    <th>Waktu Presensi</th>
+                                    <th>{{ __("Week") }}</th>
+                                    <th>{{ __("Date") }}</th>
+                                    <th>{{ __("Presence Time") }}</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -95,7 +95,7 @@
                                 @foreach ($sesi as $item)
                                     <tr>
                                         <th>{{ ($sesi->currentpage() - 1) * $sesi->perpage() + $loop->index + 1 }}</th>
-                                        <td>Pekan {{ $item->sesi }}</td>
+                                        <td>{{ __("Week") }} {{ $item->sesi }}</td>
                                         <td>{{ $item->tanggal }}</td>
                                         <td>
                                             @foreach ($presensi as $item2)

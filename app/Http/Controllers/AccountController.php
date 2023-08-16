@@ -62,7 +62,7 @@ class AccountController extends Controller
             #Match The Old Password
             if (!Hash::check($request->old_password, auth()->user()->password)) {
                 return back()->with([
-                    "message" => "Old Password Doesn't match!",
+                    "message" => __("Old Password Doesn't match") ,
                     "status" => false,
                 ]);
             }
@@ -73,12 +73,12 @@ class AccountController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Change Password Success",
+                "message" => __("Change Password Success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Change Password Failed")." , Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

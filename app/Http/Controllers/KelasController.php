@@ -132,13 +132,13 @@ class KelasController extends Controller
         try {
             if ($jadwal_kelas->save()) {
                 return back()->with([
-                    "message" => "Successfully updated the start and end time of attendance",
+                    "message" => __("Successfully updated the start and end time of attendance"),
                     "status" => true,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to update the start and end time of attendance, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to update the start and end time of attendance").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -175,18 +175,18 @@ class KelasController extends Controller
                 ]);
 
                 return back()->with([
-                    "message" => "Presensi berhasil!",
+                    "message" => __("Marking attendance success"),
                     "status" => true,
                 ]);
             } else {
                 return back()->with([
-                    "message" => "Attendance with NIM {$request->nim} failed, Error: Already marked attendance!",
+                    "message" => __("Marking attendance failed, Error: Already marked attendance"),
                     "status" => false,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Attendance with NIM {$request->nim} failed, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Marking attendance failed "). ", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -232,12 +232,12 @@ class KelasController extends Controller
             }
 
             return back()->with([
-                "message" => "Online attendance successful!",
+                "message" => __("Marking online attendance success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Online attendance failed!, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Marking online attendance failed")." , Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -281,12 +281,12 @@ class KelasController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Successfully close week!",
+                "message" => __("Successfully close week"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to close week, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to close week").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -313,12 +313,12 @@ class KelasController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Successfully edited presence!",
+                "message" => __("Successfully edited presence"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to edit presence, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to edit presence").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -334,7 +334,7 @@ class KelasController extends Controller
             ])->first();
 
             if ($mahasiswa == null) {
-                $errorMessage = "NIM " . $request->nim . " Not found or different class!";
+                $errorMessage = "NIM " . $request->nim . __("Not found or different class");
                 return response()->json(['status' => "Invalid", 'errorMessage' => $errorMessage]);
             } else {
                 $presensi = Presensi::where([
@@ -343,7 +343,7 @@ class KelasController extends Controller
                 ])->first();
 
                 if ($presensi != null) {
-                    $errorMessage = "NIM " . $request->nim . " already mark attendace!";
+                    $errorMessage = "NIM " . $request->nim . __("already mark attendace");
                     return response()->json(['status' => "Invalid", 'errorMessage' => $errorMessage]);
                 }
 
@@ -380,12 +380,12 @@ class KelasController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Pending Week $sesi->sesi Success!",
+                "message" => __("Pending Week Success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Pending Week Failed, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Pending Week Failed").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

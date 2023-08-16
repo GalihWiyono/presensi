@@ -23,7 +23,7 @@ class JadwalMahasiswaController extends Controller
         $kelas =  auth()->user()->mahasiswa->kelas;
         if ($kelas == null) {
             return back()->with([
-                "message" => "You are not registered in any class, please report to the Admin for further action.",
+                "message" => __("You are not registered in any class, please report to the Admin for further action"),
                 "status" => false,
             ]);
         }

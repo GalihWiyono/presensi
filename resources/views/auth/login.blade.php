@@ -33,7 +33,7 @@
             <form action="/login" method="post">
                 @csrf
                 <img class="mb-4" src="{{ 'brand/qrscanner.png' }}" alt="" width="200" height="100">
-                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+                <h1 class="h3 mb-3 fw-normal">{{ __('sign in text') }}</h1>
                 <div class="form-floating">
                     <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
                         id="floatingInput" placeholder="Username" autofocus autocomplete="off"
@@ -49,14 +49,14 @@
                 <div class="form-floating">
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                         id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword" name="password">Password</label>
+                    <label for="floatingPassword" name="password">{{ __('password') }}</label>
                     @error('password')
                         <div class="div invalid-feedback mb-1">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
-                <button class="w-100 mt-3 btn btn-lg btn-primary" type="submit">Sign in</button>
+                <button class="w-100 mt-3 btn btn-lg btn-primary" type="submit">{{ __('sign in') }}</button>
                 <p class="mt-4 mb-3 text-muted">&copy; 2023 Muhammad Galih Wiyono Putra</p>
             </form>
         </main>

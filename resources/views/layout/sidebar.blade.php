@@ -16,7 +16,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <span data-feather="database"></span>
-                            Database
+                            {{ __("Database") }}
                         </a>
                         <div id="collapseOne"
                             class="accordion-collapse collapse {{ Request::is('dashboard/database/*') ? 'show' : '' }}"
@@ -25,11 +25,11 @@
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/mahasiswa') ? 'active' : '' }}"
                                         href="/dashboard/database/mahasiswa"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Student</a></li>
+                                            data-feather="chevrons-right"></span>{{ __("Student") }}</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/dosen') ? 'active' : '' }}"
                                         href="/dashboard/database/dosen"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Lecturer</a></li>
+                                            data-feather="chevrons-right"></span>{{ __("Lecturer") }}</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/database/admin') ? 'active' : '' }}"
                                         href="/dashboard/database/admin"><span class="me-2"
@@ -42,7 +42,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
                             aria-controls="collapseTwo">
                             <span data-feather="calendar"></span>
-                            Academic
+                            {{ __("Academic") }}
                         </a>
                         <div id="collapseTwo"
                             class="accordion-collapse collapse {{ Request::is('dashboard/academic/*') ? 'show' : '' }}"
@@ -51,15 +51,15 @@
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/academic/class*') ? 'active' : '' }}"
                                         href="/dashboard/academic/class"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Class</a></li>
+                                            data-feather="chevrons-right"></span>{{ __("Class") }}</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/academic/course') ? 'active' : '' }}"
                                         href="/dashboard/academic/course"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Course</a></li>
+                                            data-feather="chevrons-right"></span>{{ __("Course") }}</a></li>
                                 <li class="nav-item"><a
                                         class="nav-link dropdown-item {{ Request::is('dashboard/academic/schedule') ? 'active' : '' }}"
                                         href="/dashboard/academic/schedule"><span class="me-2"
-                                            data-feather="chevrons-right"></span>Schedule</a></li>
+                                            data-feather="chevrons-right"></span>{{ __("Schedule") }}</a></li>
                             </ul>
                         </div>
                     </li>
@@ -68,7 +68,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
                             aria-controls="collapseThree">
                             <span data-feather="settings"></span>
-                            Account
+                            {{ __("Account") }}
                         </a>
                         <div id="collapseThree"
                             class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
@@ -78,7 +78,7 @@
                                     <a class="nav-link dropdown-item {{ Request::is('dashboard/account/admin/*') ? 'active' : '' }}"
                                         href="/dashboard/account/admin/changePassword">
                                         <span class="me-2" data-feather="chevrons-right">
-                                        </span>Change Password
+                                        </span>{{ __("Change Password") }}
                                     </a>
                                 </li>
                             </ul>
@@ -97,7 +97,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/kelas*') ? 'active' : '' }}" href="/dashboard/kelas">
                             <i class="fa-solid fa-chalkboard"></i>
-                            <span class="ms-1">Class</span>
+                            <span class="ms-1">{{ __("Class") }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -105,7 +105,7 @@
                             <a class="nav-link {{ Request::is('dashboard/pending*') ? 'active' : '' }}"
                                 href="/dashboard/pending">
                                 <i class="fa-solid fa-clock-rotate-left"></i>
-                                <span class="ms-1">Pending Week</span>
+                                <span class="ms-1">{{ __("Pending Week") }}</span>
                             </a>
                             <button class="btn d-none" id="pendingNotif">
                                 <i class="fa-solid fa-circle-exclamation" style="color: #df4759;"></i>
@@ -117,7 +117,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <span data-feather="settings"></span>
-                            Account
+                            {{ __("Account") }}
                         </a>
                         <div id="collapseOne"
                             class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
@@ -127,7 +127,7 @@
                                     <a class="nav-link dropdown-item {{ Request::is('dashboard/account/dosen/*') ? 'active' : '' }}"
                                         href="/dashboard/account/dosen/changePassword">
                                         <span class="me-2" data-feather="chevrons-right">
-                                        </span>Change Password
+                                        </span>{{ __("Change Password") }}
                                     </a>
                                 </li>
                             </ul>
@@ -147,14 +147,14 @@
                         <a class="nav-link {{ Request::is('dashboard/jadwal*') ? 'active' : '' }}"
                             href="/dashboard/jadwal">
                             <span data-feather="file-text"></span>
-                            Schedules
+                            {{ __("Schedule") }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('dashboard/presensi*') ? 'active' : '' }}"
                             href="/dashboard/presensi">
                             <span data-feather="camera"></span>
-                            Presence
+                            {{ __("Presence") }}
                         </a>
                     </li>
                     <li class="nav-item accordion">
@@ -162,7 +162,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <span data-feather="settings"></span>
-                            Account
+                            {{ __("Account") }}
                         </a>
                         <div id="collapseOne"
                             class="accordion-collapse collapse {{ Request::is('dashboard/account/*') ? 'show' : '' }}"
@@ -172,7 +172,7 @@
                                     <a class="nav-link dropdown-item {{ Request::is('dashboard/account/mahasiswa/*') ? 'active' : '' }}"
                                         href="/dashboard/account/mahasiswa/changePassword">
                                         <span class="me-2" data-feather="chevrons-right">
-                                        </span>Change Password
+                                        </span>{{ __("Change Password") }}
                                     </a>
                                 </li>
                             </ul>
@@ -189,7 +189,7 @@
                         @csrf
                         <button class="btn btn-secondary px-5" type="submit" onclick="logout()">
                             <span data-feather="log-out"></span>
-                            Sign out
+                            {{ __("Sign out") }}
                         </button>
                     </form>
                 </li>

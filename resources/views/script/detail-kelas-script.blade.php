@@ -4,10 +4,10 @@
     $(document).ready(function() {
         var sessionStatusKelas = sessionStorage.getItem("statusKelas");
         if (sessionStatusKelas == "Online") {
-            $("#btnForPresensi").html('Presence');
+            $("#btnForPresensi").html('{{ __("Presence") }}');
             $("#btnForPresensi").attr("data-bs-target", "#presensiModal");
         } else {
-            $("#btnForPresensi").html('Generate QRCode');
+            $("#btnForPresensi").html('{{ __("Generate QRCode") }}');
             $("#btnForPresensi").attr("data-bs-target", "#qrModal");
         }
     });

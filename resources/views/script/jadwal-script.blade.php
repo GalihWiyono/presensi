@@ -25,7 +25,22 @@
         $('#tanggal_mulai_edit').val(tanggal_mulai);
         $('#jam_mulai_edit').val(jam_mulai);
         $('#jam_berakhir_edit').val(jam_berakhir);
+    });
 
+    $(document).on('click', '#downloadBtn', function() {
+        let id = $(this).attr('data-id');
+        $('#jadwal_id').val(id);
+    });
+
+    $('#download_type').on('change', function(e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        var jadwal_id = $('#jadwal_id').val();
+        if(valueSelected == "PDF") {
+            $('#formDownload').attr('action', '/dashboard/academic/schedule/'+jadwal_id+'/pdf');
+        } else {
+            $('#formDownload').attr('action', '/dashboard/academic/schedule/'+jadwal_id+'/excel');
+        }
     });
 
     $(document).ready(function() {

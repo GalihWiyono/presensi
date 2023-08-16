@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KelasExport;
+use App\Exports\ReportKompensasiExport;
+use App\Exports\ReportPresensiExport;
+use App\Imports\KelasImport;
 use App\Models\AnggotaKelas;
 use App\Models\Jadwal;
 use App\Models\Kelas;
@@ -15,6 +19,7 @@ use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassController extends Controller
 {
@@ -114,10 +119,10 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try {
-            $kelas = Kelas::where('id', $id)->first();
+            $kelas = Kelas::where('id', $request->id)->first();
             $kelas->update([
                 'nama_kelas' => $request->nama_kelas,
             ]);
@@ -144,7 +149,7 @@ class ClassController extends Controller
     {
         try {
             $data = Jadwal::where('kelas_id', $request->id)->get();
-            
+
             if (count($data) != 0) {
                 return back()->with([
                     "message" => "Failed to delete the class because there are schedules that utilize this class, please double-check the Schedule data!",
@@ -170,11 +175,12 @@ class ClassController extends Controller
     public function detail($id, $nim)
     {
         Gate::allows('isAdmin') ? Response::allow() : abort(403);
+        $mahasiswa = Mahasiswa::find($nim);
         $sesi = new Sesi;
         $jadwal = Jadwal::with('matkul')->where('kelas_id', $id)->get();
         if (count($jadwal) == 0) {
             return back()->with([
-                "message" => "The schedule is not available for this class, please add it first!",
+                "message" => __("The schedule is not available for this class, please add it first"),
                 "status" => false,
             ]);
         }
@@ -184,12 +190,16 @@ class ClassController extends Controller
             $getData = $sesi->where('jadwal_id', request('kelas'));
         }
 
-        $presensi = Presensi::where('nim', $nim)->get();
+        $presensi = Presensi::where([
+            'nim' => $nim,
+            'jadwal_id' => $getData->first()->jadwal->id
+        ])->get();
+
         return view('academic/detail_mahasiswa', [
             'jadwal' => $jadwal,
             'sesi' => $getData->paginate(7)->withQueryString(),
             'presensi' => $presensi,
-            'mahasiswa' => $presensi->first()->mahasiswa
+            'mahasiswa' => $mahasiswa
         ]);
     }
 
@@ -218,12 +228,12 @@ class ClassController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Successfully edited attendance data",
+                "message" => __("Successfully edited attendance data"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to edit attendance data, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to edit attendance data").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -251,80 +261,99 @@ class ClassController extends Controller
         }
     }
 
-    public function generatePdf($id)
+    public function getReportKompensasiData($id, $jadwal)
     {
-        try {
-            $jadwal = Jadwal::where('kelas_id', $id)->get();
-            $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $id)->get();
-            $jadwal_id = [];
+        $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $id)->get();
+        $jadwal_id = [];
 
-            foreach ($jadwal as $item) {
-                $jadwal_id[] = $item->id;
-            }
+        foreach ($jadwal as $item) {
+            $jadwal_id[] = $item->id;
+        }
 
-            $presensi = Presensi::whereIn('jadwal_id', $jadwal_id)->orderBy('sesi_id')->get();
+        $presensi = Presensi::whereIn('jadwal_id', $jadwal_id)->orderBy('sesi_id')->get();
 
-            $data = [];
+        $data = [];
 
-            foreach ($anggotaKelas as $mahasiswa) {
-                $dataMahasiswa = $presensi->where('nim', $mahasiswa->nim);
-                $totalKompensasi = 0;
-                $sp = "-";
+        foreach ($anggotaKelas as $mahasiswa) {
+            $dataMahasiswa = $presensi->where('nim', $mahasiswa->nim);
+            $totalKompensasi = 0;
+            $sp = "-";
 
-                //get kompen tidak hadir
-                foreach ($jadwal as $dataJadwal) {
-                    foreach ($presensi as $dataPresensi) {
-                        if ($dataPresensi->jadwal_id == $dataJadwal->id && $mahasiswa->nim == $dataPresensi->nim) {
-                            if ($dataPresensi->status == "Tidak Hadir") {
-                                $akhir_absen = Carbon::parse($dataJadwal->jam_berakhir);
-                                $mulai_absen = Carbon::parse($dataJadwal->jam_mulai);
-                                $selisih = $akhir_absen->diffInMinutes($mulai_absen);
-                                $totalKompensasi += $selisih;
-                            }
+            //get kompen tidak hadir
+            foreach ($jadwal as $dataJadwal) {
+                foreach ($presensi as $dataPresensi) {
+                    if ($dataPresensi->jadwal_id == $dataJadwal->id && $mahasiswa->nim == $dataPresensi->nim) {
+                        if ($dataPresensi->status == "Tidak Hadir") {
+                            $akhir_absen = Carbon::parse($dataJadwal->jam_berakhir);
+                            $mulai_absen = Carbon::parse($dataJadwal->jam_mulai);
+                            $selisih = $akhir_absen->diffInMinutes($mulai_absen);
+                            $totalKompensasi += $selisih;
+                        }
 
-                            if ($dataPresensi->status == "Terlambat") {
-                                $dataAkhirAbsen = ($dataJadwal->akhir_absen == null) ? $dataJadwal->jam_mulai : $dataJadwal->akhir_absen;
-                                $akhir_absen = Carbon::parse($dataAkhirAbsen);
-                                $jam_absen = Carbon::parse($dataPresensi->waktu_presensi);
-                                $selisih = $akhir_absen->diffInMinutes($jam_absen);
-                                $totalKompensasi += $selisih;
-                            }
+                        if ($dataPresensi->status == "Terlambat") {
+                            $dataAkhirAbsen = ($dataJadwal->akhir_absen == null) ? $dataJadwal->jam_mulai : $dataJadwal->akhir_absen;
+                            $akhir_absen = Carbon::parse($dataAkhirAbsen);
+                            $jam_absen = Carbon::parse($dataPresensi->waktu_presensi);
+                            $selisih = $akhir_absen->diffInMinutes($jam_absen);
+                            $totalKompensasi += $selisih;
                         }
                     }
                 }
-
-                if ($totalKompensasi >= 750 && $totalKompensasi < 1500) {
-                    $sp = "1";
-                }
-
-                if ($totalKompensasi >= 1500 && $totalKompensasi < 1850) {
-                    $sp = "2";
-                }
-
-                if ($totalKompensasi >= 1850) {
-                    $sp = "3";
-                }
-
-                $addData = (object)[
-                    'nim' => $mahasiswa->mahasiswa->nim,
-                    'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
-                    'hadir' => $dataMahasiswa->where('status', "Hadir")->count(),
-                    'terlambat' => $dataMahasiswa->where('status', "Terlambat")->count(),
-                    'izin' => $dataMahasiswa->where('status', "Izin")->count(),
-                    'tidakHadir' => $dataMahasiswa->where('status', "Tidak Hadir")->count(),
-                    'total_kompensasi' => $totalKompensasi,
-                    'sp' => $sp
-                ];
-                (object) array_push($data, $addData);
             }
 
-            // for ($i = 0; $i < 4; $i++) {
-            //     $data = array_merge($data, $data);
-            // }
+            if ($totalKompensasi >= 750 && $totalKompensasi < 1500) {
+                $sp = "1";
+            }
 
-            $data = collect($data);
+            if ($totalKompensasi >= 1500 && $totalKompensasi < 1850) {
+                $sp = "2";
+            }
 
-            // dd($data);
+            if ($totalKompensasi >= 1850) {
+                $sp = "3";
+            }
+
+            $addData = (object)[
+                'nim' => $mahasiswa->mahasiswa->nim,
+                'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
+                'hadir' => $dataMahasiswa->where('status', "Hadir")->count(),
+                'terlambat' => $dataMahasiswa->where('status', "Terlambat")->count(),
+                'izin' => $dataMahasiswa->where('status', "Izin")->count(),
+                'tidakHadir' => $dataMahasiswa->where('status', "Tidak Hadir")->count(),
+                'total_kompensasi' => $totalKompensasi,
+                'sp' => $sp
+            ];
+            (object) array_push($data, $addData);
+        }
+
+        // for ($i = 0; $i < 4; $i++) {
+        //     $data = array_merge($data, $data);
+        // }
+
+        $data = collect($data);
+
+        return array(
+            'data' => $data,
+            'jadwal' => $jadwal
+        );;
+    }
+
+    public function generatePdf($id)
+    {
+        try {
+            //check if the class have schedule
+            $jadwal = Jadwal::where('kelas_id', $id)->get();
+            if (count($jadwal) == 0) {
+                return back()->with([
+                    "message" => __("The schedule is not available for this class, please add it first"),
+                    "status" => false,
+                ]);
+            }
+
+            //get data from getReportKompensasiData
+            //extract array return and make variable of it (variable data and jadwal)
+            extract($this->getReportKompensasiData($id, $jadwal));
+
             $pdf = Pdf::loadView('academic/class-pdf', [
                 'data' => $data,
                 'jadwal' => $jadwal
@@ -333,9 +362,65 @@ class ClassController extends Controller
             return $pdf->stream('Kompensasi Kelas ' . $jadwal->first()->kelas->nama_kelas . '.pdf');
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "The class does not have a schedule, please make sure to add a schedule first!",
+                "message" => __("Failed to generate PDF").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
+    }
+
+    public function reportKompensasiExcel($id)
+    {
+        try {
+            //check if the class have schedule
+            $jadwal = Jadwal::where('kelas_id', $id)->get();
+            if (count($jadwal) == 0) {
+                return back()->with([
+                    "message" => __("The schedule is not available for this class, please add it first"),
+                    "status" => false,
+                ]);
+            }
+
+            //get data from getReportKompensasiData
+            //extract array return and make variable of it (variable data and jadwal)
+            extract($this->getReportKompensasiData($id, $jadwal));
+            return (new ReportKompensasiExport($data, $jadwal))->download('ReportKompensasi-' . $jadwal->first()->kelas->nama_kelas . '-' . Carbon::now()->toDateTimeString() . '.xlsx');
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => __("Failed to generate Excel").", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function import(Request $request)
+    {
+        try {
+            $whitelistType = array('xlsx', 'xls', 'csv');
+            $extension = $request->file('file')->extension();
+
+            if (!in_array($extension, $whitelistType)) {
+                return back()->with([
+                    "message" => __("The uploaded file type is not supported"),
+                    "status" => false,
+                ]);
+            }
+
+            Excel::import(new KelasImport, $request->file('file'));
+
+            return back()->with([
+                "message" => __("Upload Data Class Success"),
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => __("Upload Data Class Failed").", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function export()
+    {
+        return Excel::download(new KelasExport, 'kelas.xlsx');
     }
 }

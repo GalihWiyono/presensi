@@ -64,10 +64,11 @@
         console.log("Your coordinate is: Lat: " + lat + " Long: " + long + " Accuracy: " + accuracy)
 
         var check = checkIfInsidePolygon(marker);
+        console.log('check session');
         window.onload = function() {
             if (!check) {
                 if (window.jQuery) {
-                    sessionStorage.setItem("statusKelas", null)
+                    sessionStorage.setItem("statusKelas", null);
                     sessionStorage.setItem("location", null);
                     $('#lokasiOutsideModal').modal('show');
                 }
@@ -81,7 +82,7 @@
                 sessionStorage.setItem("location", JSON.stringify(lokasi));
                 $('#statusBtn').removeClass('btn-outline-dark');
                 $('#statusBtn').addClass('btn-dark');
-                $("#statusBtn").html('Offline');
+                $("#statusBtn").html('{{ __("Offline") }}');
             }
         }
     }
@@ -117,10 +118,10 @@
     }
 
     var latlngs = [
-        [-6.370732092011403, 106.82317715080158],
-        [-6.370700104262608, 106.8239118615445],
-        [-6.371158595138264, 106.82394940150945],
-        [-6.37122257057671, 106.82319860221016]
+        [-6.370681644697524, 106.82373976704186],
+        [-6.370697638572755, 106.82344472405022],
+        [-6.3703511044978995, 106.8234232663781],
+        [-6.370345773202614, 106.82375049587792]
     ];
 
     var polygon1 = L.polygon(latlngs, {
@@ -135,20 +136,20 @@
     ];
 
     var polygon2 = L.polygon(latlngs2, {
-        color: 'red'
+        color: 'blue'
     }).addTo(map);
 
     //test
-    var latlngsTest = [
-        [-6.212544497743618, 106.59501766365489],
-        [-6.212533831914748, 106.59541451471308],
-        [-6.212939133259963, 106.59546814323448],
-        [-6.212912468707373, 106.59500693795059]
-    ];
+     var latlngsTest = [
+         [-6.212544497743618, 106.59501766365489],
+         [-6.212533831914748, 106.59541451471308],
+         [-6.212939133259963, 106.59546814323448],
+         [-6.212912468707373, 106.59500693795059]
+     ];
 
-    var polygonTest = L.polygon(latlngsTest, {
-        color: 'red'
-    }).addTo(map);
+     var polygonTest = L.polygon(latlngsTest, {
+         color: 'red'
+     }).addTo(map);
     //test
 
     map.on('click', onMapClick);
@@ -175,7 +176,7 @@
             console.log(sessionStorage.getItem("statusKelas"));
             $('#statusBtn').addClass('btn-outline-dark');
             $('#statusBtn').removeClass('btn-dark');
-            $("#statusBtn").html('Online');
+            $("#statusBtn").html('{{ __("Online") }}');
             location.reload();
         });
     });

@@ -7,7 +7,7 @@
     <meta http-equiv="refresh" content="{{ config('session.lifetime') * 60 }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Dashboard Presensi</title>
+    <title>{{ __("System Dashboard") }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"

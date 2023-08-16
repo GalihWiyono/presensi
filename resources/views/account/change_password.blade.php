@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Change Account Password</h1>
+        <h1 class="h2">{{ __("Change Account Password") }}</h1>
     </div>
 
     @if (session()->has('message'))
@@ -35,27 +35,26 @@
                             <div class="form-floating mb-3 col-10">
                                 <input class="form-control" name="old_password" id="old_password" type="password"
                                     placeholder="Old Password" required />
-                                <label for="old_password">Old Password</label>
+                                <label for="old_password">{{ __("Old Password") }}</label>
                             </div>
                             <div class="col-2 input-group-text mb-3 justify-content-center">
                                 <a class="text-decoration-none text-primary" id="togglePasword1"
-                                    style="cursor: pointer">Show</a>
+                                    style="cursor: pointer">{{ __("Show") }}</a>
                             </div>
                         </div>
                         <div class="row gx-1 input-group d-flex">
                             <div class="form-floating mb-3 col-10">
                                 <input class="form-control" name="new_password" id="new_password" type="password"
                                     placeholder="New Password" required />
-                                <label for="new_password">New Password</label>
+                                <label for="new_password">{{ __("New Password") }}</label>
                             </div>
                             <div class="col-2 input-group-text mb-3 justify-content-center">
                                 <a class="text-decoration-none text-primary" id="togglePasword2"
-                                    style="cursor: pointer">Show</a>
+                                    style="cursor: pointer">{{ __("Show") }}</a>
                             </div>
                         </div>
                         <div class="mb-2">
-                            <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100">Change
-                                Password</button>
+                            <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100">{{ __("Change Password") }}</button>
                         </div>
                     </form>
                 </div>

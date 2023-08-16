@@ -10,12 +10,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Students</p>
+                            Total {{ __("Student") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->mahasiswa }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/database/mahasiswa" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/database/mahasiswa" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -33,12 +33,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Lecturers</p>
+                            Total {{ __("Lecturer") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->dosen }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/database/dosen" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/database/dosen" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -56,12 +56,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Admins</p>
+                            Total Admin</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->admin }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/database/admin" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/database/admin" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -79,12 +79,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Classes</p>
+                            Total {{ __("Class") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->kelas }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/academic/class" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/academic/class" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -102,12 +102,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Courses</p>
+                            Total {{ __("Course") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->matkul }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/academic/course" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/academic/course" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -125,12 +125,12 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Total Schedules</p>
+                            Total {{ __("Schedule") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="825">{{ $dashboard->count->jadwal }}</span>
                             </h4>
                         </div>
-                        <a href="dashboard/academic/schedule" class="text-decoration-underline text-link-color">See details</a>
+                        <a href="dashboard/academic/schedule" class="text-decoration-underline text-link-color">{{ __("See details") }}</a>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header align-items-center d-flex py-3">
-                <h4 class="card-title mb-0 flex-grow-1">Log Activities</h4>
+                <h4 class="card-title mb-0 flex-grow-1">{{ __("Log Activities") }}</h4>
             </div>
             <div class="card-body pt-0">
                 <div class="div table-responsive">
@@ -150,8 +150,8 @@
                         <thead class="">
                             <tr>
                                 <th>NIP</th>
-                                <th>Activity</th>
-                                <th>Timestamp</th>
+                                <th>{{ __("Activity") }}</th>
+                                <th>{{ __("Timestamp") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -167,8 +167,8 @@
                 </div>
                 <div class="align-items-center mt-1 row g-3 text-center text-sm-start">
                     <div class="col-sm">
-                        <div class="text-muted">Showing <span class="fw-semibold">{{ ($dashboard->logAdmin->currentpage() - 1) * $dashboard->logAdmin->perpage() + $dashboard->logAdmin->count() }}</span> of <span
-                                class="fw-semibold">{{ $dashboard->logAdmin->total() }}</span> Results
+                        <div class="text-muted">{{ __("Showing") }} <span class="fw-semibold">{{ ($dashboard->logAdmin->currentpage() - 1) * $dashboard->logAdmin->perpage() + $dashboard->logAdmin->count() }}</span> {{ _("of") }} <span
+                                class="fw-semibold">{{ $dashboard->logAdmin->total() }}</span> {{ __("Result") }}
                         </div>
                     </div>
                     <div class="col-sm-auto">
@@ -182,16 +182,16 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header align-items-center d-flex py-3">
-                <h4 class="card-title mb-0 flex-grow-1">Log System</h4>
+                <h4 class="card-title mb-0 flex-grow-1">{{ __("Log System") }}</h4>
             </div>
             <div class="card-body pt-0">
                 <div class="div table-responsive">
                     <table class="table table-striped align-middle">
                         <thead class="">
                             <tr>
-                                <th>Activity</th>
+                                <th>{{ __("Activity") }}</th>
                                 <th>Status</th>
-                                <th>Timestamp</th>
+                                <th>{{ __("Timestamp") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -207,8 +207,8 @@
                 </div>
                 <div class="align-items-center mt-1 row g-3 text-center text-sm-start">
                     <div class="col-sm">
-                        <div class="text-muted">Showing <span class="fw-semibold">{{ ($dashboard->logSystem->currentpage() - 1) * $dashboard->logSystem->perpage() + $dashboard->logSystem->count() }}</span> of <span
-                                class="fw-semibold">{{ $dashboard->logSystem->total() }}</span> Results
+                        <div class="text-muted">{{ __("Showing") }} <span class="fw-semibold">{{ ($dashboard->logSystem->currentpage() - 1) * $dashboard->logSystem->perpage() + $dashboard->logSystem->count() }}</span> {{ __("of") }} <span
+                                class="fw-semibold">{{ $dashboard->logSystem->total() }}</span> {{ __("Result") }}
                         </div>
                     </div>
                     <div class="col-sm-auto">

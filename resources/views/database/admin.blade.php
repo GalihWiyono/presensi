@@ -2,7 +2,7 @@
 
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Database Admin</h1>
+        <h1 class="h2">{{ __("Admin Database") }}</h1>
     </div>
 
     @if (session()->has('message'))
@@ -28,7 +28,7 @@
                     <form action="/dashboard/database/admin">
                         <div class="input-group">
                             <input type="search" id="search" name="search" class="form-control"
-                                placeholder="Search Admin Name" value="{{ request('search') }}" />
+                                placeholder="{{ __("Search Admin") }}" value="{{ request('search') }}" />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -36,8 +36,8 @@
                     </form>
                 </div>
                 <div class="">
-                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Add
-                        Admin</a>
+                    <a class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">{{ __("Upload Admin") }}</a>
+                    <a class="btn btn-success px-4" href="/dashboard/database/admin/export">{{ __("Download Admin") }}</a>
                 </div>
             </div>
             <div class="div table-responsive">
@@ -46,10 +46,10 @@
                         <tr>
                             <th>#</th>
                             <th>NIP</th>
-                            <th>Admin Name</th>
-                            <th>Date Of Birth</th>
-                            <th>Gender</th>
-                            <th>Action</th>
+                            <th>{{ __("Admin Name") }}</th>
+                            <th>{{ __("Date Of Birth") }}</th>
+                            <th>{{ __("Gender") }}</th>
+                            <th>{{ __("Action") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,12 +59,12 @@
                                 <td>{{ $item->nip }}</td>
                                 <td>{{ $item->nama_admin }}</td>
                                 <td>{{ $item->tanggal_lahir }}</td>
-                                <td>{{ $item->gender == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                                <td>{{ $item->gender == 'L' ? __("Male") : __("Female") }}</td>
                                 <td>
-                                    <a class="btn btn-success btn-sm px-3" id="changePassword" data-bs-toggle="modal"
+                                    <a class="btn btn-warning btn-sm px-3" id="changePassword" data-bs-toggle="modal"
                                         data-bs-target="#gantiPasswordModal" data-user-id="{{ $item->user_id }}"
                                         data-nip="{{ $item->nip }}"><i class="fa-solid fa-unlock-keyhole"></i></a>
-                                    <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
+                                    {{-- <a class="btn btn-warning btn-sm px-3" id="editBtn" data-bs-toggle="modal"
                                         data-bs-target="#editAdminModal" data-user-id="{{ $item->user_id }}"
                                         data-nip="{{ $item->nip }}" data-nama="{{ $item->nama_admin }}"
                                         data-tanggal="{{ $item->tanggal_lahir }}" data-gender="{{ $item->gender }}"><span
@@ -72,7 +72,7 @@
                                     <button class="btn btn-danger btn-sm px-3" id='deleteBtn'
                                         data-user-id="{{ $item->user_id }}" data-id="{{ $item->nip }}"
                                         data-bs-toggle="modal" data-bs-target="#deleteAdminModal"
-                                        {!! $userLoggedIn->nip == $item->nip ? 'disabled' : '' !!}><span data-feather="x-circle"></span></button>
+                                        {!! $userLoggedIn->nip == $item->nip ? 'disabled' : '' !!}><span data-feather="x-circle"></span></button> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -90,42 +90,23 @@
         aria-labelledby="tambahAdminModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/database/admin" method="POST">
+                <form action="/dashboard/database/admin/import" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('post')
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Admin</h5>
+                        <h5 class="modal-title">{{ __("Upload Admin Master Data") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="">
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="nip" id="nip" type="text" placeholder="NIP"
-                                    required />
-                                <label for="nip">NIP</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="nama_admin" id="nama_admin" type="text"
-                                    placeholder="Nama admin" required />
-                                <label for="nama_admin">Admin Name</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input class="form-control" name="tanggal_lahir" id="tanggal_lahir" type="date"
-                                    placeholder="Tanggal Lahir" required />
-                                <label for="tanggal_lahir">Date of Birth</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <select class="form-select" name="gender" id="gender" required>
-                                    <option value="L">Laki-Laki</option>
-                                    <option value="P">Perempuan</option>
-                                </select>
-                                <label for="gender">Gender</label>
-                            </div>
-                        </div>
+                        <input class="form-control" type="file" id="formFile" name="file"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            required>
+                        <span class="text-danger">
+                            {{ __("Only files of types xlsx, xls, and csv are supported") }}.</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Upload") }}</button>
                     </div>
                 </form>
             </div>
@@ -133,7 +114,7 @@
     </div>
 
     {{-- Modal Edit admin --}}
-    <div class="modal fade" id="editAdminModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    {{-- <div class="modal fade" id="editAdminModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="editAdminModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -180,16 +161,16 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     {{-- Modal Delete admin --}}
-    <div class="modal fade" id="deleteAdminModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    {{-- <div class="modal fade" id="deleteAdminModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="deleteAdminModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="/dashboard/database/admin/" method="POST">
+                <form action="/dashboard/database/admin" method="POST">
+                  	@method('delete')
                     @csrf
-                    @method('delete')
                     <div class="modal-header">
                         <h5 class="modal-title">Delete Admin</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -213,7 +194,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     {{-- Change Password User --}}
     <div class="modal fade" id="gantiPasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -223,7 +204,7 @@
                 <form action="/dashboard/database/admin/changePassword" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Change Admin Password</h5>
+                        <h5 class="modal-title">{{ __("Change Admin Password") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -239,22 +220,22 @@
                             <div class="form-floating mb-3 col-10">
                                 <input class="form-control" name="admin_password" id="admin_password" type="password"
                                     placeholder="Admin Password" required />
-                                <label for="admin_password">Admin Password</label>
+                                <label for="admin_password">{{ __("Admin Password") }}</label>
                             </div>
                             <div class="col-2 input-group-text mb-3">
                                 <a class="ms-2 text-decoration-none text-primary" id="togglePasword"
-                                    style="cursor: pointer">Show</a>
+                                    style="cursor: pointer">{{ __("Show") }}</a>
                             </div>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="student_password" id="student_password" type="text"
                                 placeholder="Student Password" required />
-                            <label for="student_password">Admin New Password</label>
+                            <label for="student_password">{{ __('Admin New Password') }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Change</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Change") }}</button>
                     </div>
                 </form>
             </div>

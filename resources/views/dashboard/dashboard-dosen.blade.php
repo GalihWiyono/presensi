@@ -10,13 +10,13 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Schedule</p>
+                            {{ __("Schedule") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value"
                                     data-target="825">{{ $dashboard->jadwal->byNip }}</span>
                             </h4>
                         </div>
-                        <a class="text-decoration-none text-muted">from {{ $dashboard->jadwal->total }} schedules</a>
+                        <a class="text-decoration-none text-muted">{{ __("from") }} {{ $dashboard->jadwal->total }} {{ __("Schedule") }}</a>
                     </div>
                 </div>
             </div>
@@ -34,13 +34,13 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Class</p>
+                            {{ __("Class") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value"
                                     data-target="825">{{ $dashboard->kelas->byNip }}</span>
                             </h4>
                         </div>
-                        <a class="text-decoration-none text-muted">from {{ $dashboard->kelas->total }} classes</a>
+                        <a class="text-decoration-none text-muted">{{ __("from") }} {{ $dashboard->kelas->total }} {{ __("Class") }}</a>
                     </div>
                 </div>
             </div>
@@ -58,13 +58,13 @@
                     </div>
                     <div class="flex-grow-1 overflow-hidden ms-3">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-3">
-                            Course</p>
+                            {{ __("Course") }}</p>
                         <div class="d-flex align-items-center mb-3">
                             <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value"
                                     data-target="825">{{ $dashboard->matkul->byNip }}</span>
                             </h4>
                         </div>
-                        <a class="text-decoration-none text-muted">from {{ $dashboard->matkul->total }} courses</a>
+                        <a class="text-decoration-none text-muted">{{ __("from") }} {{ $dashboard->matkul->total }} {{ __("Course") }}</a>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header align-items-center d-flex py-3">
-                <h4 class="card-title mb-0 flex-grow-1">Upcoming Weekly Activities</h4>
+                <h4 class="card-title mb-0 flex-grow-1">{{ __("Upcoming Weekly Activities") }}</h4>
             </div><!-- end card header -->
             <div class="card-body pt-0">
                 <ul class="list-group list-group-flush border-dashed">
@@ -96,8 +96,8 @@
                                 <div class="col">
                                     <h5 class="text-muted mt-0 mb-1 fs-13">{{ $item->jadwal->jam_mulai }} -
                                         {{ $item->jadwal->jam_berakhir }}</h5>
-                                    <a class="text-decoration-none text-muted fs-14 mb-0">Pertemuan Kelas
-                                        {{ $item->jadwal->kelas->nama_kelas }}, Mata Kuliah
+                                    <a class="text-decoration-none text-muted fs-14 mb-0">{{ __("Class") }}
+                                        {{ $item->jadwal->kelas->nama_kelas }}, {{ __("Course") }}
                                         {{ $item->jadwal->matkul->nama_matkul }}</a>
                                 </div>
                             </div>
@@ -106,9 +106,9 @@
                 </ul>
                 <div class="align-items-center row g-3 text-center text-sm-start mt-1">
                     <div class="col-sm">
-                        <div class="text-muted">Showing <span
+                        <div class="text-muted">{{ __("Showing") }} <span
                                 class="fw-semibold">{{ ($dashboard->activity->currentpage() - 1) * $dashboard->activity->perpage() + $dashboard->activity->count() }}
-                            </span> of <span class="fw-semibold">{{ $dashboard->activity->total() }}</span> Results
+                            </span> {{ __("of") }} <span class="fw-semibold">{{ $dashboard->activity->total() }}</span> {{ __("Result") }}
                         </div>
                     </div>
                     <div class="col-sm-auto">
@@ -122,15 +122,15 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header align-items-center d-flex py-3">
-                <h4 class="card-title mb-0 flex-grow-1">Log Activities</h4>
+                <h4 class="card-title mb-0 flex-grow-1">{{ __("Log Activities") }}</h4>
             </div><!-- end card header -->
             <div class="card-body pt-0">
                 <div class="div table-responsive">
                     <table class="table table-striped align-middle">
                         <thead class="text-center">
                             <tr>
-                                <th>Activity</th>
-                                <th>Timestamp</th>
+                                <th>{{ __("Activity") }}</th>
+                                <th>{{ __("Timestamp") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,8 +145,8 @@
                 </div>
                 <div class="align-items-center mt-1 row g-3 text-center text-sm-start">
                     <div class="col-sm">
-                        <div class="text-muted">Showing <span class="fw-semibold">{{ ($dashboard->log->currentpage() - 1) * $dashboard->log->perpage() + $dashboard->log->count() }}</span> of <span
-                                class="fw-semibold">{{ $dashboard->log->total() }}</span> Results
+                        <div class="text-muted">{{ __("Showing") }} <span class="fw-semibold">{{ ($dashboard->log->currentpage() - 1) * $dashboard->log->perpage() + $dashboard->log->count() }}</span> {{ __("of") }} <span
+                                class="fw-semibold">{{ $dashboard->log->total() }}</span> {{ __("Results") }}
                         </div>
                     </div>
                     <div class="col-sm-auto">

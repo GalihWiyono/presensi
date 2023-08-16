@@ -18,7 +18,7 @@
     @endif
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Pending Week List</h1>
+        <h1 class="h2">{{ __("Pending Week List") }}</h1>
     </div>
     <div class="body-white border rounded shadow">
         <div class="container">
@@ -27,15 +27,15 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Course</th>
-                            <th>Class</th>
-                            <th>Week</th>
-                            <th>Date</th>
-                            <th>Class Time</th>
-                            <th>New Date</th>
-                            <th>New Class Time</th>
-                            <th>New Presence Time</th>
-                            <th>Action</th>
+                            <th>{{ __("Course") }}</th>
+                            <th>{{ __("Class") }}</th>
+                            <th>{{ __("Week") }}</th>
+                            <th>{{ __("Date") }}</th>
+                            <th>{{ __("Class Time") }}</th>
+                            <th>{{ __("New Date") }}</th>
+                            <th>{{ __("New Class Time") }}</th>
+                            <th>{{ __("New Presence Time") }}</th>
+                            <th>{{ __("Action") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                                 <th>{{ $loop->index + 1 }}</th>
                                 <td>{{ $item->jadwal->matkul->nama_matkul }}</td>
                                 <td>{{ $item->jadwal->kelas->nama_kelas }}</td>
-                                <td>Week {{ $item->sesi->sesi }}</td>
+                                <td>{{ __("Week") }} {{ $item->sesi->sesi }}</td>
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->jadwal->jam_mulai . ' - ' . $item->jadwal->jam_berakhir }}</td>
                                 <td>{{ $item->tanggal_baru == null ? '-' : $item->tanggal_baru }}</td>
@@ -78,7 +78,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Register Pending Class Date</h5>
+                        <h5 class="modal-title" id="qrModal">{{ __("Register Pending Class Date") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -86,19 +86,19 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="tanggal_baru" id="new_date" type="date"
                                 placeholder="New Date" min="{{ date('Y-m-d') }}" required />
-                            <label for="new_date">New Date</label>
+                            <label for="new_date">{{ __("New Date") }}</label>
                         </div>
 
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="jam_mulai" id="jam_mulai" type="time"
                                     placeholder="Start Class Time" required />
-                                <label for="jam_mulai">Start Class Time</label>
+                                <label for="jam_mulai">{{ __("Start Class Time") }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="jam_berakhir" id="jam_berakhir" type="time"
                                     placeholder="End Presence Time" required />
-                                <label for="jam_berakhir">End Class Time</label>
+                                <label for="jam_berakhir">{{ __("End Class Time") }}</label>
                             </div>
                         </div>
 
@@ -106,21 +106,20 @@
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
                                     placeholder="Start Presence Time" required />
-                                <label for="mulai_absen">Start Presence Time</label>
+                                <label for="mulai_absen">{{ __("Presence Start Time") }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
                                     placeholder="End Presence Time" required />
-                                <label for="akhir_absen">End Presence Time</label>
+                                <label for="akhir_absen">{{ __("Presence End Time") }}</label>
                             </div>
                         </div>
                         <span class="text-danger">
-                            When you save a new attendance date and time, the system will automatically register this
-                            pending week to be closed automatically when the class is finished.</span>
+                            {{ __("When you save a new attendance date and time, the system will automatically register this pending week to be closed automatically when the class is finished") }}.</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Save") }}</button>
                     </div>
                 </form>
             </div>

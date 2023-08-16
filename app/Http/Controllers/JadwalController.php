@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\JadwalExport;
+use App\Exports\ReportPresensiExport;
+use App\Imports\JadwalImport;
 use App\Models\AnggotaKelas;
 use App\Models\Dosen;
 use App\Models\Jadwal;
@@ -14,6 +17,8 @@ use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JadwalController extends Controller
 {
@@ -157,6 +162,7 @@ class JadwalController extends Controller
     {
         try {
             $jadwal = Jadwal::where('id', $request->id)->first();
+            $date = $jadwal->tanggal_mulai;
             $jadwal->update([
                 "matkul_id" => $request->matkul_id,
                 'kelas_id' => $request->kelas_id,
@@ -165,6 +171,14 @@ class JadwalController extends Controller
                 'jam_mulai' => $request->jam_mulai,
                 'jam_berakhir' => $request->jam_berakhir
             ]);
+          
+            if ($request->tanggal_mulai != $date) {
+                Sesi::where('jadwal_id', $jadwal->id)->delete();
+              
+                for ($i = 1; $i < 19; $i++) {
+                    $this->generateSesi($jadwal, $i);
+                }
+            }
             return back()->with([
                 "message" => "Successfully edited schedule data",
                 "status" => true,
@@ -280,5 +294,92 @@ class JadwalController extends Controller
         if ($data == "Tidak Hadir") {
             return "A";
         }
+    }
+
+    public function reportPresensiExcel($id) {
+        $jadwal = Jadwal::find($id);
+        $anggotaKelas = AnggotaKelas::with('mahasiswa')->where('kelas_id', $jadwal->kelas_id)->get();
+        $presensi = Presensi::where('jadwal_id', $id)->orderBy('sesi_id')->get();
+        $data = [];
+
+        foreach ($anggotaKelas as $mahasiswa) {
+            $dataMahasiswa = $presensi->where('nim', $mahasiswa->nim);
+
+            $dataPresensi = [];
+
+            foreach ($presensi as $item) {
+                if ($item->nim == $mahasiswa->nim) {
+                    $dataData = (object) [
+                        'pekan' => $item->sesi->sesi,
+                        'status' => $this->fixStatus($item->status)
+                    ];
+                    (object) array_push($dataPresensi, $dataData);
+                }
+            }
+
+            if (count($dataPresensi) != 18) {
+                $countAwal = count($dataPresensi);
+                for ($i = $countAwal; $i < 18; $i++) {
+                    $dataData = (object) [
+                        'pekan' => $i + 1,
+                        'status' => "-"
+                    ];
+                    (object) array_push($dataPresensi, $dataData);
+                }
+            }
+
+
+            $addData = (object)[
+                'nim' => $mahasiswa->mahasiswa->nim,
+                'nama_mahasiswa' => $mahasiswa->mahasiswa->nama_mahasiswa,
+                'presensi' => collect($dataPresensi),
+                'hadir' => $dataMahasiswa->where('status', "Hadir")->count(),
+                'terlambat' => $dataMahasiswa->where('status', "Terlambat")->count(),
+                'izin' => $dataMahasiswa->where('status', "Izin")->count(),
+                'tidakHadir' => $dataMahasiswa->where('status', "Tidak Hadir")->count()
+            ];
+            (object) array_push($data, $addData);
+        }
+
+        // for ($i = 0; $i < 4; $i++) {
+        //     $data = array_merge($data, $data);
+        // }
+
+        $data = collect($data);
+
+        ob_end_clean();
+        return (new ReportPresensiExport($data, $jadwal))->download('ReportPresensi-'. Carbon::now()->toDateTimeString() .'.xlsx');
+    }
+
+    public function import(Request $request) 
+    {
+        try {
+            $whitelistType = array('xlsx','xls','csv');
+            $extension = $request->file('file')->extension();
+            
+            if(!in_array($extension, $whitelistType)) {
+                return back()->with([
+                    "message" => __("The uploaded file type is not supported"),
+                    "status" => false,
+                ]);
+            }
+
+            Excel::import(new JadwalImport, $request->file('file'));
+
+            return back()->with([
+                "message" => __("Upload Data Schedule Success"),
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => __("Upload Data Schedule Failed").", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function export() 
+    {
+        return Excel::download(new JadwalExport, 'jadwal.xlsx');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DosenExport;
+use App\Imports\DosenImport;
 use App\Models\Dosen;
 use App\Models\Jadwal;
 use App\Models\User;
@@ -9,6 +11,7 @@ use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DosenController extends Controller
 {
@@ -181,7 +184,7 @@ class DosenController extends Controller
             #Match The Admin Password
             if (!Hash::check($request->admin_password, auth()->user()->password)) {
                 return back()->with([
-                    "message" => "Admin Password Doesn't match!",
+                    "message" => __("Admin Password Doesn't match"),
                     "status" => false,
                 ]);
             }
@@ -192,14 +195,46 @@ class DosenController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Change Password Success",
+                "message" => __("Change Password Success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
+                "message" =>  __("Change Password Failed")." Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
+    }
+
+    public function import(Request $request) 
+    {
+        try {
+            $whitelistType = array('xlsx','xls','csv');
+            $extension = $request->file('file')->extension();
+            
+            if(!in_array($extension, $whitelistType)) {
+                return back()->with([
+                    "message" => __("The uploaded file type is not supported"),
+                    "status" => false,
+                ]);
+            }
+
+            Excel::import(new DosenImport, $request->file('file'));
+
+            return back()->with([
+                "message" => __("Upload Data Lecturers Success"),
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => __("Upload Data Lecturers Failed") .", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function export() 
+    {
+        return Excel::download(new DosenExport, 'dosen.xlsx');
     }
 }

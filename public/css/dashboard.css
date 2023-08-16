@@ -124,6 +124,15 @@ body {
   height: 0px;
 }
 
+.btnLang {
+  margin-right: 4rem;
+}
+
+.dropdown-menu {
+  min-width: 0;
+  width: 100%;
+}
+
 .feather-24 {
   width: 24px;
   height: 24px;

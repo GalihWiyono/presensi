@@ -74,12 +74,12 @@ class PresensiController extends Controller
             
             if (!$waktuPresensi->isBetween($mulai_absen, $jam_berakhir)) {
                 return back()->with([
-                    "message" => "Unable to mark attendance outside the scheduled hours!",
+                    "message" => __("Unable to mark attendance outside the scheduled hours"),
                     "status" => false,
                 ]);
             }
 
-            if ($waktuPresensi > $akhir_absen) {
+            if (Carbon::parse($waktuPresensi)->format('H:i:s') > $akhir_absen) {
                 $statusPresensi = "Terlambat";
             }
 
@@ -103,18 +103,18 @@ class PresensiController extends Controller
                 ]);
 
                 return back()->with([
-                    "message" => "Successful attendance recorded!",
+                    "message" => __("Successful marking attendance"),
                     "status" => true,
                 ]);
             } else {
                 return back()->with([
-                    "message" => "You have already marked attendance for the schedule this week!",
+                    "message" => __("You have already marked attendance for the schedule this week"),
                     "status" => false,
                 ]);
             }
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to mark attendance, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to mark attendance").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }

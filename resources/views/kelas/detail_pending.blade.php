@@ -3,7 +3,7 @@
 @section('container')
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div class="col-lg-9">
-            <h1 class="h2">Class Pending Detail </h1>
+            <h1 class="h2">{{ __('Class Pending Detail') }} </h1>
         </div>
         <div class="input-group">
             <input type="text" class="form-control dash-filter-picker border-dark "
@@ -47,25 +47,25 @@
                         <input class="form-control" name="mataKuliah" id="mataKuliah" type="text"
                             placeholder="Mata Kuliah" data-sb-validations="" value="{{ $detail->matkul->nama_matkul }}"
                             readonly />
-                        <label for="mataKuliah">Course</label>
+                        <label for="mataKuliah">{{ __('Course') }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="kelas" id="kelas" type="text" placeholder="Kelas"
                             data-sb-validations="" value="{{ $detail->kelas->nama_kelas }}" readonly />
-                        <label for="kelas">Class</label>
+                        <label for="kelas">{{ _('Class') }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="jam" id="jam" type="text" placeholder="Jam"
                             data-sb-validations=""
                             value="{{ $pendingData->tanggal_baru == null ? '-' : $pendingData->tanggal_baru }}" readonly />
-                        <label for="jam">New Date</label>
+                        <label for="jam">{{ _('New Date') }}</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="hari" id="hari" type="text" placeholder="Hari"
                             data-sb-validations=""
                             value="{{ $pendingData->jam_mulai_baru == null || $pendingData->jam_berakhir_baru == null ? '-' : $pendingData->jam_mulai_baru . ' - ' . $pendingData->jam_berakhir_baru }}"
                             readonly />
-                        <label for="hari">New Class Time</label>
+                        <label for="hari">{{ __('New Class Time') }}</label>
                     </div>
                     <form action="" method="POST">
                         <div class="row gx-1">
@@ -73,13 +73,13 @@
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
                                     placeholder="Jam Mulai Absen" data-sb-validations=""
                                     value="{{ $pendingData->mulai_absen_baru }}" readonly />
-                                <label for="jam">Presence Start Time</label>
+                                <label for="jam">{{ __('Presence Start Time') }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-5">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
                                     placeholder="Jam Akhir Absen" data-sb-validations=""
                                     value="{{ $pendingData->akhir_absen_baru }}" readonly />
-                                <label for="jam">Presence End Time</label>
+                                <label for="jam">{{ __('Presence End Time') }}</label>
                             </div>
                             <div class="mb-3 col-lg-2 ">
                                 <a class="btn btn-secondary py-3 w-100" data-bs-toggle="modal"
@@ -91,13 +91,13 @@
                     </form>
                     <div class="mb-3">
                         <button id="btnForPresensi" href="" class="btn btn-primary py-3 w-100"
-                            data-bs-toggle="modal" data-bs-target="#qrModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>Generate
-                            QRCode</button>
+                            data-bs-toggle="modal" data-bs-target="#qrModal"
+                            {!! $status == 'Inactive' ? 'disabled' : '' !!}>{{ __('Generate QRCode') }}</button>
                     </div>
                     {{-- </form> --}}
                     <div class="">
                         <button class="btn btn-warning py-3 w-100" data-bs-toggle="modal"
-                            data-bs-target="#closeWeekModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>Close Week</button>
+                            data-bs-target="#closeWeekModal" {!! $status == 'Inactive' ? 'disabled' : '' !!}>{{ __('Close Week') }}</button>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                 <div class="body-white border rounded shadow py-4 px-3">
                     <div class="row">
                         <div class="col-lg-10 col-9">
-                            <h3>Attendance List</h3>
+                            <h3>{{ __('Attendance List') }}</h3>
                         </div>
                         <div class="col-lg-2 col-3">
                             <button class="btn btn-primary px-4" data-bs-toggle="modal"
@@ -122,10 +122,10 @@
                                 <tr>
                                     <th>#</th>
                                     <th>NIM</th>
-                                    <th>Student Name</th>
-                                    <th>Presence Time</th>
+                                    <th>{{ __('Student Name') }}</th>
+                                    <th>{{ __('Presence Time') }}</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -156,7 +156,7 @@
                         </table>
                     </div>
                     <div class="d-flex justify-content-center">
-                        {{-- {{ $absen->links() }} --}}
+                        {{ $absen->links() }}
                     </div>
                 </div>
             </div>
@@ -170,11 +170,11 @@
                 <form action="/dashboard/pending/tutup" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="closeWeekModal">Close Week</h5>
+                        <h5 class="modal-title" id="closeWeekModal">{{ __('Close Week') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Week Information:
+                        {{ __('Week Information') }}:
                         <div class="form-floating mb-3">
                             <input class="form-control" name="jadwal_id" id="jadwal_id" type="hidden"
                                 placeholder="Jadwal" value="{{ $detail->id }}" readonly />
@@ -187,17 +187,17 @@
                             <div class="form-floating mb-3 col-lg-6 col-sm-12">
                                 <input class="form-control" id="Week" type="text" placeholder="Week"
                                     value="{{ $pendingData->sesi->sesi }}" readonly />
-                                <label for="Week">Week</label>
+                                <label for="Week">{{ __('Week') }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6 col-sm-12">
                                 <input class="form-control" id="Date" type="text" placeholder="Date"
                                     value="{{ $pendingData->tanggal_baru }}" readonly />
-                                <label for="Date">Date</label>
+                                <label for="Date">{{ __('Date') }}</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-warning">Close Week</button>
+                        <button type="submit" class="btn btn-warning">{{ __('Close Week') }}</button>
                     </div>
                 </form>
             </div>
@@ -209,17 +209,18 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="qrModal">QRCode</h5>
+                    <h5 class="modal-title" id="qrModal">{{ __('QRCode') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="visible-print text-center">
                         {!! $qrcode !!}
-                        <p class="mt-3">Please scan the QR Code above to register your attendance.</p>
+                        <p class="mt-3">{{ __('Please scan the QR Code above to register your attendance') }}.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        aria-label="Close">{{ __('Close') }}</button>
                 </div>
             </div>
         </div>
@@ -242,8 +243,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Nim</th>
-                                        <th>Student Name</th>
+                                        <th>NIM</th>
+                                        <th>{{ __('Student Name') }}</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -262,26 +263,26 @@
                                                     <input type="radio" name="status[{{ $loop->index }}]"
                                                         id="btnradio4_{{ $loop->index }}" value="Tidak Hadir"
                                                         {!! $item->status == 'Tidak Hadir' ? 'checked' : '' !!}>
-                                                    <label class="btn" for="btnradio4_{{ $loop->index }}">Tidak
-                                                        Hadir</label>
+                                                    <label class="btn"
+                                                        for="btnradio4_{{ $loop->index }}">{{ __('Absent') }}</label>
 
                                                     <input type="radio" name="status[{{ $loop->index }}]"
                                                         id="btnradio1_{{ $loop->index }}" value="Hadir"
                                                         {!! $item->status == 'Hadir' ? 'checked' : '' !!}>
                                                     <label class="btn"
-                                                        for="btnradio1_{{ $loop->index }}">Hadir</label>
+                                                        for="btnradio1_{{ $loop->index }}">{{ __('Present') }}</label>
 
                                                     <input type="radio" name="status[{{ $loop->index }}]"
                                                         id="btnradio2_{{ $loop->index }}" value="Izin"
                                                         {!! $item->status == 'Izin' ? 'checked' : '' !!}>
                                                     <label class="btn"
-                                                        for="btnradio2_{{ $loop->index }}">Izin</label>
+                                                        for="btnradio2_{{ $loop->index }}">{{ __('Permit') }}</label>
 
                                                     <input type="radio" name="status[{{ $loop->index }}]"
                                                         id="btnradio3_{{ $loop->index }}" value="Terlambat"
                                                         {!! $item->status == 'Terlambat' ? 'checked' : '' !!}>
                                                     <label class="btn"
-                                                        for="btnradio3_{{ $loop->index }}">Terlambat</label>
+                                                        for="btnradio3_{{ $loop->index }}">{{ __('Late') }}</label>
 
                                                 </div>
                                             </td>
@@ -290,14 +291,14 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
                 </form>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                <button type="submit" class="btn btn-primary" form="presensiOnline">{{ __('Save') }}</button>
+            </div>
         </div>
+    </div>
     </div>
 
     {{-- Modal edit waktu --}}
@@ -308,7 +309,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Register Pending Class Date</h5>
+                        <h5 class="modal-title" id="qrModal">{{ __('Register Pending Class Date') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -316,19 +317,19 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="tanggal_baru" id="new_date" type="date"
                                 placeholder="New Date" min="{{ date('Y-m-d') }}" value="{{ $pendingData->tanggal_baru }}" required />
-                            <label for="new_date">New Date</label>
+                            <label for="new_date">{{ __('New Date') }}</label>
                         </div>
 
                         <div class="row gx-1">
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="jam_mulai" id="jam_mulai" type="time"
                                     placeholder="Start Class Time" value="{{ $pendingData->jam_mulai_baru }}" required />
-                                <label for="jam_mulai">Start Class Time</label>
+                                <label for="jam_mulai">{{ __('Start Class Time') }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="jam_berakhir" id="jam_berakhir" type="time"
                                     placeholder="End Presence Time" value="{{ $pendingData->jam_berakhir_baru }}" required />
-                                <label for="jam_berakhir">End Class Time</label>
+                                <label for="jam_berakhir">{{ __('End Class Time') }}</label>
                             </div>
                         </div>
 
@@ -336,19 +337,21 @@
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="mulai_absen" id="mulai_absen" type="time"
                                     placeholder="Start Presence Time" value="{{ $pendingData->mulai_absen_baru }}" required />
-                                <label for="mulai_absen">Start Presence Time</label>
+                                <label for="mulai_absen">{{ __('Presence Start Time') }}</label>
                             </div>
                             <div class="form-floating mb-3 col-lg-6">
                                 <input class="form-control" name="akhir_absen" id="akhir_absen" type="time"
                                     placeholder="End Presence Time" value="{{ $pendingData->akhir_absen_baru }}" required />
-                                <label for="akhir_absen">End Presence Time</label>
+                                <label for="akhir_absen">{{ __('Presence End Time') }}</label>
                             </div>
                         </div>
-
+                        <span class="text-danger">
+                            {{ __('When you save a new attendance date and time, the system will automatically register this pending week to be closed automatically when the class is finished') }}.</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __('Save') }}</button>
                     </div>
                 </form>
             </div>
@@ -364,7 +367,7 @@
                     @csrf
                     @method('put')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Edit Presence</h5>
+                        <h5 class="modal-title" id="qrModal">{{ __('Edit Presence') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -380,14 +383,14 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nama_mahasiswa" id="nama_mahasiswa_edit" type="text"
                                 placeholder="Nama Mahasiswa" readonly />
-                            <label for="nama_mahasiswa">Student Name</label>
+                            <label for="nama_mahasiswa">{{ __('Student Name') }}</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="status" id="status_edit">
-                                <option value="Hadir">Hadir</option>
-                                <option value="Terlambat">Terlambat</option>
-                                <option value="Izin">Izin</option>
-                                <option value="Tidak Hadir">Tidak Hadir</option>
+                                <option value="Hadir">{{ _('Present') }}</option>
+                                <option value="Terlambat">{{ __('Late') }}</option>
+                                <option value="Izin">{{ __('Permit') }}</option>
+                                <option value="Tidak Hadir">{{ __('Absent') }}</option>
                             </select>
                             <label for="nim">Status</label>
                         </div>
@@ -398,12 +401,13 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="waktu_presensi" id="waktu_presensi_edit" type="time"
                                 placeholder="Waktu Presensi" required />
-                            <label for="waktu_presensi">Presence TIme</label>
+                            <label for="waktu_presensi">{{ __('Presence Time') }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __('Save') }}</button>
                     </div>
                 </form>
             </div>
@@ -416,7 +420,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="qrModal">Add Presence</h5>
+                    <h5 class="modal-title" id="qrModal">{{ __("Add Attendance") }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -435,8 +439,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" id="searchNim">Search</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                    <button class="btn btn-primary" id="searchNim">{{ __("Search") }}</button>
                 </div>
             </div>
         </div>
@@ -449,7 +453,7 @@
                 <form action="/dashboard/kelas/{{ $detail->id }}/presensi" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qrModal">Add Presence</h5>
+                        <h5 class="modal-title" id="qrModal">{{ __("Add Attendance") }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -465,31 +469,31 @@
                         <div class="form-floating mb-3">
                             <input class="form-control" name="nama_mahasiswa" id="nama_show" type="text"
                                 placeholder="Nama Mahasiswa" readonly />
-                            <label for="nim">Student Name</label>
+                            <label for="nim">{{ __("Student Name") }}</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="kelas" id="kelas_show" type="text" placeholder="NIM"
                                 readonly />
-                            <label for="nim">Class</label>
+                            <label for="nim">{{ __("Class") }}</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" name="status" id="status_show">
-                                <option value="Hadir">Hadir</option>
-                                <option value="Terlambat">Terlambat</option>
-                                <option value="Izin">Izin</option>
-                                <option value="Tidak Hadir">Tidak Hadir</option>
+                                <option value="Hadir">{{ _('Present') }}</option>
+                                <option value="Terlambat">{{ __('Late') }}</option>
+                                <option value="Izin">{{ __('Permit') }}</option>
+                                <option value="Tidak Hadir">{{ __('Absent') }}</option>
                             </select>
                             <label for="nim">Status</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input class="form-control" name="waktu_presensi" id="waktu_presensi_show" type="time"
                                 placeholder="Waktu Presensi" required />
-                            <label for="waktu_presensi">Presence Time</label>
+                            <label for="waktu_presensi">{{ __("Presence Time") }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button class="btn btn-primary" type="submit">{{ __("Add") }}</button>
                     </div>
                 </form>
             </div>

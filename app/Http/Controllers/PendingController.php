@@ -16,19 +16,21 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PendingController extends Controller
 {
-    public function showPending() {
+    public function showPending()
+    {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $user = auth()->user()->dosen;
         $pendingWeek = Pending::where([
             'nip' => $user->nip,
             'status' => "Belum"
-        ])->with('jadwal', 'jadwal.kelas','jadwal.matkul');
+        ])->with('jadwal', 'jadwal.kelas', 'jadwal.matkul');
         return view('kelas/pending_kelas', [
             'pendingWeek' => $pendingWeek->paginate(8),
         ]);
     }
 
-    public function updateDate(Request $request) {
+    public function updateDate(Request $request)
+    {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         try {
             $pending = Pending::find($request->id);
@@ -41,18 +43,19 @@ class PendingController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Update Pending Week Success!",
+                "message" => __("Update Pending Week Success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Update Pending Week Failed, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Update Pending Week Failed").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
     }
 
-    public function showDetailPending($id) {
+    public function showDetailPending($id)
+    {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         $pendingData = Pending::find($id);
         $jadwal_kelas =  $pendingData->jadwal;
@@ -90,17 +93,17 @@ class PendingController extends Controller
 
         $status = "Active";
 
-        if($pendingData->status != "Belum") {
+        if ($pendingData->status != "Belum") {
             $status = "Inactive";
         }
 
-        if($pendingData->tanggal_baru == null) {
+        if ($pendingData->tanggal_baru == null) {
             $status = "Inactive";
-        } else if($pendingData->tanggal_baru != $dateToday) {
+        } else if ($pendingData->tanggal_baru != $dateToday) {
             $status = "Inactive";
         }
 
-        if($pendingData->mulai_absen_baru == null || $pendingData->akhir_absen_baru == null) {
+        if ($pendingData->mulai_absen_baru == null || $pendingData->akhir_absen_baru == null) {
             $status = "Inactive";
         }
 
@@ -109,13 +112,14 @@ class PendingController extends Controller
             'pendingData' => $pendingData,
             'absen' => $presensi->paginate(8)->withQueryString(),
             'qrcode' => $qrcode,
-            "activeSesi" => $activeSesiData, 
+            "activeSesi" => $activeSesiData,
             'anggotaKelas' => $dataPush,
             'status' => $status,
         ]);
     }
 
-    public function closePendingWeek(Request $request) {
+    public function closePendingWeek(Request $request)
+    {
         Gate::allows('isDosen') ? Response::allow() : abort(403);
         //tutup sesi
         try {
@@ -145,12 +149,12 @@ class PendingController extends Controller
             $pendingSesi->update(['status' => 'Selesai']);
 
             return back()->with([
-                "message" => "Successfully close week!",
+                "message" => __("Successfully close week"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Failed to close week, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Failed to close week")." Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
@@ -177,19 +181,26 @@ class PendingController extends Controller
         return $qrcode;
     }
 
-    public function checkPending(Request $request) {
-        $userLoggedIn = auth()->user()->dosen;
+    public function checkPending(Request $request)
+    {
+        $userLoggedIn = auth()->user();
         if ($request->ajax()) {
-            $errorMessage = "";
-            $thereIsPending = false;
+            if ($userLoggedIn == "Dosen") {
+                $errorMessage = "";
+                $thereIsPending = false;
 
-            $pendingData = Pending::where([
-                ['nip', $userLoggedIn->nip],
-                ['status', "Belum"]
-            ])->get();
+                $pendingData = Pending::where([
+                    ['nip', $userLoggedIn->dosen->nip],
+                    ['status', "Belum"]
+                ])->get();
 
-            $thereIsPending = (count($pendingData) > 0) ? true : false;
-            return response()->json(['data' => $pendingData, 'status' => $thereIsPending, 'errorMessage' => $errorMessage]);
+                $thereIsPending = (count($pendingData) > 0) ? true : false;
+                return response()->json(['data' => $pendingData, 'status' => $thereIsPending, 'errorMessage' => $errorMessage]);
+            } else {
+                $errorMessage = "";
+                $thereIsPending = false;
+                return response()->json(['status' => $thereIsPending, 'errorMessage' => $errorMessage]);
+            }
         }
     }
 }

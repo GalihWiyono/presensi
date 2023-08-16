@@ -502,41 +502,6 @@
                                 <td>-</td>
                             @endif
                         @endfor
-                        {{-- @php
-                            $check = false;
-                            for ($i = 0; $i < 18; $i++) { 
-                                foreach ($item->presensi as $item2) {
-                                    if(isset($item2) && $item2->pekan == $i+1) {
-                                        echo('<td>'. $item2->status .'</td>');
-                                        $check = true;
-                                    } else {
-                                        $check = false;
-                                    }
-                                }
-
-                                if (empty($item->presensi[$i]) && !$check) {
-                                    echo('<td>'.$i.'</td>');
-                                    // echo('<td></td>');
-                                } else if(!empty($item->presensi[$i]) && !$check){
-                                    echo('<td>*</td>');
-                                } else {
-
-                                }
-                            }
-                        @endphp
-                        {{-- @for ($i = 0; $i < 18; $i++)
-                            @foreach ($item->presensi as $item2)
-                                @if (isset($item2) && $item2->pekan == $i + 1)
-                                    <td>{{ $item2->status }}</td>
-                                @endif
-                            @endforeach
-
-                            @if (isset($item->presensi[$i]) && $item->presensi[$i]->pekan == $i + 1)
-                                @continue
-                            @else
-                                <td>-</td>
-                            @endif
-                        @endfor --}}
                         <th>{{ $item->hadir }}</th>
                         <th>{{ $item->terlambat }}</th>
                         <th>{{ $item->izin }}</th>
@@ -546,5 +511,4 @@
             </tbody>
         </table>
     </div>
-
 </body>

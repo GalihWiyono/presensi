@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AdminExport;
+use App\Imports\AdminImport;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -174,7 +177,7 @@ class AdminController extends Controller
             #Match The Admin Password
             if (!Hash::check($request->admin_password, auth()->user()->password)) {
                 return back()->with([
-                    "message" => "Admin Password Doesn't match!",
+                    "message" => __("Admin Password Doesn't match"),
                     "status" => false,
                 ]);
             }
@@ -185,14 +188,46 @@ class AdminController extends Controller
             ]);
 
             return back()->with([
-                "message" => "Change Password Success",
+                "message" => __("Change Password Success"),
                 "status" => true,
             ]);
         } catch (\Throwable $th) {
             return back()->with([
-                "message" => "Change Password Failed, Error: " . json_encode($th->getMessage(), true),
+                "message" => __("Change Password Failed").", Error: " . json_encode($th->getMessage(), true),
                 "status" => false,
             ]);
         }
+    }
+
+    public function import(Request $request) 
+    {
+        try {
+            $whitelistType = array('xlsx','xls','csv');
+            $extension = $request->file('file')->extension();
+            
+            if(!in_array($extension, $whitelistType)) {
+                return back()->with([
+                    "message" => __("The uploaded file type is not supported"),
+                    "status" => false,
+                ]);
+            }
+
+            Excel::import(new AdminImport, $request->file('file'));
+
+            return back()->with([
+                "message" => __("Upload Data Admin Success"),
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => __("Upload Data Admin Failed").", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function export() 
+    {
+        return Excel::download(new AdminExport, 'admin.xlsx');
     }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MataKuliahExport;
+use App\Imports\MataKuliahImport;
 use App\Models\Jadwal;
 use App\Models\MataKuliah;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MatkulController extends Controller
 {
@@ -94,10 +97,10 @@ class MatkulController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try {
-            $matkul = MataKuliah::where('id', $id)->first();
+            $matkul = MataKuliah::where('id', $request->id)->first();
             $matkul->update([
                 'nama_matkul' => $request->nama_matkul,
             ]);
@@ -122,6 +125,7 @@ class MatkulController extends Controller
      */
     public function destroy(Request $request)
     {
+
         try {
             $data = Jadwal::where('matkul_id', $request->id_matkul)->get();
             
@@ -146,5 +150,37 @@ class MatkulController extends Controller
                 "status" => false,
             ]);
         }
+    }
+
+    public function import(Request $request) 
+    {
+        try {
+            $whitelistType = array('xlsx','xls','csv');
+            $extension = $request->file('file')->extension();
+            
+            if(!in_array($extension, $whitelistType)) {
+                return back()->with([
+                    "message" => __("The uploaded file type is not supported"),
+                    "status" => false,
+                ]);
+            }
+
+            Excel::import(new MataKuliahImport, $request->file('file'));
+
+            return back()->with([
+                "message" => "Upload Data Course Success",
+                "status" => true,
+            ]);
+        } catch (\Throwable $th) {
+            return back()->with([
+                "message" => "Upload Data Course Failed" . ", Error: " . json_encode($th->getMessage(), true),
+                "status" => false,
+            ]);
+        }
+    }
+
+    public function export() 
+    {
+        return Excel::download(new MataKuliahExport, 'matakuliah.xlsx');
     }
 }
